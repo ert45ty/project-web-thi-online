@@ -20,20 +20,20 @@
               <div class="card-body">
                 <div class="ec-cat-form">
                   <h4>Add New Subject</h4>
-                  <form action="/list/create" method="post" th:object="${subject}">
-                    <div class="form-group row">
-                      <label for="name" class="col-12 col-form-label">Name</label>
-                      <div class="col-12">
-                        <input id="name" th:field="*{name}" name="text" class="form-control here slug-title" type="text">
-                      </div>
-                      <label th:if="${#fields.hasErrors('name')}" th:errors="*{name}" for="name" class="form-label error"></label>
-                    </div>
-                    <div class="row">
-                      <div class="col-12">
-                        <button name="submit" type="submit" class="btn btn-primary">Submit</button>
-                      </div>
-                    </div>
-                  </form>
+<!--                  <form action="/list/create" method="post" th:object="${subject}">-->
+<!--                    <div class="form-group row">-->
+<!--                      <label for="name" class="col-12 col-form-label">Name</label>-->
+<!--                      <div class="col-12">-->
+<!--                        <input id="name" th:field="*{name}" name="text" class="form-control here slug-title" type="text">-->
+<!--                      </div>-->
+<!--                      <label th:if="${#fields.hasErrors('name')}" th:errors="*{name}" for="name" class="form-label error"></label>-->
+<!--                    </div>-->
+<!--                    <div class="row">-->
+<!--                      <div class="col-12">-->
+<!--                        <button name="submit" type="submit" class="btn btn-primary">Submit</button>-->
+<!--                      </div>-->
+<!--                    </div>-->
+<!--                  </form>-->
                 </div>
               </div>
             </div>
