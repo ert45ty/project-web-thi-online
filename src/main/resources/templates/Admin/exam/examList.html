@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body class="ec-header-fixed ec-sidebar-fixed ec-sidebar-dark ec-header-light" id="body">
+<div class="wrapper">
+  <div th:replace="fragment::sidebar()"></div>
+  <div class="ec-page-wrapper">
+    <header th:replace="fragment::header()"></header>
+
+    <footer th:replace="fragment::footer()"></footer>
+  </div>
+</div>
+</body>
+</html>
