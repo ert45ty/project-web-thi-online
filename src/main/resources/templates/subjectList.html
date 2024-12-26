@@ -1,14 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+<head th:replace="fragments::head('tieu de')">
 </head>
 <body class="ec-header-fixed ec-sidebar-fixed ec-sidebar-dark ec-header-light" id="body">
 <div class="wrapper">
-  <div th:replace="fragment::sidebar()"></div>
+  <div th:replace="fragments::sidebar()"></div>
   <div class="ec-page-wrapper">
-    <header th:replace="fragment::header()"></header>
+    <header th:replace="fragments::header()"></header>
     <div class="ec-content-wrapper">
       <div class="content">
         <div class="breadcrumb-wrapper breadcrumb-wrapper-2 breadcrumb-contacts">
@@ -22,12 +20,13 @@
               <div class="card-body">
                 <div class="ec-cat-form">
                   <h4>Add New Subject</h4>
-                  <form method="post">
+                  <form action="/list/create" method="post" th:object="${subject}">
                     <div class="form-group row">
-                      <label for="text" class="col-12 col-form-label">Name</label>
+                      <label for="name" class="col-12 col-form-label">Name</label>
                       <div class="col-12">
-                        <input id="text" name="text" class="form-control here slug-title" type="text">
+                        <input id="name" th:field="*{name}" name="text" class="form-control here slug-title" type="text">
                       </div>
+                      <label th:if="${#fields.hasErrors('name')}" th:errors="*{name}" for="name" class="form-label error"></label>
                     </div>
                     <div class="row">
                       <div class="col-12">
@@ -46,7 +45,6 @@
                   <table id="responsive-data-table" class="table">
                     <thead>
                     <tr>
-                      <th>Thumb</th>
                       <th>Name</th>
                       <th>Total Topic</th>
                       <th>Action</th>
@@ -54,10 +52,9 @@
                     </thead>
 
                     <tbody>
-                    <tr>
-                      <td><img class="cat-thumb" src="assets/img/category/clothes.png" alt="Product Image" /></td>
-                      <td>Clothes</td>
-                      <td>28</td>
+                    <tr th:each="subject : ${subjectList}">
+                      <td th:text="${subject.name}"></td>
+                      <td th:text="${subject.getTopics().size()}"></td>
                       <td>
                         <div class="btn-group">
                           <button type="button"
@@ -84,7 +81,7 @@
         </div>
       </div>
     </div>
-    <footer th:replace="fragment::footer()"></footer>
+    <footer th:replace="fragments::footer()"></footer>
   </div>
 </div>
 </body>
