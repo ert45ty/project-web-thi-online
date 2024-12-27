@@ -16,6 +16,9 @@ public class SubjectEntity extends BaseEntity{
     @Column
     private String name;
 
+    @Column
+    private String image_name;
+
     @OneToMany(mappedBy = "subject")
     private List<TopicEntity> topics = new ArrayList<>();
 }

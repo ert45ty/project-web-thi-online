@@ -4,7 +4,7 @@
 </head>
 <body class="ec-header-fixed ec-sidebar-fixed ec-sidebar-dark ec-header-light" id="body">
 <div class="wrapper">
-  <div th:replace="fragments::sidebar()"></div>
+  <div th:replace="fragments::sidebar('subjects')"></div>
   <div class="ec-page-wrapper">
     <header th:replace="fragments::header()"></header>
     <div class="ec-content-wrapper">
@@ -20,20 +20,26 @@
               <div class="card-body">
                 <div class="ec-cat-form">
                   <h4>Add New Subject</h4>
-<!--                  <form action="/list/create" method="post" th:object="${subject}">-->
-<!--                    <div class="form-group row">-->
-<!--                      <label for="name" class="col-12 col-form-label">Name</label>-->
-<!--                      <div class="col-12">-->
-<!--                        <input id="name" th:field="*{name}" name="text" class="form-control here slug-title" type="text">-->
-<!--                      </div>-->
-<!--                      <label th:if="${#fields.hasErrors('name')}" th:errors="*{name}" for="name" class="form-label error"></label>-->
-<!--                    </div>-->
-<!--                    <div class="row">-->
-<!--                      <div class="col-12">-->
-<!--                        <button name="submit" type="submit" class="btn btn-primary">Submit</button>-->
-<!--                      </div>-->
-<!--                    </div>-->
-<!--                  </form>-->
+                  <form action="/list" method="post" th:object="${subject}" enctype="multipart/form-data">
+                    <div class="form-group row">
+                      <label for="thumb" class="col-12 col-form-label">Thumb</label>
+                      <div class="col-12" >
+                        <input id="thumb" name="fileImage" class="form-control" type="file">
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="name" class="col-12 col-form-label">Name</label>
+                      <div class="col-12">
+                        <input id="name" th:field="*{name}" name="text" class="form-control here slug-title" type="text">
+                      </div>
+                      <label th:if="${#fields.hasErrors('name')}" th:errors="*{name}" for="name" class="form-label text-danger"></label>
+                    </div>
+                    <div class="row">
+                      <div class="col-12">
+                        <button name="submit" type="submit" class="btn btn-primary">Submit</button>
+                      </div>
+                    </div>
+                  </form>
                 </div>
               </div>
             </div>
@@ -41,10 +47,11 @@
           <div class="col-xl-8 col-lg-12">
             <div class="ec-cat-list card card-default">
               <div class="card-body">
-                <div class="table-responsive">
+                <div>
                   <table id="responsive-data-table" class="table">
                     <thead>
                     <tr>
+                      <th>Thumb</th>
                       <th>Name</th>
                       <th>Total Topic</th>
                       <th>Action</th>
@@ -53,6 +60,9 @@
 
                     <tbody>
                     <tr th:each="subject : ${subjectList}">
+                      <td>
+                        <img class="icon-subject" th:src="'/image-file/' + ${subject.image_name}" >
+                      </td>
                       <td th:text="${subject.name}"></td>
                       <td th:text="${subject.getTopics().size()}"></td>
                       <td>
@@ -66,8 +76,13 @@
                             <span class="sr-only">Info</span>
                           </button>
                           <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#">Edit</a>
-                            <a class="dropdown-item" href="#">Delete</a>
+                            <a class="dropdown-item"
+                               href="#"
+                               role="button">Edit</a>
+                            <a class="dropdown-item"
+                               th:href="@{/list/delete/{id} (id=${subject.id})}"
+                               role="button"
+                               onclick="return confirm('Bạn có muốn xóa?')">Delete</a>
                           </div>
                         </div>
                       </td>

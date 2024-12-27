@@ -23,4 +23,7 @@ public class TopicEntity extends BaseEntity{
 
     @Column
     private String name;
+
+    @Column
+    private String description;
 }

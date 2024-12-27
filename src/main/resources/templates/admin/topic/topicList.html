@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments::head('Topics')">
+</head>
+<body class="ec-header-fixed ec-sidebar-fixed ec-sidebar-dark ec-header-light" id="body">
+<div class="wrapper">
+    <div th:replace="fragments::sidebar('topics')"></div>
+    <div class="ec-page-wrapper">
+        <header th:replace="fragments::header()"></header>
+        <div class="ec-content-wrapper">
+            <div class="content">
+                <div class="breadcrumb-wrapper breadcrumb-wrapper-2 breadcrumb-contacts">
+                    <div>
+                    <h1>Topic</h1>
+                    <p class="breadcrumbs"><span><a href="index.html">Home</a></span>
+                        <span><i class="mdi mdi-chevron-right"></i></span>Topic</p></div>
+                    <div>
+                        <a type="button" class="btn btn-primary" th:href="@{/topic/list/create}" > Add Topic
+                        </a>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xl-12 col-lg-12 mx-auto">
+                        <div class="ec-cat-list card card-default">
+                            <div class="card-body">
+                                <div class="col-md-12 text-center">
+                                    <ul class="ec-pro-tab-nav nav justify-content-center">
+                                        <li class="nav-item" th:each="subject, iterStat : ${subjectList}">
+                                            <a class="nav-link"
+                                               th:href="@{/topic/list/{id}(id=${subject.id})}"
+                                               th:text="${subject.name}">
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <table id="responsive-data-table" class="table">
+                                        <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Description</th>
+                                            <th>Total Exam</th>
+                                            <th>Action</th>
+                                        </tr>
+                                        </thead>
+
+                                        <tbody>
+                                        <tr th:each="topic : ${topicList}">
+                                            <td th:text="${topic.name}"></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>
+                                                <div class="btn-group">
+                                                    <button type="button"
+                                                            class="btn btn-outline-success">Info</button>
+                                                    <button type="button"
+                                                            class="btn btn-outline-success dropdown-toggle dropdown-toggle-split"
+                                                            data-bs-toggle="dropdown" aria-haspopup="true"
+                                                            aria-expanded="false" data-display="static">
+                                                        <span class="sr-only">Info</span>
+                                                    </button>
+                                                    <div class="dropdown-menu">
+                                                        <a class="dropdown-item"
+                                                           th:href="@{/topic/list/update/{id}(id=${topic.id})}">Edit</a>
+                                                        <a class="dropdown-item"
+                                                           th:href="@{/topic/list/delete/{id}(id=${topic.id})}"
+                                                           onclick="return confirm('Bạn có muốn xóa?')">Delete</a>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer th:replace="fragments::footer()"></footer>
+    </div>
+</div>
+</body>
+</html>

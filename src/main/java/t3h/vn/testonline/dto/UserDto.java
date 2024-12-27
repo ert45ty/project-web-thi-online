@@ -3,6 +3,7 @@ package t3h.vn.testonline.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
@@ -28,5 +29,7 @@ public class UserDto {
     private String role;
 
     private LocalDateTime created_at;
+
+    MultipartFile fileImage;
 
 }

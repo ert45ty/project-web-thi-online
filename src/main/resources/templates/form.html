@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments::head('Topics')">
+</head>
+<body class="ec-header-fixed ec-sidebar-fixed ec-sidebar-dark ec-header-light" id="body">
+<div class="wrapper">
+  <div th:replace="fragments::sidebar('topics')"></div>
+  <div class="ec-page-wrapper">
+    <header th:replace="fragments::header()"></header>
+
+
+    <footer th:replace="fragments::footer()"></footer>
+    </div>
+  </div>
+</body>
+</html>
