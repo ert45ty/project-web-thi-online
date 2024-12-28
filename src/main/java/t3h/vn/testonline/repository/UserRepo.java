@@ -4,4 +4,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import t3h.vn.testonline.entities.UserEntity;
 
 public interface UserRepo extends JpaRepository<UserEntity, Long> {
+    UserEntity getById(Long id);
 }

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments::head('Topics')">
+</head>
+<body class="ec-header-fixed ec-sidebar-fixed ec-sidebar-dark ec-header-light" id="body">
+<div class="wrapper">
+  <div th:replace="fragments::sidebar('topics')"></div>
+  <div class="ec-page-wrapper">
+    <header th:replace="fragments::header()"></header>
+    <div class="ec-content-wrapper">
+      <div class="content">
+        <div class="row">
+          <div class="col-xl-8 col-lg-12 mx-auto">
+            <div class="ec-cat-list card card-default mb-24px">
+              <div th:switch="${is_update}" class="card-body">
+                <div th:case="update" class="ec-cat-form">
+                  <h4>Update User</h4>
+                  <form th:action="@{/user/list/update/{id}(id=${ID})}" method="post" th:object="${existUser}" enctype="multipart/form-data">
+                    <div class="form-group row">
+                      <label for="fullname" class="col-12 col-form-label">Your name</label>
+                      <div class="col-12">
+                        <input id="fullname" th:field="*{fullname}" name="fullname" class="form-control here slug-title" type="text">
+                      </div>
+                      <label th:if="${#fields.hasErrors('fullname')}" th:errors="*{fullname}" for="fullname" class="form-label text-danger"></label>
+                    </div>
+                    <div class="form-group row">
+                      <label for="username" class="col-12 col-form-label">Your Username</label>
+                      <div class="col-12">
+                        <input disabled id="username" th:field="*{username}" name="username" class="form-control here slug-title" type="text">
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-12 col-form-label">Password</label>
+                      <div class="col-12">
+                        <input id="password" th:field="*{password}" name="password" class="form-control here slug-title" type="password">
+                      </div>
+                      <label th:if="${#fields.hasErrors('password')}" th:errors="*{password}" for="password" class="form-label text-danger"></label>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-12 col-form-label">Image</label>
+                      <div class="col-12">
+                        <input id="fileImage" name="fileImage" class="form-control here slug-title" type="file">
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-12 col-form-label">Select Subject</label>
+                      <select name="role" id="role" class="form-select" th:field="*{role}">
+                        <option th:value="ADMIN" th:text="ADMIN"></option>
+                        <option th:value="USER" th:text="USER"></option>
+                      </select>
+                    </div>
+                    <div class="row">
+                      <div class="col-12">
+                        <button name="submit" type="submit" class="btn btn-primary">Submit</button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+                <div th:case="detail" class="ec-cat-form">
+                  <h4>Add New User</h4>
+                  <form th:object="${existUser}">
+                    <div class="form-group row">
+                      <label for="fullname" class="col-12 col-form-label">Your name</label>
+                      <div class="col-12">
+                        <input readonly id="fullname" th:field="*{fullname}" name="fullname" class="form-control here slug-title" type="text">
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="username" class="col-12 col-form-label">Your Username</label>
+                      <div class="col-12">
+                        <input readonly id="username" th:field="*{username}" name="username" class="form-control here slug-title" type="text">
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-12 col-form-label">Password</label>
+                      <div class="col-12">
+                        <input readonly id="password" th:field="*{password}" name="password" class="form-control here slug-title" type="text">
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-12 col-form-label">Image</label>
+                      <div class="col-12">
+                        <img th:src="'/image-file/' + ${existUser.image_name}" width="100px" height="100px">
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-12 col-form-label">Select Subject</label>
+                      <select readonly name="role" id="role" class="form-select" th:field="*{role}">
+                        <option th:value="ADMIN" th:text="ADMIN"></option>
+                        <option th:value="USER" th:text="USER"></option>
+                      </select>
+                    </div>
+                    <div class="row">
+                      <div class="col-12">
+                        <a class="btn btn-primary" th:href="@{/user/list}" type="button">Return</a>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+                <div th:case="*" class="ec-cat-form">
+                  <h4>Add New User</h4>
+                  <form action="/user/list/create" method="post" th:object="${user}" enctype="multipart/form-data">
+                    <div class="form-group row">
+                      <label for="fullname" class="col-12 col-form-label">Your name</label>
+                      <div class="col-12">
+                        <input id="fullname" th:field="*{fullname}" name="fullname" class="form-control here slug-title" type="text">
+                      </div>
+                      <label th:if="${#fields.hasErrors('fullname')}" th:errors="*{fullname}" for="fullname" class="form-label text-danger"></label>
+                    </div>
+                    <div class="form-group row">
+                      <label for="username" class="col-12 col-form-label">Your Username</label>
+                      <div class="col-12">
+                        <input id="username" th:field="*{username}" name="username" class="form-control here slug-title" type="text">
+                      </div>
+                      <label th:if="${#fields.hasErrors('username')}" th:errors="*{username}" for="username" class="form-label text-danger"></label>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-12 col-form-label">Password</label>
+                      <div class="col-12">
+                        <input id="password" th:field="*{password}" name="password" class="form-control here slug-title" type="password">
+                      </div>
+                      <label th:if="${#fields.hasErrors('password')}" th:errors="*{password}" for="password" class="form-label text-danger"></label>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-12 col-form-label">Image</label>
+                      <div class="col-12">
+                        <input id="image_name" th:field="*{image_name}" name="image_name" class="form-control here slug-title" type="file">
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-12 col-form-label">Select Subject</label>
+                      <select name="role" id="role" class="form-select" th:field="*{role}">
+                          <option th:value="ADMIN" th:text="ADMIN"></option>
+                        <option th:value="USER" th:text="USER"></option>
+                      </select>
+                    </div>
+                    <div class="row">
+                      <div class="col-12">
+                        <button name="submit" type="submit" class="btn btn-primary">Submit</button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer th:replace="fragments::footer()"></footer>
+  </div>
+</div>
+</body>
+</html>
