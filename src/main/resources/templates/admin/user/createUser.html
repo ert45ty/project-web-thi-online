@@ -4,7 +4,7 @@
 </head>
 <body class="ec-header-fixed ec-sidebar-fixed ec-sidebar-dark ec-header-light" id="body">
 <div class="wrapper">
-  <div th:replace="fragments::sidebar('topics')"></div>
+  <div th:replace="fragments::sidebar('users')"></div>
   <div class="ec-page-wrapper">
     <header th:replace="fragments::header()"></header>
     <div class="ec-content-wrapper">
@@ -72,12 +72,6 @@
                       </div>
                     </div>
                     <div class="form-group row">
-                      <label class="col-12 col-form-label">Password</label>
-                      <div class="col-12">
-                        <input readonly id="password" th:field="*{password}" name="password" class="form-control here slug-title" type="text">
-                      </div>
-                    </div>
-                    <div class="form-group row">
                       <label class="col-12 col-form-label">Image</label>
                       <div class="col-12">
                         <img th:src="'/image-file/' + ${existUser.image_name}" width="100px" height="100px">
@@ -124,7 +118,7 @@
                     <div class="form-group row">
                       <label class="col-12 col-form-label">Image</label>
                       <div class="col-12">
-                        <input id="image_name" th:field="*{image_name}" name="image_name" class="form-control here slug-title" type="file">
+                        <input id="fileImage" th:field="*{fileImage}" name="fileImage" class="form-control here slug-title" type="file">
                       </div>
                     </div>
                     <div class="form-group row">

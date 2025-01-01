@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments::head('Topics')">
+</head>
+<body class="ec-header-fixed ec-sidebar-fixed ec-sidebar-dark ec-header-light" id="body">
+<div class="wrapper">
+    <div th:replace="fragments::sidebar('exams')"></div>
+    <div class="ec-page-wrapper">
+        <header th:replace="fragments::header()"></header>
+        <div class="ec-content-wrapper">
+            <div class="content">
+        <div class="row">
+            <div class="col-xl-8 col-lg-12 mx-auto">
+                <div class="ec-cat-list card card-default mb-24px">
+                    <div th:switch="${is_update}" class="card-body">
+                        <div th:case="update" class="ec-cat-form">
+                            <h4>Update Topic</h4>
+                            <form th:action="@{/topic/list/update/{id}(id=${ID})}" method="post" th:object="${existTopic}">
+                                <div class="form-group row">
+                                    <label for="name" class="col-12 col-form-label">Name</label>
+                                    <div class="col-12">
+                                        <input id="name" th:field="*{name}" name="name" class="form-control here slug-title" type="text">
+                                    </div>
+                                    <label th:if="${#fields.hasErrors('name')}" th:errors="*{name}" for="name" class="form-label text-danger"></label>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-12 col-form-label">Description</label>
+                                    <div class="col-12">
+                                        <textarea th:field="*{description}" id="description" name="description" cols="40" rows="2" class="form-control"></textarea>
+                                    </div>
+                                    <label th:if="${#fields.hasErrors('description')}" th:errors="*{description}" for="description" class="form-label text-danger"></label>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-12 col-form-label">Select Subject</label>
+                                    <select name="subject_id" id="subjects" class="form-select" th:field="*{subject.id}">
+                                        <th:block th:each="subject : ${subjectList}">
+                                            <option th:value="${subject.id}" th:text="${subject.name}"></option></th:block>
+                                    </select>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <button name="submit" type="submit" class="btn btn-primary">Submit</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div th:case="*" class="ec-cat-form">
+                            <h4>Add New Exam</h4>
+                            <form action="/exam/list/create" method="post" th:object="${exam}">
+                                <div class="form-group row">
+                                    <label for="title" class="col-12 col-form-label">Title</label>
+                                    <div class="col-12">
+                                        <input id="title" th:field="*{title}" name="title" class="form-control here slug-title" type="text">
+                                    </div>
+                                    <label th:if="${#fields.hasErrors('title')}" th:errors="*{title}" for="title" class="form-label text-danger"></label>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-12 col-form-label">Select total question</label>
+                                    <select name="total_question" id="total_question" class="form-select" th:field="*{total_question}">
+                                        <option th:value="10" th:text="'10 câu'"></option>
+                                        <option th:value="30" th:text="'30 câu'"></option>
+                                        <option th:value="40" th:text="'40 câu'"></option>
+                                        <option th:value="50" th:text="'50 câu'"></option>
+                                    </select>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-12 col-form-label">Select Topic</label>
+                                    <select name="topic_id" id="topic_id" class="form-select" th:field="*{topic_id}">
+                                        <th:block th:each="topic : ${topicList}">
+                                        <option th:value="${topic.id}" th:text="${topic.name}"></option>
+                                        </th:block>
+                                    </select>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <button name="submit" type="submit" class="btn btn-primary">Submit</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            </div>
+        </div>
+
+        <footer th:replace="fragments::footer()"></footer>
+    </div>
+</div>
+</body>
+</html>

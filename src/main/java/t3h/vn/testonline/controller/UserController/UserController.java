@@ -38,7 +38,7 @@ public class UserController {
     public String createUser(@Valid @ModelAttribute("user")UserDto user, BindingResult result, RedirectAttributes redirectAttributes){
 
         if (result.hasErrors()){
-            return "user/list/create";
+            return "admin/user/createUser";
         }
         userService.save(user);
         redirectAttributes.addAttribute("message", "Thêm mới người dùng thành công");
@@ -76,6 +76,7 @@ public class UserController {
     @GetMapping("detail/{id}")
     public String formDetailUser(Model model, @PathVariable Long id){
         UserEntity existUser = userService.getById(id);
+        model.addAttribute("userName", existUser.getUsername());
         model.addAttribute("existUser", existUser);
         model.addAttribute("is_update", "detail");
         model.addAttribute("ID", id);

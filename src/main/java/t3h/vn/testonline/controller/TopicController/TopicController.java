@@ -26,19 +26,18 @@ public class TopicController {
     @Autowired
     SubjectService subjectService;
 
-    @GetMapping({"", "/{id}"})
-    public String topicList(Model model, @PathVariable(value = "id", required = false) Long id){
+    @GetMapping
+    public String topicList(Model model,
+                            @RequestParam(defaultValue = "0") Integer subject){
         List<TopicEntity> topicList;
         List<SubjectEntity> subjectList = subjectService.getAll();
-        List<String> subjectName = new ArrayList<>();
-        if (id == null){
-            topicList = topicService.getAllBySubjectId(subjectList.get(0).getId());
-        }else {
-            topicList = topicService.getAllBySubjectId(id);
-        }
+
+        topicList = topicService.getAllBySubjectId(subjectList.get(subject).getId());
+
         model.addAttribute("topicList", topicList);
         model.addAttribute("subjectList", subjectList);
-//        model.addAttribute("subjectName", subjectName);
+        model.addAttribute("subjectIndex", subject);
+
         return "admin/topic/topicList";
     }
 
@@ -64,7 +63,7 @@ public class TopicController {
     @GetMapping("/delete/{id}")
     public String delete(Model model, @PathVariable Long id){
         topicService.delete(id);
-        return topicList(model, null);
+        return topicList(model, 0);
     }
 
     @GetMapping("/update/{id}")

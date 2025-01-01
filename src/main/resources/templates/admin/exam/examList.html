@@ -1,16 +1,96 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="UTF-8">
-  <title>Title</title>
+<head th:replace="fragments::head('Subjects')">
 </head>
 <body class="ec-header-fixed ec-sidebar-fixed ec-sidebar-dark ec-header-light" id="body">
 <div class="wrapper">
-  <div th:replace="fragment::sidebar()"></div>
+  <div th:replace="fragments::sidebar('exams')"></div>
   <div class="ec-page-wrapper">
-    <header th:replace="fragment::header()"></header>
+    <header th:replace="fragments::header()"></header>
+    <div class="ec-content-wrapper">
+      <div class="content">
+        <div class="breadcrumb-wrapper breadcrumb-wrapper-2 breadcrumb-contacts">
 
-    <footer th:replace="fragment::footer()"></footer>
+          <h1>Subject</h1>
+          <p class="breadcrumbs"><span><a href="index.html">Home</a></span>
+            <span><i class="mdi mdi-chevron-right"></i></span>Exams</p></div>
+        <div class="row">
+          <div class="col-xl-12 col-lg-12">
+            <div class="ec-cat-list card card-default">
+              <div class="card-body">
+                <div class="col-md-12 text-center">
+                  <ul class="ec-pro-tab-nav nav justify-content-center">
+                    <li class="nav-item" th:each="subject, iterStat : ${subjectList}">
+                      <a class="nav-link"
+                         th:href="@{/exam/list(subject=${iterStat.index})}"
+                         th:text="${subject.name}"
+                         th:classappend="${subjectIndex == iterStat.index} ? 'active' : ''">
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+
+                <div>
+                <div style="display: flex; justify-content: space-between ">
+                    <th:block th:switch="${currentTopic == null}">
+                        <h4 th:case="${true}" th:text="'Chưa có bài thi nào'"></h4>
+                        <h4 th:case="${false}" th:text="${currentTopic.subject.name} + ' - ' + ${currentTopic.name}"></h4>
+                    </th:block>
+                  <div>
+                    <a type="button" class="btn btn-primary" th:href="@{/exam/list/create}" > Add Exam
+                    </a>
+                  </div>
+                </div>
+                <div>
+                  <table id="responsive-data-table" class="table">
+                    <thead>
+                    <tr>
+                      <th class="col-6">Title</th>
+                      <th class="col-2">Total question</th>
+                      <th class="col-2">Duration</th>
+                      <th class="col-2">Action</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr th:each="exam : ${examList}">
+                      <td th:text="${exam.title}"></td>
+                      <td th:text="${exam.total_question}"></td>
+                      <td th:text="${exam.duration}/60 + ' phút'"></td>
+                      <td>
+                        <div class="btn-group">
+                          <button type="button"
+                                  class="btn btn-outline-success">Info</button>
+                          <button type="button"
+                                  class="btn btn-outline-success dropdown-toggle dropdown-toggle-split"
+                                  data-bs-toggle="dropdown" aria-haspopup="true"
+                                  aria-expanded="false" data-display="static">
+                            <span class="sr-only">Info</span>
+                          </button>
+                          <div class="dropdown-menu">
+                            <a class="dropdown-item"
+                               href="#"
+                               role="button">Edit</a>
+                            <a class="dropdown-item"
+                               th:href="@{/exam/list/delete/{id}(id=${exam.id})}"
+                               role="button"
+                               onclick="return confirm('Bạn có muốn xóa?')">Delete</a>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+                </br>
+              </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer th:replace="fragments::footer()"></footer>
   </div>
 </div>
 </body>
