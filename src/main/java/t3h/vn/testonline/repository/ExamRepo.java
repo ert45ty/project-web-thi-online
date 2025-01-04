@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface ExamRepo extends JpaRepository<ExamEntity, Long> {
     List<ExamEntity> getExamEntityByTopic_Id(Long id);
+
+    ExamEntity getById(Long id);
 }

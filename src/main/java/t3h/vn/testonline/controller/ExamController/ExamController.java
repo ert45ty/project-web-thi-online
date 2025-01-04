@@ -9,6 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import t3h.vn.testonline.dto.ExamDto;
+import t3h.vn.testonline.dto.QuestionDto;
 import t3h.vn.testonline.entities.ExamEntity;
 import t3h.vn.testonline.entities.SubjectEntity;
 import t3h.vn.testonline.entities.TopicEntity;
@@ -16,6 +17,7 @@ import t3h.vn.testonline.service.ExamService;
 import t3h.vn.testonline.service.SubjectService;
 import t3h.vn.testonline.service.TopicService;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -74,14 +76,17 @@ public class ExamController {
 
     @PostMapping("/create")
     public String createExam(@Valid @ModelAttribute("exam") ExamDto exam, Model model,
-                             BindingResult result){
+                             BindingResult result, RedirectAttributes redirectAttributes){
         if (result.hasErrors()){
             return "admin/exam/createExam";
         }
         Integer total = exam.getTotal_question();
         exam.setDuration(duration(total));
-        examService.save(exam);
-        return "redirect:/exam/list";
+        ExamEntity examEntity = examService.save(exam);
+        Long examId = examEntity.getId();
+        redirectAttributes.addFlashAttribute("exam", examEntity);
+        redirectAttributes.addAttribute("examId", examId);
+        return "redirect:/exam/createQandA";
     }
 
     @GetMapping("/delete/{id}")
@@ -89,8 +94,6 @@ public class ExamController {
         examService.delete(id);
         return examList(model, session, 0, 0);
     }
-
-
 
 
     public Integer duration(Integer integer){

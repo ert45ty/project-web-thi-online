@@ -22,12 +22,17 @@ public class ExamService {
         return examRepo.getExamEntityByTopic_Id(id);
     }
 
-    public void save(ExamDto examDto){
+    public ExamEntity getExamById(Long id){
+        return examRepo.getById(id);
+    }
+
+    public ExamEntity save(ExamDto examDto){
         ExamEntity examEntity = new ExamEntity();
         TopicEntity topic = topicService.getById(examDto.getTopic_id());
         BeanUtils.copyProperties(examDto, examEntity);
         examEntity.setTopic(topic);
         examRepo.save(examEntity);
+        return examEntity;
     }
 
     public void delete(Long id){
