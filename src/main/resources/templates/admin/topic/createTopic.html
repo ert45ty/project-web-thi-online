@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments::head('Topics')">
+<head th:replace="fragments::head('Chủ đề')">
 </head>
 <body class="ec-header-fixed ec-sidebar-fixed ec-sidebar-dark ec-header-light" id="body">
 <div class="wrapper">
@@ -14,24 +14,24 @@
                 <div class="ec-cat-list card card-default mb-24px">
                     <div th:switch="${is_update}" class="card-body">
                         <div th:case="update" class="ec-cat-form">
-                            <h4>Update Topic</h4>
+                            <h4>Chỉnh sửa chủ đề</h4>
                             <form th:action="@{/topic/list/update/{id}(id=${ID})}" method="post" th:object="${existTopic}">
                                 <div class="form-group row">
-                                    <label for="name" class="col-12 col-form-label">Name</label>
+                                    <label for="name" class="col-12 col-form-label">Tên chủ đề</label>
                                     <div class="col-12">
                                         <input id="name" th:field="*{name}" name="name" class="form-control here slug-title" type="text">
                                     </div>
                                     <label th:if="${#fields.hasErrors('name')}" th:errors="*{name}" for="name" class="form-label text-danger"></label>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-12 col-form-label">Description</label>
+                                    <label class="col-12 col-form-label">Mô tả</label>
                                     <div class="col-12">
                                         <textarea th:field="*{description}" id="description" name="description" cols="40" rows="2" class="form-control"></textarea>
                                     </div>
                                     <label th:if="${#fields.hasErrors('description')}" th:errors="*{description}" for="description" class="form-label text-danger"></label>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-12 col-form-label">Select Subject</label>
+                                    <label class="col-12 col-form-label">Chọn môn thi</label>
                                     <select name="subject_id" id="subjects" class="form-select" th:field="*{subject.id}">
                                         <th:block th:each="subject : ${subjectList}">
                                             <option th:value="${subject.id}" th:text="${subject.name}"></option></th:block>
@@ -39,30 +39,30 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
-                                        <button name="submit" type="submit" class="btn btn-primary">Submit</button>
+                                        <button name="submit" type="submit" class="btn btn-primary">Thêm</button>
                                     </div>
                                 </div>
                             </form>
                         </div>
                         <div th:case="*" class="ec-cat-form">
-                            <h4>Add New Topic</h4>
+                            <h4>Thêm chủ đề</h4>
                             <form action="/topic/list/create" method="post" th:object="${topic}">
                                 <div class="form-group row">
-                                    <label for="name" class="col-12 col-form-label">Name</label>
+                                    <label for="name" class="col-12 col-form-label">Tên chủ đề</label>
                                     <div class="col-12">
                                         <input id="name" th:field="*{name}" name="name" class="form-control here slug-title" type="text">
                                     </div>
                                     <label th:if="${#fields.hasErrors('name')}" th:errors="*{name}" for="name" class="form-label text-danger"></label>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-12 col-form-label">Description</label>
+                                    <label class="col-12 col-form-label">Mô tả</label>
                                     <div class="col-12">
                                         <textarea th:field="*{description}" id="description" name="description" cols="40" rows="2" class="form-control"></textarea>
                                     </div>
                                     <label th:if="${#fields.hasErrors('description')}" th:errors="*{description}" for="description" class="form-label text-danger"></label>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-12 col-form-label">Select Subject</label>
+                                    <label class="col-12 col-form-label">Chọn môn thi</label>
                                     <select name="subject_id" id="subjects" class="form-select" th:field="*{subject_id}">
                                         <th:block th:each="subject : ${subjectList}">
                                             <option th:value="${subject.id}" th:text="${subject.name}"></option></th:block>
@@ -70,7 +70,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
-                                        <button name="submit" type="submit" class="btn btn-primary">Submit</button>
+                                        <button name="submit" type="submit" class="btn btn-primary">Thêm</button>
                                     </div>
                                 </div>
                             </form>

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments::head('Topics')">
+<head th:replace="fragments::head('Chủ đề')">
 </head>
 <body class="ec-header-fixed ec-sidebar-fixed ec-sidebar-dark ec-header-light" id="body">
 <div class="wrapper">
@@ -13,9 +13,9 @@
                     <div>
                     <h1>Topic</h1>
                     <p class="breadcrumbs"><span><a href="index.html">Home</a></span>
-                        <span><i class="mdi mdi-chevron-right"></i></span>Topic</p></div>
+                        <span><i class="mdi mdi-chevron-right"></i></span>Chủ đề</p></div>
                     <div>
-                        <a type="button" class="btn btn-primary" th:href="@{/topic/list/create}" > Add Topic
+                        <a type="button" class="btn btn-primary align-items-center d-flex" th:href="@{/topic/list/create}" > Thêm chủ đề
                         </a>
                     </div>
                 </div>
@@ -36,25 +36,26 @@
                                     </ul>
                                 </div>
                                 <div>
-                                    <table id="responsive-data-table" class="table">
+                                    <table id="responsive-data-table" class="table table-bordered text-center">
                                         <thead>
                                         <tr>
-                                            <th class="col-2">Name</th>
-                                            <th class="col-8">Description</th>
-                                            <th class="col-1">Total Exam</th>
-                                            <th class="col-1">Action</th>
+                                            <th scope="col">Tên chủ đề</th>
+                                            <th scope="col">Mô tả</th>
+                                            <th scope="col">Tổng số đề thi</th>
+                                            <th scope="col">Hành động</th>
                                         </tr>
                                         </thead>
 
                                         <tbody>
-                                        <tr th:each="topic : ${topicList}">
+                                        <tr th:each="topic, iterStat : ${topicList}">
                                             <td th:text="${topic.name}"></td>
                                             <td></td>
                                             <td></td>
                                             <td>
                                                 <div class="btn-group">
-                                                    <button type="button"
-                                                            class="btn btn-outline-success">Info</button>
+                                                    <a type="button"
+                                                            class="btn btn-outline-success align-items-center d-flex"
+                                                    th:href="@{/exam/list(subject=${subjectIndex}, topic=${iterStat.index})}">Chi tiết</a>
                                                     <button type="button"
                                                             class="btn btn-outline-success dropdown-toggle dropdown-toggle-split"
                                                             data-bs-toggle="dropdown" aria-haspopup="true"
@@ -63,10 +64,10 @@
                                                     </button>
                                                     <div class="dropdown-menu">
                                                         <a class="dropdown-item"
-                                                           th:href="@{/topic/list/update/{id}(id=${topic.id})}">Edit</a>
+                                                           th:href="@{/topic/list/update/{id}(id=${topic.id})}">Sửa</a>
                                                         <a class="dropdown-item"
                                                            th:href="@{/topic/list/delete/{id}(id=${topic.id})}"
-                                                           onclick="return confirm('Bạn có muốn xóa?')">Delete</a>
+                                                           onclick="return confirm('Bạn có muốn xóa?')">Xóa</a>
                                                     </div>
                                                 </div>
                                             </td>

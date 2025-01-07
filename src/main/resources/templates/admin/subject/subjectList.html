@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments::head('Subjects')">
+<head th:replace="fragments::head('Môn thi')">
 </head>
 <body class="ec-header-fixed ec-sidebar-fixed ec-sidebar-dark ec-header-light" id="body">
 <div class="wrapper">
@@ -12,23 +12,23 @@
         <div class="breadcrumb-wrapper breadcrumb-wrapper-2 breadcrumb-contacts">
           <h1>Subject</h1>
           <p class="breadcrumbs"><span><a href="index.html">Home</a></span>
-            <span><i class="mdi mdi-chevron-right"></i></span>Subject</p>
+            <span><i class="mdi mdi-chevron-right"></i></span>Môn thi</p>
         </div>
         <div class="row">
           <div class="col-xl-4 col-lg-12">
             <div class="ec-cat-list card card-default mb-24px">
               <div class="card-body">
                 <div class="ec-cat-form">
-                  <h4>Add New Subject</h4>
-                  <form action="/list" method="post" th:object="${subject}" enctype="multipart/form-data">
+                  <h4>Thêm mới môn thi</h4>
+                  <form action="/subject/list" method="post" th:object="${subject}" enctype="multipart/form-data">
                     <div class="form-group row">
-                      <label for="thumb" class="col-12 col-form-label">Thumb</label>
+                      <label for="thumb" class="col-12 col-form-label">Ảnh</label>
                       <div class="col-12" >
                         <input id="thumb" name="fileImage" class="form-control" type="file">
                       </div>
                     </div>
                     <div class="form-group row">
-                      <label for="name" class="col-12 col-form-label">Name</label>
+                      <label for="name" class="col-12 col-form-label">Tên môn thi</label>
                       <div class="col-12">
                         <input id="name" th:field="*{name}" name="text" class="form-control here slug-title" type="text">
                       </div>
@@ -36,7 +36,7 @@
                     </div>
                     <div class="row">
                       <div class="col-12">
-                        <button name="submit" type="submit" class="btn btn-primary">Submit</button>
+                        <button name="submit" type="submit" class="btn btn-primary">Thêm</button>
                       </div>
                     </div>
                   </form>
@@ -48,27 +48,29 @@
             <div class="ec-cat-list card card-default">
               <div class="card-body">
                 <div>
-                  <table id="responsive-data-table" class="table">
+                  <table id="responsive-data-table" class="table table-bordered text-center">
                     <thead>
                     <tr>
-                      <th>Thumb</th>
-                      <th>Name</th>
-                      <th>Total Topic</th>
-                      <th>Action</th>
+                      <th scope="col" >Ảnh</th>
+                      <th scope="col">Tên môn thi</th>
+                      <th scope="col">Số lượng chủ đề</th>
+                      <th scope="col">Hành động</th>
                     </tr>
                     </thead>
 
                     <tbody>
-                    <tr th:each="subject : ${subjectList}">
+                    <tr th:each="subject, iterStat : ${subjectList}">
                       <td>
-                        <img class="icon-subject" th:src="'/image-file/' + ${subject.image_name}" >
+                        <img width="50px" height="50px" th:src="'/image-file/' + ${subject.image_name}" >
                       </td>
                       <td th:text="${subject.name}"></td>
                       <td th:text="${subject.getTopics().size()}"></td>
                       <td>
                         <div class="btn-group">
-                          <button type="button"
-                                  class="btn btn-outline-success">Info</button>
+                          <a type="button"
+                                  class="btn btn-outline-success align-items-center d-flex"
+                             th:href="@{/topic/list?subject={subject}&topic=0(subject=${iterStat.index})}"
+                                  >Chi tiết</a>
                           <button type="button"
                                   class="btn btn-outline-success dropdown-toggle dropdown-toggle-split"
                                   data-bs-toggle="dropdown" aria-haspopup="true"
@@ -78,11 +80,11 @@
                           <div class="dropdown-menu">
                             <a class="dropdown-item"
                                href="#"
-                               role="button">Edit</a>
+                               role="button">Sửa</a>
                             <a class="dropdown-item"
-                               th:href="@{/list/delete/{id} (id=${subject.id})}"
+                               th:href="@{/subject/list/delete/{id} (id=${subject.id})}"
                                role="button"
-                               onclick="return confirm('Bạn có muốn xóa?')">Delete</a>
+                               onclick="return confirm('Bạn có muốn xóa?')">Xóa</a>
                           </div>
                         </div>
                       </td>

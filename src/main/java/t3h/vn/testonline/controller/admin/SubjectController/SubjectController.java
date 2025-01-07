@@ -1,4 +1,4 @@
-package t3h.vn.testonline.controller.SubjectController;
+package t3h.vn.testonline.controller.admin.SubjectController;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,14 +13,14 @@ import t3h.vn.testonline.service.SubjectService;
 
 import java.util.List;
 
-//@RequestMapping("")
+@RequestMapping("/subject/list")
 @Controller
 public class SubjectController {
 
     @Autowired
     SubjectService subjectService;
 
-    @GetMapping("/list")
+    @GetMapping
     public String subjectList(Model model){
         List<SubjectEntity> subjectList = subjectService.getAll();
         model.addAttribute("subjectList", subjectList);
@@ -28,7 +28,7 @@ public class SubjectController {
         return "admin/subject/subjectList";
     }
 
-    @PostMapping("/list")
+    @PostMapping
     public String createSubject(Model model, @Valid @ModelAttribute("subject") SubjectDto subject,
                               BindingResult result, RedirectAttributes redirectAttributes){
         if (result.hasErrors()){
@@ -39,16 +39,16 @@ public class SubjectController {
                 subjectService.save(subject);
         }
         redirectAttributes.addAttribute("message", "Thêm môn thi thành công");
-        return "redirect:/list";
+        return "redirect:/subject/list";
     }
 
-    @GetMapping("/list/delete/{id}")
+    @GetMapping("/delete/{id}")
     public String deleteSubject(Model model, @PathVariable Long id){
         subjectService.delete(id);
-        return "redirect:/list";
+        return "redirect:/subject/list";
     }
 
-    @GetMapping("/list/update/{id}")
+    @GetMapping("/update/{id}")
     public String updateSubject(Model model, @PathVariable Long id){
         List<SubjectEntity> subjectList = subjectService.getAll();
         SubjectEntity existSubject = subjectService.getById(id);
@@ -58,7 +58,7 @@ public class SubjectController {
         return "admin/subject/subjectList";
     }
 
-    @PostMapping("/list/update/{id}")
+    @PostMapping("/update/{id}")
     public String update(Model model, @Valid @ModelAttribute("subject") SubjectDto subject,
                                 BindingResult result, RedirectAttributes redirectAttributes, @PathVariable Long id){
         if (result.hasErrors()){
@@ -72,6 +72,6 @@ public class SubjectController {
             subjectService.save(subject);
         }
         redirectAttributes.addAttribute("message", "Thêm môn thi thành công");
-        return "redirect:/list";
+        return "redirect:/subject/list";
     }
 }

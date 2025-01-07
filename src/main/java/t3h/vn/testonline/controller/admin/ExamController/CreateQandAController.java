@@ -1,6 +1,5 @@
-package t3h.vn.testonline.controller.ExamController;
+package t3h.vn.testonline.controller.admin.ExamController;
 
-import com.sun.jdi.connect.ListeningConnector;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -75,7 +74,6 @@ public class CreateQandAController {
             return "admin/exam/createQandA";
         }
         List<QuestionDto> questions = (List<QuestionDto>) model.getAttribute("questions");
-//        currentQuestion.setExam_id(examId);
         for (int i = 0; i < 4; i++){
             if (correct == i) currentQuestion.getOptions().get(i).setIs_correct(true);
             else currentQuestion.getOptions().get(i).setIs_correct(false);

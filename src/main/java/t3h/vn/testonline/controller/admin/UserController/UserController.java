@@ -1,4 +1,4 @@
-package t3h.vn.testonline.controller.UserController;
+package t3h.vn.testonline.controller.admin.UserController;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

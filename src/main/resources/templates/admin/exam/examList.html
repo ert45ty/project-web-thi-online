@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments::head('Subjects')">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head th:replace="fragments::head('Đề thi')">
 </head>
 <body class="ec-header-fixed ec-sidebar-fixed ec-sidebar-dark ec-header-light" id="body">
 <div class="wrapper">
@@ -11,9 +11,9 @@
       <div class="content">
         <div class="breadcrumb-wrapper breadcrumb-wrapper-2 breadcrumb-contacts">
 
-          <h1>Subject</h1>
+          <h1>Đề thi</h1>
           <p class="breadcrumbs"><span><a href="index.html">Home</a></span>
-            <span><i class="mdi mdi-chevron-right"></i></span>Exams</p></div>
+            <span><i class="mdi mdi-chevron-right"></i></span>Đề thi</p></div>
         <div class="row">
           <div class="col-xl-12 col-lg-12">
             <div class="ec-cat-list card card-default">
@@ -37,30 +37,31 @@
                         <h4 th:case="${false}" th:text="${currentTopic.subject.name} + ' - ' + ${currentTopic.name}"></h4>
                     </th:block>
                   <div>
-                    <a type="button" class="btn btn-primary" th:href="@{/exam/list/create}" > Add Exam
+                    <a type="button" class="btn btn-primary align-items-center d-flex" th:href="@{/exam/list/create}" > Thêm đề thi
                     </a>
                   </div>
                 </div>
                 <div>
-                  <table id="responsive-data-table" class="table">
+                  <table id="responsive-data-table" class="table table-bordered text-center">
                     <thead>
                     <tr>
-                      <th class="col-6">Title</th>
-                      <th class="col-2">Total question</th>
-                      <th class="col-2">Duration</th>
-                      <th class="col-2">Action</th>
+                      <th scope="col">Tiêu đề</th>
+                      <th scope="col">Tổng số câu hỏi</th>
+                      <th scope="col">Thời gian làm bài</th>
+                      <th scope="col">Hành động</th>
                     </tr>
                     </thead>
-
                     <tbody>
-                    <tr th:each="exam : ${examList}">
+                    <tr th:each="exam, iterStat : ${examList}">
                       <td th:text="${exam.title}"></td>
                       <td th:text="${exam.total_question}"></td>
                       <td th:text="${exam.duration}/60 + ' phút'"></td>
                       <td>
                         <div class="btn-group">
-                          <button type="button"
-                                  class="btn btn-outline-success">Info</button>
+                          <a type="button"
+                                  class="btn btn-outline-success align-items-center d-flex"
+                          th:href="@{/exam/list/detail(subject=${subjectIndex}, topic=${topicIndex}, exam=${iterStat.index})}"
+                          >Chi tiết</a>
                           <button type="button"
                                   class="btn btn-outline-success dropdown-toggle dropdown-toggle-split"
                                   data-bs-toggle="dropdown" aria-haspopup="true"
@@ -70,18 +71,26 @@
                           <div class="dropdown-menu">
                             <a class="dropdown-item"
                                href="#"
-                               role="button">Edit</a>
+                               role="button">Sửa</a>
                             <a class="dropdown-item"
                                th:href="@{/exam/list/delete/{id}(id=${exam.id})}"
                                role="button"
-                               onclick="return confirm('Bạn có muốn xóa?')">Delete</a>
+                               onclick="return confirm('Bạn có muốn xóa?')">Xóa</a>
                           </div>
                         </div>
                       </td>
                     </tr>
                     </tbody>
                   </table>
+
                 </div>
+                  </br>
+                  <div>
+                    <a type="button" class="btn btn-primary" th:if="${topicIndex > 0}" th:href="@{/exam/list(subject=${subjectIndex}, topic=${topicIndex - 1})}" > Chủ đề trước
+                    </a>
+                    <a type="button" class="btn btn-primary" th:if="${topicIndex < totalTopic}" th:href="@{/exam/list(subject=${subjectIndex}, topic=${topicIndex + 1})}" > Chủ đề sau
+                    </a>
+                  </div>
                 </br>
               </div>
               </div>

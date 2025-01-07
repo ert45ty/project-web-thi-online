@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments::head('Exams')">
+<head th:replace="fragments::head('Bài thi')">
 </head>
 <body class="ec-header-fixed ec-sidebar-fixed ec-sidebar-dark ec-header-light" id="body">
 <div class="wrapper">
@@ -27,7 +27,7 @@
                     <div class="form-group row">
                       <div class="d-flex">
                         <label for="option_text">Lựa chọn:</label>
-                        <input type="text" id="option_text" name="option_text" th:field="*{options[__${iterStat.index}__].option_text}" placeholder="Enter answer" required class="mr-1"/>
+                        <input type="text" id="option_text" name="option_text" th:field="*{options[__${iterStat.index}__].option_text}" placeholder="Nhập câu trả lời" required class="mr-1"/>
                       </div>
                       <label th:if="${#fields.hasErrors('options[__${iterStat.index}__].option_text')}" th:errors="*{options[__${iterStat.index}__].option_text}" for="option_text" class="form-label text-danger"></label>
                     </div>
@@ -41,11 +41,11 @@
                     </div>
                     <div class="row">
                       <div class="col-10">
-                        <button type="submit" th:disabled="${currentIndex == 0}" name="action" value="back">Back</button>
+                        <button type="submit" th:disabled="${currentIndex == 0}" name="action" value="back">Quay lại</button>
                       </div>
                     <div class="col-2" th:switch="${currentIndex == (exam.total_question - 1)}">
-                    <button th:case="${false}" type="submit" name="action" value="next">Next</button>
-                    <button th:case="${true}" type="submit" name="finish" value="true">Finish</button>
+                    <button th:case="${false}" type="submit" name="action" value="next">Tiếp</button>
+                    <button th:case="${true}" type="submit" name="finish" value="true">Hoàn thành</button>
                     </div>
                       </div>
                   </form>
