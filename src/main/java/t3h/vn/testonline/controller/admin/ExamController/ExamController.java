@@ -3,6 +3,7 @@ package t3h.vn.testonline.controller.admin.ExamController;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,7 +22,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Controller
-@RequestMapping("/exam/list")
+@RequestMapping("/admin/exam/list")
 public class ExamController {
 
     @Autowired
@@ -32,9 +33,12 @@ public class ExamController {
     SubjectService subjectService;
 
     @GetMapping
-    public String examList(Model model, HttpSession session,
+    public String examList(Model model,
                            @RequestParam(defaultValue = "0") Integer subject,
-                           @RequestParam(defaultValue = "0") Integer topic){
+                           @RequestParam(defaultValue = "0") Integer topic,
+                           @RequestParam(defaultValue = "") String query,
+                           @RequestParam(defaultValue = "1") Integer page,
+                           @RequestParam(defaultValue = "10") Integer perpage){
 
         List<SubjectEntity> subjectList = subjectService.getAll();
         if (subject >= subjectList.size()) {
@@ -53,24 +57,35 @@ public class ExamController {
             return "admin/exam/examList";
         }
         TopicEntity currentTopic;
+        Long topicId = 0L;
         if(topicList == null){
             currentTopic = null;
         }else {
             currentTopic = topicList.get(topic);
+            topicId = currentTopic.getId();
         }
-        List<ExamEntity> examList;
-        if(topicList == null) examList = Collections.emptyList();
-        else examList = examService.getAllByTopicId(topicList.get(topic).getId());
-
+//        List<ExamEntity> examList;
+//        if(topicList == null) examList = Collections.emptyList();
+//        else examList = examService.getAllByTopicId(topicList.get(topic).getId());
 
         model.addAttribute("currentTopic", currentTopic);
         model.addAttribute("subjectList", subjectList);
-        model.addAttribute("examList", examList);
+        model.addAttribute("response", examService.search(topicId, query, page, perpage));
         model.addAttribute("subjectIndex", subject);
         model.addAttribute("topicIndex", topic);
-        session.setAttribute("topicList", topicList);
+        model.addAttribute("topicList", topicList);
         model.addAttribute("totalTopic", totalTopic);
         return "admin/exam/examList";
+    }
+
+    @PostMapping
+    public String querySearch(Model model,
+                              @RequestParam Integer subject,
+                              @RequestParam Integer topic,
+                              @RequestParam String query){
+        model.addAttribute("subjectIndex", subject);
+        model.addAttribute("topicIndex", topic);
+        return examList(model, subject, topic, query, 1, 10);
     }
 
     @GetMapping("create")
@@ -92,13 +107,14 @@ public class ExamController {
         Long examId = examEntity.getId();
         redirectAttributes.addFlashAttribute("exam", examEntity);
         redirectAttributes.addAttribute("examId", examId);
-        return "redirect:/exam/createQandA";
+        return "redirect:/admin/exam/createQandA";
     }
 
-    @GetMapping("/delete/{id}")
-    public String delete(@PathVariable Long id, Model model, HttpSession session){
-        examService.delete(id);
-        return examList(model, session, 0, 0);
+    @GetMapping("/delete")
+    public String delete(@RequestParam Long examId, RedirectAttributes redirectAttributes){
+        examService.delete(examId);
+        redirectAttributes.addAttribute("message", "Xóa thành công");
+        return "redirect:/admin/exam/list";
     }
 
     @GetMapping("/detail")

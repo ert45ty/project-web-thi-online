@@ -6,7 +6,7 @@
 <div class="wrapper">
     <div th:replace="fragments::sidebar('topics')"></div>
     <div class="ec-page-wrapper">
-        <header th:replace="fragments::header()"></header>
+        <header th:replace="fragments::header('topic')"></header>
         <div class="ec-content-wrapper">
             <div class="content">
         <div class="row">
@@ -15,7 +15,7 @@
                     <div th:switch="${is_update}" class="card-body">
                         <div th:case="update" class="ec-cat-form">
                             <h4>Chỉnh sửa chủ đề</h4>
-                            <form th:action="@{/topic/list/update/{id}(id=${ID})}" method="post" th:object="${existTopic}">
+                            <form th:action="@{/admin/topic/list/update/{id}(id=${ID})}" method="post" th:object="${existTopic}">
                                 <div class="form-group row">
                                     <label for="name" class="col-12 col-form-label">Tên chủ đề</label>
                                     <div class="col-12">
@@ -46,7 +46,7 @@
                         </div>
                         <div th:case="*" class="ec-cat-form">
                             <h4>Thêm chủ đề</h4>
-                            <form action="/topic/list/create" method="post" th:object="${topic}">
+                            <form action="/admin/topic/list/create" method="post" th:object="${topic}">
                                 <div class="form-group row">
                                     <label for="name" class="col-12 col-form-label">Tên chủ đề</label>
                                     <div class="col-12">

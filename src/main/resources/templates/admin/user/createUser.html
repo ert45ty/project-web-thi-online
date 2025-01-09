@@ -6,7 +6,7 @@
 <div class="wrapper">
   <div th:replace="fragments::sidebar('users')"></div>
   <div class="ec-page-wrapper">
-    <header th:replace="fragments::header()"></header>
+    <header th:replace="fragments::header('user')"></header>
     <div class="ec-content-wrapper">
       <div class="content">
         <div class="row">
@@ -15,7 +15,7 @@
               <div th:switch="${is_update}" class="card-body">
                 <div th:case="update" class="ec-cat-form">
                   <h4>Sửa tài khoản</h4>
-                  <form th:action="@{/user/list/update/{id}(id=${ID})}" method="post" th:object="${existUser}" enctype="multipart/form-data">
+                  <form th:action="@{/admin/user/list/update/{id}(id=${ID})}" method="post" th:object="${existUser}" enctype="multipart/form-data">
                     <div class="form-group row">
                       <label for="fullname" class="col-12 col-form-label">Tên đầy đủ</label>
                       <div class="col-12">
@@ -59,7 +59,7 @@
                 <div th:case="detail" class="ec-cat-form">
                   <h4>Chi tiết tài khoản</h4>
                   <form th:object="${existUser}">
-                    <div class="form-group row">
+                    <div class="form-group row ">
                       <label for="fullname" class="col-12 col-form-label">Tên đầy đủ</label>
                       <div class="col-12">
                         <input readonly id="fullname" th:field="*{fullname}" name="fullname" class="form-control here slug-title" type="text">
@@ -71,6 +71,15 @@
                         <input readonly id="username" th:field="*{username}" name="username" class="form-control here slug-title" type="text">
                       </div>
                     </div>
+                    <div class="d-flex g-3">
+                    <div class="col-md-6">
+                      <label class="form-label">Tổng số bình luận</label>
+                      <input readonly type="text" class="form-control" id="comments" th:value="${#lists.size(existUser.comments)}">
+                    </div>
+                    <div class="col-md-6">
+                    <label class="form-label">Tổng số bài thi đã làm</label>
+                    <input readonly type="text" class="form-control" id="results" th:value="${#lists.size(existUser.results)}">
+                  </div></div>
                     <div class="form-group row">
                       <label class="col-12 col-form-label">Hình ảnh</label>
                       <div class="col-12">
@@ -93,7 +102,7 @@
                 </div>
                 <div th:case="*" class="ec-cat-form">
                   <h4>Thêm tài khoản</h4>
-                  <form action="/user/list/create" method="post" th:object="${user}" enctype="multipart/form-data">
+                  <form action="/admin/user/list/create" method="post" th:object="${user}" enctype="multipart/form-data">
                     <div class="form-group row">
                       <label for="fullname" class="col-12 col-form-label">Tên đầy đủ</label>
                       <div class="col-12">

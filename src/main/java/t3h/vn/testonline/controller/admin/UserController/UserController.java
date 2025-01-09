@@ -15,17 +15,25 @@ import t3h.vn.testonline.service.UserService;
 import java.util.List;
 
 @Controller
-@RequestMapping("/user/list")
+@RequestMapping("/admin/user/list")
 public class UserController {
 
     @Autowired
     UserService userService;
 
     @GetMapping
-    public String userList(Model model){
-        List<UserEntity> userList = userService.getAll();
-        model.addAttribute("userList", userList);
+    public String userList(Model model,
+                           @RequestParam(defaultValue = "") String query,
+                           @RequestParam(defaultValue = "1") Integer page,
+                           @RequestParam(defaultValue = "10") Integer perpage){
+
+        model.addAttribute("response", userService.search(query, page, perpage));
         return "admin/user/userList";
+    }
+
+    @PostMapping
+    public String querySearch(Model model, @RequestParam String query){
+        return userList(model, query, 1, 10);
     }
 
     @GetMapping("/create")
@@ -42,13 +50,13 @@ public class UserController {
         }
         userService.save(user);
         redirectAttributes.addAttribute("message", "Thêm mới người dùng thành công");
-        return "redirect:/user/list";
+        return "redirect:/admin/user/list";
     }
 
     @GetMapping("/delete/{id}")
     public String delete(Model model, @PathVariable Long id){
         userService.delete(id);
-        return userList(model);
+        return "redirect:/admin/user/list";
     }
 
     @GetMapping("update/{id}")
@@ -70,7 +78,7 @@ public class UserController {
         }
         userService.update(user, fileImage);
         redirectAttributes.addAttribute("message", "cập nhật người dùng thành công");
-        return "redirect:/user/list";
+        return "redirect:/admin/user/list";
     }
 
     @GetMapping("detail/{id}")

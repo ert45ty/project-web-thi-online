@@ -13,7 +13,7 @@ import t3h.vn.testonline.service.SubjectService;
 
 import java.util.List;
 
-@RequestMapping("/subject/list")
+@RequestMapping("/admin/subject/list")
 @Controller
 public class SubjectController {
 
@@ -21,14 +21,22 @@ public class SubjectController {
     SubjectService subjectService;
 
     @GetMapping
-    public String subjectList(Model model){
-        List<SubjectEntity> subjectList = subjectService.getAll();
-        model.addAttribute("subjectList", subjectList);
+    public String subjectList(Model model,
+                              @RequestParam(defaultValue = "") String query,
+                              @RequestParam(defaultValue = "1") Integer page,
+                              @RequestParam(defaultValue = "10") Integer perpage){
+
+        model.addAttribute("response", subjectService.search(query, page, perpage));
         model.addAttribute("subject", new SubjectDto());
         return "admin/subject/subjectList";
     }
 
     @PostMapping
+    public String querySearch(Model model, @RequestParam String query){
+        return subjectList(model, query, 1, 10);
+    }
+
+    @PostMapping("/create")
     public String createSubject(Model model, @Valid @ModelAttribute("subject") SubjectDto subject,
                               BindingResult result, RedirectAttributes redirectAttributes){
         if (result.hasErrors()){
@@ -39,13 +47,13 @@ public class SubjectController {
                 subjectService.save(subject);
         }
         redirectAttributes.addAttribute("message", "Thêm môn thi thành công");
-        return "redirect:/subject/list";
+        return "redirect:/admin/subject/list";
     }
 
     @GetMapping("/delete/{id}")
     public String deleteSubject(Model model, @PathVariable Long id){
         subjectService.delete(id);
-        return "redirect:/subject/list";
+        return "redirect:/admin/subject/list";
     }
 
     @GetMapping("/update/{id}")
@@ -72,6 +80,6 @@ public class SubjectController {
             subjectService.save(subject);
         }
         redirectAttributes.addAttribute("message", "Thêm môn thi thành công");
-        return "redirect:/subject/list";
+        return "redirect:/admin/subject/list";
     }
 }

@@ -6,7 +6,7 @@
 <div class="wrapper">
   <div th:replace="fragments::sidebar('exams')"></div>
   <div class="ec-page-wrapper">
-    <header th:replace="fragments::header()"></header>
+    <header th:replace="fragments::header('exam')"></header>
     <div class="ec-content-wrapper">
       <div class="content">
         <div class="row">
@@ -15,7 +15,7 @@
               <div class="card-body">
                 <div class="ec-cat-form">
                   <h4 th:text="'Câu hỏi số ' + ${currentIndex + 1}"></h4>
-                  <form th:action="@{/exam/createQandA(examId=${examId}, currentIndex=${currentIndex})}" method="post" th:object="${currentQuestion}">
+                  <form th:action="@{/admin/exam/createQandA(examId=${examId}, currentIndex=${currentIndex})}" method="post" th:object="${currentQuestion}">
                     <div class="form-group row">
                       <label class="col-12 col-form-label">Nội dung câu hỏi:</label>
                       <div class="col-12">

@@ -2,9 +2,7 @@ package t3h.vn.testonline.service;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import t3h.vn.testonline.dto.TopicDto;
 import t3h.vn.testonline.entities.SubjectEntity;
@@ -24,9 +22,19 @@ public class TopicService {
     public List<TopicEntity> getAll(){
         return topicRepo.findAll();
     }
-    public Page<TopicEntity> get10perpage(Integer page, Integer perpage){
+    public Page<TopicEntity> search(Long id, String query, Integer page, Integer perpage){
+        SubjectEntity subject = new SubjectEntity();
+        subject.setId(id);
+        TopicEntity exampleTopic = new TopicEntity();
+        exampleTopic.setSubject(subject);
+        Example<TopicEntity> topic = Example.of(exampleTopic);
         Pageable pageable = PageRequest.of(page - 1, perpage);
-        Page<TopicEntity> pageResult = topicRepo.findAll(pageable);
+        Page<TopicEntity> pageResult;
+        if (query != null && !query.isEmpty()){
+            pageResult = topicRepo.findAllBySubject_IdAndNameContaining(id, query, pageable);
+            return pageResult;
+        }
+        pageResult = topicRepo.findAll(topic, pageable);
         return pageResult;
     }
 

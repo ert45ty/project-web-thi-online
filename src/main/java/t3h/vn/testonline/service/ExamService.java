@@ -2,6 +2,10 @@ package t3h.vn.testonline.service;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import t3h.vn.testonline.dto.ExamDto;
 import t3h.vn.testonline.entities.ExamEntity;
@@ -20,6 +24,22 @@ public class ExamService {
 
     public List<ExamEntity> getAllByTopicId(Long id){
         return examRepo.getExamEntityByTopic_Id(id);
+    }
+
+    public Page<ExamEntity> search(Long id,String query, Integer page, Integer perpage){
+        TopicEntity exampleTopic = new TopicEntity();
+        exampleTopic.setId(id);
+        ExamEntity exampleExam = new ExamEntity();
+        exampleExam.setTopic(exampleTopic);
+        Example<ExamEntity> exam = Example.of(exampleExam);
+        Pageable pageable = PageRequest.of(page - 1, perpage);
+        Page<ExamEntity> result;
+        if (query != null && !query.isEmpty()){
+            result = examRepo.findAllByTopic_IdAndTitle(id, query, pageable);
+            return result;
+        }
+        result = examRepo.findAll(exam, pageable);
+        return result;
     }
 
     public ExamEntity getExamById(Long id){

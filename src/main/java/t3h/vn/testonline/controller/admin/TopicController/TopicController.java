@@ -17,7 +17,7 @@ import t3h.vn.testonline.service.TopicService;
 import java.util.List;
 
 @Controller
-@RequestMapping("/topic/list")
+@RequestMapping("/admin/topic/list")
 public class TopicController {
 
     @Autowired
@@ -27,17 +27,28 @@ public class TopicController {
 
     @GetMapping
     public String topicList(Model model,
-                            @RequestParam(defaultValue = "0") Integer subject){
-        List<TopicEntity> topicList;
+                            @RequestParam(defaultValue = "0") Integer subject,
+                            @RequestParam(defaultValue = "") String query,
+                            @RequestParam(defaultValue = "1") Integer page,
+                            @RequestParam(defaultValue = "10") Integer perpage){
+
         List<SubjectEntity> subjectList = subjectService.getAll();
+        Long id = subjectList.get(subject).getId();
 
-        topicList = topicService.getAllBySubjectId(subjectList.get(subject).getId());
-
-        model.addAttribute("topicList", topicList);
+//        model.addAttribute("topicList", topicService.getAllBySubjectId(id));
+        model.addAttribute("response", topicService.search(id, query, page, perpage));
         model.addAttribute("subjectList", subjectList);
         model.addAttribute("subjectIndex", subject);
 
         return "admin/topic/topicList";
+    }
+
+    @PostMapping
+    public String querySearch(Model model,
+                              @RequestParam(defaultValue = "0") Integer subject,
+                              @RequestParam String query){
+        model.addAttribute("subjectIndex", subject);
+        return topicList(model, subject, query, 1, 10);
     }
 
     @GetMapping("/create")
@@ -49,20 +60,22 @@ public class TopicController {
     }
 
     @PostMapping("/create")
-    public String createTopic(@Valid @ModelAttribute("topic") TopicDto topic, Model model, RedirectAttributes redirectAttributes, BindingResult result){
+    public String createTopic(@Valid @ModelAttribute("topic") TopicDto topic,
+                              Model model, RedirectAttributes redirectAttributes,
+                              BindingResult result){
 
         if(result.hasErrors()){
             return "admin/topic/createTopic";
         }
         topicService.save(topic);
         redirectAttributes.addAttribute("message", "Thêm chủ đề thành công");
-        return "redirect:/topic/list";
+        return "redirect:/admin/topic/list";
     }
 
     @GetMapping("/delete/{id}")
     public String delete(Model model, @PathVariable Long id){
         topicService.delete(id);
-        return topicList(model, 0);
+        return "redirect:/admin/topic/list";
     }
 
     @GetMapping("/update/{id}")
@@ -85,6 +98,6 @@ public class TopicController {
         }
         topicService.update(topic);
         redirectAttributes.addAttribute("message", "Cập nhật chủ đề thành công");
-        return "redirect:/topic/list";
+        return "redirect:/admin/topic/list";
     }
 }

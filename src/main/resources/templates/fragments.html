@@ -77,19 +77,23 @@
   <script src="/js/main.js"></script>
 </head>
 
-<header th:fragment="header()" class="ec-main-header" id="header">
+<header th:fragment="header(page)" class="ec-main-header" id="header">
   <nav class="navbar navbar-static-top navbar-expand-lg">
     <!-- Sidebar toggle button -->
     <button id="sidebar-toggler" class="sidebar-toggle"></button>
     <!-- search form -->
     <div class="search-form d-lg-inline-block">
-      <div class="input-group">
+
+        <form th:action="@{${page == 'user' ? '/admin/user/list' :
+                            page == 'subject' ? '/admin/subject/list' : ''}}" method="post" >
+          <div class="input-group">
         <input type="text" name="query" id="search-input" class="form-control"
+               th:value="${query}"
                placeholder="search.." autofocus autocomplete="off" />
         <button type="button" name="search" id="search-btn" class="btn btn-flat">
           <i class="mdi mdi-magnify"></i>
         </button>
-      </div>
+      </div></form>
       <div id="search-results-container">
         <ul id="search-results"></ul>
       </div>
@@ -143,7 +147,7 @@
         </li>
         <!-- Users -->
         <li class="has-sub" th:classappend="${is_active.equals('users')? 'active' : '' }">
-          <a class="sidenav-item-link" th:href="@{/user/list}">
+          <a class="sidenav-item-link" th:href="@{/admin/user/list}">
             <i class="mdi mdi-account-group"></i>
             <span class="nav-text">Tài khoản</span>
           </a>
@@ -152,7 +156,7 @@
 
 
         <li class="has-sub" th:classappend="${is_active.equals('subjects')? 'active' : '' }">
-          <a class="sidenav-item-link" th:href="@{/subject/list}">
+          <a class="sidenav-item-link" th:href="@{/admin/subject/list}">
             <i class="mdi mdi-dns-outline"></i>
             <span class="nav-text">Môn thi</span>
           </a>
@@ -160,7 +164,7 @@
 
 
         <li class="has-sub" th:classappend="${is_active.equals('topics')? 'active' : '' }">
-          <a class="sidenav-item-link" th:href="@{/topic/list?subject=0}">
+          <a class="sidenav-item-link" th:href="@{/admin/topic/list?subject=0}">
             <i class="mdi mdi-palette-advanced"></i>
             <span class="nav-text">Chủ đề</span>
           </a>
@@ -168,7 +172,7 @@
 
 
         <li class="has-sub" th:classappend="${is_active.equals('exams')? 'active' : '' }">
-          <a class="sidenav-item-link" th:href="@{/exam/list?subject=0&topic=0}">
+          <a class="sidenav-item-link" th:href="@{/admin/exam/list?subject=0&topic=0}">
             <i class="mdi mdi-tag-faces"></i>
             <span class="nav-text">Bài thi</span>
           </a>

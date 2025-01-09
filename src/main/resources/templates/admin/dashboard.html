@@ -1,10 +1,65 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments::head('Trang chủ')">
 </head>
-<body>
+<body class="ec-header-fixed ec-sidebar-fixed ec-sidebar-dark ec-header-light" id="body">
+<div class="wrapper">
+    <div th:replace="fragments::sidebar('dashboard')"></div>
+    <div class="ec-page-wrapper">
+        <header th:replace="fragments::header()"></header>
+        <div class="ec-content-wrapper">
+            <div class="content">
+                <div class="row">
+                    <div class="col-xl-8 col-lg-12 mx-auto">
+                        <div class="ec-cat-list card card-default mb-24px">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-xl-6 col-sm-6 p-b-15 lbl-card">
+                                        <div class="card card-mini dash-card card-1">
+                                            <div class="card-body">
+                                                <h2 class="mb-1" th:text="${totalUser}"></h2>
+                                                <p>Tài khoản</p>
+                                                <span class="mdi mdi-account-arrow-left"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-sm-6 p-b-15 lbl-card">
+                                        <div class="card card-mini dash-card card-2">
+                                            <div class="card-body">
+                                                <h2 class="mb-1" th:text="${totalSubject}"></h2>
+                                                <p>Môn thi</p>
+                                                <span class="mdi mdi-account-clock"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-sm-6 p-b-15 lbl-card">
+                                        <div class="card card-mini dash-card card-3">
+                                            <div class="card-body">
+                                                <h2 class="mb-1" th:text="${totalTopic}"></h2>
+                                                <p>Chủ đề</p>
+                                                <span class="mdi mdi-package-variant"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-sm-6 p-b-15 lbl-card">
+                                        <div class="card card-mini dash-card card-4">
+                                            <div class="card-body">
+                                                <h2 class="mb-1" th:text="${totalExam}"></h2>
+                                                <p>Đề thi</p>
+                                                <span class="mdi mdi-currency-usd"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
+        <footer th:replace="fragments::footer()"></footer>
+    </div>
+</div>
 </body>
 </html>

@@ -2,6 +2,9 @@ package t3h.vn.testonline.service;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import t3h.vn.testonline.dto.SubjectDto;
 import t3h.vn.testonline.entities.SubjectEntity;
@@ -20,6 +23,17 @@ public class SubjectService {
 
     public List<SubjectEntity> getAll(){
         return subjectRepo.findAll();
+    }
+
+    public Page<SubjectEntity> search(String query, Integer page, Integer perpage){
+        Pageable pageable = PageRequest.of(page - 1, perpage);
+        Page<SubjectEntity> pageResult;
+        if (query != null && !query.isEmpty()){
+            pageResult = subjectRepo.findAllByNameContaining(query, pageable);
+            return pageResult;
+        }
+        pageResult = subjectRepo.findAll(pageable);
+        return pageResult;
     }
 
     public void save(SubjectDto subjectDto){

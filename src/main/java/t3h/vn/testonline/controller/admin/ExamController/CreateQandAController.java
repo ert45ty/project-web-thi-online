@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Controller
-@RequestMapping("/exam")
+@RequestMapping("/admin/exam")
 @SessionAttributes({"exam", "questions", "examId"})
 public class CreateQandAController {
 
@@ -100,7 +100,7 @@ public class CreateQandAController {
                 }
             }
             sessionStatus.setComplete();
-            return "redirect:/exam/list";
+            return "redirect:/admin/exam/list";
         }
         QuestionDto question;
         if (questions.size() > currentIndex){
