@@ -34,8 +34,9 @@ public class TopicController {
 
         List<SubjectEntity> subjectList = subjectService.getAll();
         Long id = subjectList.get(subject).getId();
+        String message = (String) model.asMap().get("message");
 
-//        model.addAttribute("topicList", topicService.getAllBySubjectId(id));
+        model.addAttribute("message", message);
         model.addAttribute("response", topicService.search(id, query, page, perpage));
         model.addAttribute("subjectList", subjectList);
         model.addAttribute("subjectIndex", subject);
@@ -60,30 +61,37 @@ public class TopicController {
     }
 
     @PostMapping("/create")
-    public String createTopic(@Valid @ModelAttribute("topic") TopicDto topic,
+    public String createTopic(@Valid @ModelAttribute("topic")TopicDto topic,
                               Model model, RedirectAttributes redirectAttributes,
                               BindingResult result){
 
         if(result.hasErrors()){
+            model.addAttribute("subjectList", subjectService.getAll());
             return "admin/topic/createTopic";
         }
         topicService.save(topic);
-        redirectAttributes.addAttribute("message", "Thêm chủ đề thành công");
+        redirectAttributes.addFlashAttribute("message", "*Thêm chủ đề thành công");
         return "redirect:/admin/topic/list";
     }
 
     @GetMapping("/delete/{id}")
-    public String delete(Model model, @PathVariable Long id){
+    public String delete(Model model, @PathVariable Long id, RedirectAttributes redirectAttributes){
         topicService.delete(id);
+        redirectAttributes.addFlashAttribute("message", "Xóa chủ đề thành công");
         return "redirect:/admin/topic/list";
     }
 
     @GetMapping("/update/{id}")
     public String updateTopic(Model model, @PathVariable Long id){
         TopicEntity existTopic = topicService.getById(id);
+        TopicDto topicDto = new TopicDto();;
+        topicDto.setId(existTopic.getId());
+        topicDto.setName(existTopic.getName());
+        topicDto.setDescription(existTopic.getDescription());
+        topicDto.setSubject_id(existTopic.getSubject().getId());
         List<SubjectEntity> subjectList = subjectService.getAll();
         model.addAttribute("subjectList", subjectList);
-        model.addAttribute("existTopic", existTopic);
+        model.addAttribute("topic", topicDto);
         model.addAttribute("is_update", "update");
         model.addAttribute("ID", id);
         return "admin/topic/createTopic";
@@ -91,13 +99,19 @@ public class TopicController {
 
     @PostMapping("/update/{id}")
     @Transactional
-    public String update(@Valid @ModelAttribute("topic") TopicEntity topic, Model model, RedirectAttributes redirectAttributes, BindingResult result, @PathVariable Long id){
+    public String update(@Valid @ModelAttribute("topic") TopicDto topic,
+                         Model model, RedirectAttributes redirectAttributes,
+                         BindingResult result, @PathVariable Long id){
         if(result.hasErrors()){
             model.addAttribute("is_update", "update");
             return "admin/topic/createTopic";
         }
-        topicService.update(topic);
-        redirectAttributes.addAttribute("message", "Cập nhật chủ đề thành công");
+        TopicEntity topicEntity = topicService.getById(topic.getId());
+        topicEntity.setName(topic.getName());
+        topicEntity.setDescription(topic.getDescription());
+        topicEntity.setSubject(subjectService.getById(topic.getSubject_id()));
+        topicService.update(topicEntity);
+        redirectAttributes.addFlashAttribute("message", "Cập nhật chủ đề thành công");
         return "redirect:/admin/topic/list";
     }
 }

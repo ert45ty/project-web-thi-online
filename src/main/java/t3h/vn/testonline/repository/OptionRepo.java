@@ -6,4 +6,5 @@ import t3h.vn.testonline.entities.OptionEntity;
 
 @Repository
 public interface OptionRepo extends JpaRepository<OptionEntity, Long> {
+    void deleteAllByQuestion_Id(Long id);
 }

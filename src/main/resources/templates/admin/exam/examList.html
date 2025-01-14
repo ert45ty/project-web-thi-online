@@ -21,7 +21,8 @@
               <button type="button" name="search" id="search-btn" class="btn btn-flat">
                 <i class="mdi mdi-magnify"></i>
               </button>
-            </div></form>
+            </div>
+          </form>
           <div id="search-results-container">
             <ul id="search-results"></ul>
           </div>
@@ -57,7 +58,9 @@
 
           <h1>Đề thi</h1>
           <p class="breadcrumbs"><span><a href="index.html">Home</a></span>
-            <span><i class="mdi mdi-chevron-right"></i></span>Đề thi</p></div>
+            <span><i class="mdi mdi-chevron-right"></i></span>Đề thi</p>
+        </div>
+        <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
         <div class="row">
           <div class="col-xl-12 col-lg-12">
             <div class="ec-cat-list card card-default">
@@ -78,7 +81,7 @@
                 <div style="display: flex; justify-content: space-between ">
                     <th:block th:switch="${currentTopic == null}">
                         <h4 th:case="${true}" th:text="'Chưa có bài thi nào'"></h4>
-                        <h4 th:case="${false}" th:text="${currentTopic.subject.name} + ' - ' + ${currentTopic.name}"></h4>
+                        <h4 th:case="${false}" th:text="${currentTopic.name}"></h4>
                     </th:block>
                   <div>
                     <a type="button" class="btn btn-primary align-items-center d-flex" th:href="@{/admin/exam/list/create}" > Thêm đề thi
@@ -134,36 +137,37 @@
                   <div>
                     <a type="button" class="btn btn-primary" th:if="${topicIndex > 0}" th:href="@{/admin/exam/list(subject=${subjectIndex}, topic=${topicIndex - 1})}" > Chủ đề trước
                     </a>
-                    <a type="button" class="btn btn-primary" th:if="${topicIndex < totalTopic}" th:href="@{/admin/exam/list(subject=${subjectIndex}, topic=${topicIndex + 1})}" > Chủ đề sau
+                    <a type="button" class="btn btn-primary" th:if="${topicIndex < (totalTopic - 1)}" th:href="@{/admin/exam/list(subject=${subjectIndex}, topic=${topicIndex + 1})}" > Chủ đề sau
                     </a>
                   </div>
                 </br>
               </div>
-                <nav class="mt-3 mb-5" th:if="${response.getTotalPages() > 0}">
-                  <ul class="pagination justify-content-center">
-                    <li th:if="${response.getPageable().getPageNumber() > 0}" class="page-item">
-                      <a class="page-link"
-                         th:href="@{/admin/exam/list(subject=${subjectIndex}, topic=${topicIndex}, page=${response.getPageable().getPageNumber()}, perpage=${response.getSize()})}"
-                      >
-                        Trang trước
-                      </a>
-                    </li>
-                    <li class="page-item" th:each="pageNo : ${#numbers.sequence(0, response.getTotalPages() - 1)}">
-                      <a class="page-link" th:classappend="${response.getPageable().getPageNumber() == pageNo ? 'active-page' : ''}"
-                         th:href="@{/admin/exam/list(subject=${subjectIndex}, topic=${topicIndex}, page=${pageNo + 1}, perpage=${response.getSize()})}"
-                         th:text="${pageNo + 1}"
-                      >
-                      </a>
-                    </li>
-                    <li th:if="${response.getPageable().getPageNumber() >= (response.getTotalPages() - 1)}" class="page-item">
-                      <a class="page-link"
-                         th:href="@{/admin/exam/list(subject=${subjectIndex}, topic=${topicIndex}, page=${response.getPageable().getPageNumber() + 2}, perpage=${response.getSize()})}">
-                        Trang sau
-                      </a>
-                    </li>
-                  </ul>
-                </nav>
+
               </div>
+              <nav class="mt-3 mb-5" th:if="${response.getTotalPages() > 0}">
+                <ul class="pagination justify-content-center">
+                  <li th:if="${response.getPageable().getPageNumber() > 0}" class="page-item">
+                    <a class="page-link"
+                       th:href="@{/admin/exam/list(subject=${subjectIndex}, topic=${topicIndex}, page=${response.getPageable().getPageNumber()}, perpage=${response.getSize()})}"
+                    >
+                      Trang trước
+                    </a>
+                  </li>
+                  <li class="page-item" th:each="pageNo : ${#numbers.sequence(0, response.getTotalPages() - 1)}">
+                    <a class="page-link" th:classappend="${response.getPageable().getPageNumber() == pageNo ? 'active-page' : ''}"
+                       th:href="@{/admin/exam/list(subject=${subjectIndex}, topic=${topicIndex}, page=${pageNo + 1}, perpage=${response.getSize()})}"
+                       th:text="${pageNo + 1}"
+                    >
+                    </a>
+                  </li>
+                  <li th:if="${response.getPageable().getPageNumber() < (response.getTotalPages() - 1)}" class="page-item">
+                    <a class="page-link"
+                       th:href="@{/admin/exam/list(subject=${subjectIndex}, topic=${topicIndex}, page=${response.getPageable().getPageNumber() + 2}, perpage=${response.getSize()})}">
+                      Trang sau
+                    </a>
+                  </li>
+                </ul>
+              </nav>
             </div>
           </div>
         </div>

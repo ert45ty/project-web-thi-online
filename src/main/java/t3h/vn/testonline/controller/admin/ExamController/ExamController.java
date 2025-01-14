@@ -15,6 +15,7 @@ import t3h.vn.testonline.entities.QuestionEntity;
 import t3h.vn.testonline.entities.SubjectEntity;
 import t3h.vn.testonline.entities.TopicEntity;
 import t3h.vn.testonline.service.ExamService;
+import t3h.vn.testonline.service.QuestionService;
 import t3h.vn.testonline.service.SubjectService;
 import t3h.vn.testonline.service.TopicService;
 
@@ -31,9 +32,11 @@ public class ExamController {
     TopicService topicService;
     @Autowired
     SubjectService subjectService;
+    @Autowired
+    QuestionService questionService;
 
     @GetMapping
-    public String examList(Model model,
+    public String examList(Model model, HttpSession session,
                            @RequestParam(defaultValue = "0") Integer subject,
                            @RequestParam(defaultValue = "0") Integer topic,
                            @RequestParam(defaultValue = "") String query,
@@ -64,28 +67,28 @@ public class ExamController {
             currentTopic = topicList.get(topic);
             topicId = currentTopic.getId();
         }
-//        List<ExamEntity> examList;
-//        if(topicList == null) examList = Collections.emptyList();
-//        else examList = examService.getAllByTopicId(topicList.get(topic).getId());
 
+        String message = (String) model.asMap().get("message");
+
+        model.addAttribute("message", message);
         model.addAttribute("currentTopic", currentTopic);
         model.addAttribute("subjectList", subjectList);
         model.addAttribute("response", examService.search(topicId, query, page, perpage));
         model.addAttribute("subjectIndex", subject);
         model.addAttribute("topicIndex", topic);
-        model.addAttribute("topicList", topicList);
+        session.setAttribute("topicList", topicList);
         model.addAttribute("totalTopic", totalTopic);
         return "admin/exam/examList";
     }
 
     @PostMapping
-    public String querySearch(Model model,
+    public String querySearch(Model model, HttpSession session,
                               @RequestParam Integer subject,
                               @RequestParam Integer topic,
                               @RequestParam String query){
         model.addAttribute("subjectIndex", subject);
         model.addAttribute("topicIndex", topic);
-        return examList(model, subject, topic, query, 1, 10);
+        return examList(model, session, subject, topic, query, 1, 10);
     }
 
     @GetMapping("create")
@@ -112,8 +115,9 @@ public class ExamController {
 
     @GetMapping("/delete")
     public String delete(@RequestParam Long examId, RedirectAttributes redirectAttributes){
+        questionService.deleteByExamId(examId);
         examService.delete(examId);
-        redirectAttributes.addAttribute("message", "Xóa thành công");
+        redirectAttributes.addFlashAttribute("message", "Xóa đề thi thành công");
         return "redirect:/admin/exam/list";
     }
 

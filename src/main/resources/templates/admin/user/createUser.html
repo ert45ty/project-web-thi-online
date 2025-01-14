@@ -12,10 +12,11 @@
         <div class="row">
           <div class="col-xl-8 col-lg-12 mx-auto">
             <div class="ec-cat-list card card-default mb-24px">
+              <div th:if="${message}" class="alert alert-danger" th:text="${message}"></div>
               <div th:switch="${is_update}" class="card-body">
                 <div th:case="update" class="ec-cat-form">
-                  <h4>Sửa tài khoản</h4>
-                  <form th:action="@{/admin/user/list/update/{id}(id=${ID})}" method="post" th:object="${existUser}" enctype="multipart/form-data">
+                  <h4>Thay đổi thông tin tài khoản</h4>
+                  <form th:action="@{/admin/user/list/update/{id}(id=${ID})}" method="post" th:object="${user}" enctype="multipart/form-data">
                     <div class="form-group row">
                       <label for="fullname" class="col-12 col-form-label">Tên đầy đủ</label>
                       <div class="col-12">
@@ -26,20 +27,31 @@
                     <div class="form-group row">
                       <label for="username" class="col-12 col-form-label">Tên tài khoản</label>
                       <div class="col-12">
-                        <input disabled id="username" th:field="*{username}" name="username" class="form-control here slug-title" type="text">
+                        <input readonly id="username" th:field="*{username}" name="username" class="form-control here slug-title" type="text">
                       </div>
+                      <label th:if="${#fields.hasErrors('username')}" th:errors="*{username}" for="username" class="form-label text-danger"></label>
                     </div>
                     <div class="form-group row">
-                      <label class="col-12 col-form-label">Mật khẩu</label>
+                      <label class="col-12 col-form-label">Email</label>
                       <div class="col-12">
-                        <input id="password" th:field="*{password}" name="password" class="form-control here slug-title" type="password">
+                        <input id="email" th:field="*{email}" name="email" class="form-control here slug-title" type="email">
+                      </div>
+                      <label th:if="${#fields.hasErrors('email')}" th:errors="*{email}" for="email" class="form-label text-danger"></label>
+                    </div>
+                    <div class="form-group row" hidden>
+                      <label class="col-12 col-form-label">Password</label>
+                      <div class="col-12">
+                        <input id="password" th:field="*{password}" name="password" class="form-control here slug-title" type="hidden">
                       </div>
                       <label th:if="${#fields.hasErrors('password')}" th:errors="*{password}" for="password" class="form-label text-danger"></label>
                     </div>
                     <div class="form-group row">
                       <label class="col-12 col-form-label">Hình ảnh</label>
                       <div class="col-12">
-                        <input id="fileImage" name="fileImage" class="form-control here slug-title" type="file">
+                        <input id="fileImage" name="fileImage" class="form-control here slug-title" type="file" accept="image/*" onchange="previewImage(event)">
+                        <br><br>
+                        <img id="imagePreview" src="#" alt="Ảnh xem trước" style="display: none; width: 200px; height: auto;">
+                        <br><br>
                       </div>
                     </div>
                     <div class="form-group row">
@@ -51,7 +63,7 @@
                     </div>
                     <div class="row">
                       <div class="col-12">
-                        <button name="submit" type="submit" class="btn btn-primary">Thêm</button>
+                        <button name="submit" type="submit" class="btn btn-primary">Sửa</button>
                       </div>
                     </div>
                   </form>
@@ -69,6 +81,12 @@
                       <label for="username" class="col-12 col-form-label">Tên tài khoản</label>
                       <div class="col-12">
                         <input readonly id="username" th:field="*{username}" name="username" class="form-control here slug-title" type="text">
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="email" class="col-12 col-form-label">Email</label>
+                      <div class="col-12">
+                        <input readonly id="email" th:field="*{email}" name="email" class="form-control here slug-title" type="text">
                       </div>
                     </div>
                     <div class="d-flex g-3">
@@ -118,6 +136,13 @@
                       <label th:if="${#fields.hasErrors('username')}" th:errors="*{username}" for="username" class="form-label text-danger"></label>
                     </div>
                     <div class="form-group row">
+                      <label class="col-12 col-form-label">Email</label>
+                      <div class="col-12">
+                        <input id="email" th:field="*{email}" name="email" class="form-control here slug-title" type="email">
+                      </div>
+                      <label th:if="${#fields.hasErrors('email')}" th:errors="*{email}" for="email" class="form-label text-danger"></label>
+                    </div>
+                    <div class="form-group row">
                       <label class="col-12 col-form-label">Mật khẩu</label>
                       <div class="col-12">
                         <input id="password" th:field="*{password}" name="password" class="form-control here slug-title" type="password">
@@ -125,9 +150,18 @@
                       <label th:if="${#fields.hasErrors('password')}" th:errors="*{password}" for="password" class="form-label text-danger"></label>
                     </div>
                     <div class="form-group row">
+                      <label class="col-12 col-form-label">Nhập lại mật khẩu</label>
+                      <div class="col-12">
+                        <input id="repassword" name="repassword" class="form-control here slug-title" type="password">
+                      </div>
+                    </div>
+                    <div class="form-group row">
                       <label class="col-12 col-form-label">Hình ảnh</label>
                       <div class="col-12">
-                        <input id="fileImage" th:field="*{fileImage}" name="fileImage" class="form-control here slug-title" type="file">
+                        <input id="fileImage" name="fileImage" class="form-control here slug-title" type="file" accept="image/*" onchange="previewImage(event)">
+                        <br><br>
+                        <img id="imagePreview" src="#" alt="Ảnh xem trước" style="display: none; width: 200px; height: auto;">
+                        <br><br>
                       </div>
                     </div>
                     <div class="form-group row">

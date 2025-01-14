@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments::head('Trang chủ')">
+</head>
+<body class="ec-header-fixed ec-sidebar-fixed ec-sidebar-dark ec-header-light" id="body">
+<div class="wrapper">
+  <div th:replace="fragments::sidebarCustomer('')"></div>
+  <div class="ec-page-wrapper">
+    <header th:replace="fragments::header('')"></header>
+    <div class="ec-content-wrapper">
+      <div class="content">
+        <div class="col-12 d-none d-md-block" style="margin:0px;padding:0px;">
+          <img src="/images/banner/banner.png" alt="" class="w-100" style="height:180px;">
+        </div>
+        </br>
+        <div>
+          <h2>Giới thiệu</h2>
+          <p style="margin: 10px 40px 20px 40px; font-size: x-large; font-weight: bold; color: #0b0b0b">Thi online là web tổng hợp các đề thi trung
+            học phổ thông quốc gia qua các năm tại khắp mọi tỉnh thành.
+            Hy vọng Thi Online sẽ là nguồn tài liệu tham khảo hữu ích cho các bạn học sinh để chuẩn bị tốt nhất
+            cho kỳ thi đại học hay thi THPT Quốc gia. Hãy đăng ký thành viên và bắt đầu Thi Thử Online hoàn toàn
+            miễn phí. Bài làm sẽ được chấm điểm ngay sau khi Nộp bài và được lưu lại trong phần bảng điểm của
+            từng thành viên để cho các bạn tiện theo dõi.</p>
+
+        </div>
+        <div class="breadcrumb-wrapper breadcrumb-wrapper-2 breadcrumb-contacts">
+            <h1>Danh sách các môn thi và đề thi</h1>
+            <p class="breadcrumbs"><a th:href="@{/home}">Trang chủ</a>
+            </p>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <div class="ec-vendor-list card card-default">
+                <div class="card-body">
+                  <h2>Các đề thi nhanh</h2>
+                  </hr>
+                  </br>
+                  <div class="col-md-12 text-center">
+                    <ul class="ec-pro-tab-nav nav justify-content-center">
+                      <li class="nav-item" th:each="subject, iterStat : ${subjectList}">
+                        <a class="nav-link"
+                           th:classappend="${subjectIndex == iterStat.index} ? 'active' : ''"
+                           th:href="@{/home(subject=${iterStat.index})}"
+                           th:text="${subject.name}">
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                  <div>
+                    <table id="responsive-data-table" class="table table-bordered text-center">
+                      <tbody th:if="${examList != null && !examList.isEmpty()}">
+                      <tr th:each="exam, iterStat : ${examList}">
+                        <td class="text-left" >
+                          <h4 th:text="${exam.title}" style="margin: 5px"></h4>
+                          <p class="card-text" style="margin-left: 5px">
+                            <span class="badge badge-secondary" th:text="${exam.total_question} + ' câu hỏi'"></span>
+                            <span class="badge badge-secondary" th:text="${(exam.duration)/60} + ' phút'"></span>
+<!--                            <span class="badge badge-secondary" th:text="'Điểm cao nhất:'"></span>-->
+                          </p>
+                        </td>
+                        <td>
+                          <div class="btn-group">
+                            <a type="button"
+                               class="btn btn-outline-success align-items-center d-flex"
+                               th:href="@{/admin/exam/list(subject=${subjectIndex}, topic=${iterStat.count - 1})}">Thi</a>
+                          </div>
+                        </td>
+                      </tr>
+                      </tbody>
+                    </table>
+                    <div class="text-right">
+                    <a th:href="@{/subject(subject=${subjectIndex})}">Xem thêm</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+
+    <footer th:replace="fragments::footer()"></footer>
+  </div>
+</div>
+</body>
+</html>

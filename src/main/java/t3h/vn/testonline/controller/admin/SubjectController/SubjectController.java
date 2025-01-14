@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import t3h.vn.testonline.dto.SubjectDto;
 import t3h.vn.testonline.entities.SubjectEntity;
@@ -26,6 +27,9 @@ public class SubjectController {
                               @RequestParam(defaultValue = "1") Integer page,
                               @RequestParam(defaultValue = "10") Integer perpage){
 
+        String message = (String) model.asMap().get("message");
+
+        model.addAttribute("message", message);
         model.addAttribute("response", subjectService.search(query, page, perpage));
         model.addAttribute("subject", new SubjectDto());
         return "admin/subject/subjectList";
@@ -46,40 +50,41 @@ public class SubjectController {
         }else {
                 subjectService.save(subject);
         }
-        redirectAttributes.addAttribute("message", "Thêm môn thi thành công");
+        redirectAttributes.addFlashAttribute("message", "Thêm môn thi thành công");
         return "redirect:/admin/subject/list";
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteSubject(Model model, @PathVariable Long id){
+    public String deleteSubject(Model model, @PathVariable Long id, RedirectAttributes redirectAttributes){
         subjectService.delete(id);
+        redirectAttributes.addFlashAttribute("message", "Xóa môn thi thành công");
         return "redirect:/admin/subject/list";
     }
 
     @GetMapping("/update/{id}")
     public String updateSubject(Model model, @PathVariable Long id){
-        List<SubjectEntity> subjectList = subjectService.getAll();
         SubjectEntity existSubject = subjectService.getById(id);
-        model.addAttribute("existSubject", existSubject);
-        model.addAttribute("subjectList", subjectList);
-        model.addAttribute("is_update", "update");
-        return "admin/subject/subjectList";
+        SubjectDto subjectDto = new SubjectDto();
+        subjectDto.setId(id);
+        subjectDto.setName(existSubject.getName());
+        model.addAttribute("subject", subjectDto);
+        model.addAttribute("ID", id);
+//        model.addAttribute("is_update", "update");
+        return "admin/subject/createSubject";
     }
 
     @PostMapping("/update/{id}")
     public String update(Model model, @Valid @ModelAttribute("subject") SubjectDto subject,
-                                BindingResult result, RedirectAttributes redirectAttributes, @PathVariable Long id){
+                         BindingResult result, RedirectAttributes redirectAttributes,
+                         @PathVariable Long id, MultipartFile fileImage){
         if (result.hasErrors()){
-            List<SubjectEntity> subjectList = subjectService.getAll();
-            SubjectEntity existSubject = subjectService.getById(id);
-            model.addAttribute("existSubject", existSubject);
-            model.addAttribute("subjectList", subjectList);
-            model.addAttribute("is_update", "update");
-            return "admin/subject/subjectList";
-        }else {
-            subjectService.save(subject);
+            return "admin/subject/createSubject";
         }
-        redirectAttributes.addAttribute("message", "Thêm môn thi thành công");
+        SubjectEntity subjectEntity = subjectService.getById(subject.getId());
+        subjectEntity.setName(subject.getName());
+        subjectService.update(subjectEntity, fileImage);
+
+        redirectAttributes.addFlashAttribute("message", "Sửa môn thi thành công");
         return "redirect:/admin/subject/list";
     }
 }

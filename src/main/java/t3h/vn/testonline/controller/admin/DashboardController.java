@@ -26,8 +26,6 @@ public class DashboardController {
     SubjectService subjectService;
     @Autowired
     TopicService topicService;
-    @Autowired
-    ExamService examService;
 
     @GetMapping
     public String dashboard(Model model){
@@ -35,10 +33,7 @@ public class DashboardController {
         Integer totalSubject = subjectService.getAll().size();
         List<TopicEntity> topicList = topicService.getAll();
         Integer totalTopic = topicList.size();
-        Integer totalExam = 0;
-        for (int i = 0; i < totalTopic; i++){
-            totalExam += topicList.get(i).getExams().size();
-        }
+        Integer totalExam = topicService.getTotalExams();
 
         model.addAttribute("totalUser",totalUser);
         model.addAttribute("totalSubject",totalSubject);

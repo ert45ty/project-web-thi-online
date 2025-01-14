@@ -24,4 +24,7 @@ public class QuestionEntity extends BaseEntity{
 
     @Column
     private String question_text;
+
+    @Column
+    private String image_name;
 }

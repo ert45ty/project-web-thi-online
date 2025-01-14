@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import t3h.vn.testonline.dto.SubjectDto;
 import t3h.vn.testonline.entities.SubjectEntity;
 import t3h.vn.testonline.repository.SubjectRepo;
@@ -47,6 +48,17 @@ public class SubjectService {
             }
         }
         subjectRepo.save(subjectEntity);
+    }
+
+    public void update(SubjectEntity subjectEntity, MultipartFile multipartFile){
+        if (multipartFile != null && !multipartFile.isEmpty()){
+            try {
+                String image_name = fileUtils.saveFile(multipartFile);
+                subjectEntity.setImage_name(image_name);
+            }catch (Exception e){
+            }
+            subjectRepo.save(subjectEntity);
+        }
     }
 
     public SubjectEntity getById(Long id){

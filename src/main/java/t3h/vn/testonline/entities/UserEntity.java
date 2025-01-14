@@ -23,6 +23,9 @@ public class UserEntity extends BaseEntity{
     private String password;
 
     @Column
+    private String email;
+
+    @Column
     private String fullname;
 
     @Column

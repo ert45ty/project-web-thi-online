@@ -7,12 +7,14 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import t3h.vn.testonline.dto.OptionDto;
 import t3h.vn.testonline.dto.QuestionDto;
 import t3h.vn.testonline.entities.ExamEntity;
 import t3h.vn.testonline.entities.QuestionEntity;
 import t3h.vn.testonline.service.OptionService;
 import t3h.vn.testonline.service.QuestionService;
+import t3h.vn.testonline.utils.FileUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,6 +29,8 @@ public class CreateQandAController {
     QuestionService questionService;
     @Autowired
     OptionService optionService;
+    @Autowired
+    FileUtils fileUtils;
 
     @GetMapping("/createQandA")
     public String formQandA(Model model,
@@ -69,7 +73,8 @@ public class CreateQandAController {
                               @RequestParam(required = false) String action,
                               @RequestParam(required = false) Integer currentIndex,
                               @RequestParam(required = false) Integer correct,
-                              BindingResult result, Model model, SessionStatus sessionStatus){
+                              BindingResult result, Model model, SessionStatus sessionStatus,
+                              RedirectAttributes redirectAttributes){
         if(result.hasErrors()){
             return "admin/exam/createQandA";
         }
@@ -77,6 +82,12 @@ public class CreateQandAController {
         for (int i = 0; i < 4; i++){
             if (correct == i) currentQuestion.getOptions().get(i).setIs_correct(true);
             else currentQuestion.getOptions().get(i).setIs_correct(false);
+        }
+        if (currentQuestion.getFileImage() != null && !currentQuestion.getFileImage().isEmpty()){
+            try {
+                String image_name = fileUtils.saveFile(currentQuestion.getFileImage());
+                currentQuestion.setImage_name(image_name);
+            }catch (Exception e){}
         }
 
         if (currentIndex != null && currentIndex >= 0 && currentIndex < questions.size()) {
@@ -100,6 +111,7 @@ public class CreateQandAController {
                 }
             }
             sessionStatus.setComplete();
+            redirectAttributes.addFlashAttribute("message", "Tạo bài thi thành công");
             return "redirect:/admin/exam/list";
         }
         QuestionDto question;

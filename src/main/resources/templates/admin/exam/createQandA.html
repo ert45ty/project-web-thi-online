@@ -15,13 +15,23 @@
               <div class="card-body">
                 <div class="ec-cat-form">
                   <h4 th:text="'Câu hỏi số ' + ${currentIndex + 1}"></h4>
-                  <form th:action="@{/admin/exam/createQandA(examId=${examId}, currentIndex=${currentIndex})}" method="post" th:object="${currentQuestion}">
+                  <form th:action="@{/admin/exam/createQandA(examId=${examId}, currentIndex=${currentIndex})}"
+                        method="post" th:object="${currentQuestion}" enctype="multipart/form-data">
                     <div class="form-group row">
                       <label class="col-12 col-form-label">Nội dung câu hỏi:</label>
                       <div class="col-12">
                         <textarea id="question_text" name="question_text" cols="40" rows="2" class="form-control" th:field="*{question_text}"></textarea>
                       </div>
                       <label th:if="${#fields.hasErrors('question_text')}" th:errors="*{question_text}" for="question_text" class="form-label text-danger"></label>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-12 col-form-label">Hình ảnh</label>
+                      <div class="col-12">
+                        <input id="fileImage" name="fileImage" class="form-control here slug-title" type="file" accept="image/*" onchange="previewImage(event)">
+                        <br><br>
+                        <img id="imagePreview" src="#" alt="Ảnh xem trước" style="display: none; width: 200px; height: auto;">
+                        <br><br>
+                      </div>
                     </div>
                     <div th:each="option, iterStat : ${currentQuestion.options}">
                     <div class="form-group row">

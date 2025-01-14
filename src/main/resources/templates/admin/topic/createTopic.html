@@ -15,7 +15,7 @@
                     <div th:switch="${is_update}" class="card-body">
                         <div th:case="update" class="ec-cat-form">
                             <h4>Chỉnh sửa chủ đề</h4>
-                            <form th:action="@{/admin/topic/list/update/{id}(id=${ID})}" method="post" th:object="${existTopic}">
+                            <form th:action="@{/admin/topic/list/update/{id}(id=${ID})}" method="post" th:object="${topic}">
                                 <div class="form-group row">
                                     <label for="name" class="col-12 col-form-label">Tên chủ đề</label>
                                     <div class="col-12">

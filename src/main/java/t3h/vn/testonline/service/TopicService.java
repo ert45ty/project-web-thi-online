@@ -42,6 +42,15 @@ public class TopicService {
         return topicRepo.findAllBySubject_Id(id);
     }
 
+    public int getTotalExams(){
+        int total = 0;
+        List<TopicEntity> topics = getAll();
+        for (TopicEntity topic : topics) {
+            total += topic.getExams().size();
+        }
+        return total;
+    }
+
     public void delete(Long id){
         topicRepo.deleteById(id);
     }

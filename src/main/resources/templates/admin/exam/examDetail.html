@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments::head('Topics')">
+<head th:replace="fragments::head('Đề thi')">
 </head>
 <body class="ec-header-fixed ec-sidebar-fixed ec-sidebar-dark ec-header-light" id="body">
 <div class="wrapper">
-  <div th:replace="fragments::sidebar('topics')"></div>
+  <div th:replace="fragments::sidebar('exams')"></div>
   <div class="ec-page-wrapper">
     <header th:replace="fragments::header('exam')"></header>
     <div class="ec-content-wrapper">
@@ -27,12 +27,13 @@
                     <tr th:each="question, iter : ${questionList}">
                       <td th:text="'Câu ' + ${iter.count} +':'"></td>
                       <td class="text-left">
-                        <p th:text="${question.question_text}">
-                        </p>
+                        <p th:text="${question.question_text}"></p>
+                        <img th:if="${question.image_name != null && !question.image_name.isEmpty()}" th:src="'/image-file/' + ${question.image_name}">
                         <th:block th:each="option : ${question.options}">
                           <div class="text-left">
                           <input class="form-check-input" type="radio" th:name="'option' + ${iter.index}" th:id="'option' +${iter.count}">
-                          <label class="form-check-label" th:text="${option.option_text}">Nội dung đoạn văn bản của bạn</label></div>
+                          <label class="form-check-label" th:text="${option.option_text}"></label>
+                          </div>
                         </th:block>
                       </td>
                     </tr>

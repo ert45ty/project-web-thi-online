@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import t3h.vn.testonline.dto.ExamDto;
 import t3h.vn.testonline.entities.ExamEntity;
+import t3h.vn.testonline.entities.QuestionEntity;
 import t3h.vn.testonline.entities.TopicEntity;
 import t3h.vn.testonline.repository.ExamRepo;
 

@@ -55,7 +55,7 @@
             <div class="content">
                 <div class="breadcrumb-wrapper breadcrumb-wrapper-2 breadcrumb-contacts">
                     <div>
-                    <h1>Topic</h1>
+                    <h1>Chủ đề</h1>
                     <p class="breadcrumbs"><span><a href="index.html">Home</a></span>
                         <span><i class="mdi mdi-chevron-right"></i></span>Chủ đề</p></div>
                     <div>
@@ -63,7 +63,7 @@
                         </a>
                     </div>
                 </div>
-
+                <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
                 <div class="row">
                     <div class="col-xl-12 col-lg-12 mx-auto">
                         <div class="ec-cat-list card card-default">
@@ -119,31 +119,32 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <nav class="mt-3 mb-5" th:if="${response.getTotalPages() > 0}">
-                                    <ul class="pagination justify-content-center">
-                                        <li th:if="${response.getPageable().getPageNumber() > 0}" class="page-item">
-                                            <a class="page-link"
-                                               th:href="@{/admin/topic/list(subject=${subjectIndex}, page=${response.getPageable().getPageNumber()}, perpage=${response.getSize()})}"
-                                            >
-                                                Trang trước
-                                            </a>
-                                        </li>
-                                        <li class="page-item" th:each="pageNo : ${#numbers.sequence(0, response.getTotalPages() - 1)}">
-                                            <a class="page-link" th:classappend="${response.getPageable().getPageNumber() == pageNo ? 'active-page' : ''}"
-                                               th:href="@{/admin/topic/list(subject=${subjectIndex}, page=${pageNo + 1}, perpage=${response.getSize()})}"
-                                               th:text="${pageNo + 1}"
-                                            >
-                                            </a>
-                                        </li>
-                                        <li th:if="${response.getPageable().getPageNumber() >= (response.getTotalPages() - 1)}" class="page-item">
-                                            <a class="page-link"
-                                               th:href="@{/admin/topic/list(subject=${subjectIndex}, page=${response.getPageable().getPageNumber() + 2}, perpage=${response.getSize()})}">
-                                                Trang sau
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </nav>
+
                             </div>
+                            <nav class="mt-3 mb-5" th:if="${response.getTotalPages() > 0}">
+                                <ul class="pagination justify-content-center">
+                                    <li th:if="${response.getPageable().getPageNumber() > 0}" class="page-item">
+                                        <a class="page-link"
+                                           th:href="@{/admin/topic/list(subject=${subjectIndex}, page=${response.getPageable().getPageNumber()}, perpage=${response.getSize()})}"
+                                        >
+                                            Trang trước
+                                        </a>
+                                    </li>
+                                    <li class="page-item" th:each="pageNo : ${#numbers.sequence(0, response.getTotalPages() - 1)}">
+                                        <a class="page-link" th:classappend="${response.getPageable().getPageNumber() == pageNo ? 'active-page' : ''}"
+                                           th:href="@{/admin/topic/list(subject=${subjectIndex}, page=${pageNo + 1}, perpage=${response.getSize()})}"
+                                           th:text="${pageNo + 1}"
+                                        >
+                                        </a>
+                                    </li>
+                                    <li th:if="${response.getPageable().getPageNumber() < (response.getTotalPages() - 1)}" class="page-item">
+                                        <a class="page-link"
+                                           th:href="@{/admin/topic/list(subject=${subjectIndex}, page=${response.getPageable().getPageNumber() + 2}, perpage=${response.getSize()})}">
+                                            Trang sau
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
                         </div>
                     </div>
                 </div>
