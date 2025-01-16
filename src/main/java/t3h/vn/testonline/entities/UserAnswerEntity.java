@@ -18,6 +18,6 @@ public class UserAnswerEntity extends BaseEntity{
     private QuestionEntity question;
 
     @ManyToOne
-    @JoinColumn(name = "option_id", nullable = false)
+    @JoinColumn(name = "option_id")
     private OptionEntity option;
 }

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments::head('Topics')">
+    <script>
+        let timer;
+        let remainingTime;
+
+        // Hàm để tính toán và hiển thị bộ đếm ngược
+        function startCountdown() {
+            // Lấy thời gian kết thúc từ server
+            const endTimeValue = document.getElementById("endTime").value;
+
+            // Kiểm tra nếu endTime là hợp lệ
+            const endTime = new Date(endTimeValue).getTime(); // Chuyển đổi giá trị endTime thành đối tượng Date
+
+            if (isNaN(endTime)) {
+                console.error("End time không hợp lệ:", endTimeValue);
+                return;
+            }
+
+            // Nếu có thời gian còn lại trong sessionStorage, sử dụng nó
+            if (sessionStorage.getItem("remainingTime")) {
+                remainingTime = parseInt(sessionStorage.getItem("remainingTime"));
+            } else {
+                remainingTime = endTime - new Date().getTime();
+            }
+
+            // Cập nhật bộ đếm ngược mỗi giây
+            const countdownElement = document.getElementById("countdown");
+
+            function updateCountdown() {
+                if (remainingTime <= 0) {
+                    countdownElement.innerHTML = "Thời gian đã hết!";
+                    document.getElementById("form").submit();  // Nộp form
+                    clearInterval(timer);  // Dừng bộ đếm ngược
+                } else {
+                    const secondsLeft = Math.floor(remainingTime / 1000);
+                    const minutes = Math.floor(secondsLeft / 60);
+                    const seconds = secondsLeft % 60;
+
+                    countdownElement.innerHTML = minutes + " phút " + seconds + " giây";
+                    remainingTime -= 1000;  // Giảm thời gian còn lại mỗi giây
+                    sessionStorage.setItem("remainingTime", remainingTime);  // Lưu thời gian còn lại vào sessionStorage
+                }
+            }
+
+            // Cập nhật mỗi giây
+            timer = setInterval(updateCountdown, 1000);
+        }
+
+        // Hàm để ngừng bộ đếm ngược khi người dùng nộp bài
+        function stopCountdown(event) {
+            const confirmSubmit = confirm("Bạn có chắc chắn muốn nộp bài không?");
+
+            if (confirmSubmit) {
+                // Nếu người dùng xác nhận, gửi form nộp bài
+                document.getElementById("form").submit();
+                clearInterval(timer);  // Ngừng bộ đếm ngược
+                sessionStorage.removeItem("remainingTime");  // Xóa dữ liệu khỏi sessionStorage khi nộp bài
+            } else {
+                // Nếu người dùng hủy bỏ, không làm gì cả
+                event.preventDefault();
+            }
+
+        }
+        window.onload = startCountdown;
+    </script>
+</head>
+<body class="ec-header-fixed ec-sidebar-fixed ec-sidebar-dark ec-header-light" id="body">
+<header class="header text-center" style=" background-color: black; padding: 15px; position: sticky; top: 0; z-index: 1000;">
+<!--    <input type="hidden" id="endTime" value="${endTime}" name="endTime">-->
+    <h2 style="color: white;">Thời gian còn lại: <span id="countdown">Đang tải...</span></h2>
+</header>
+<h2 th:text="${exam.title}" class="text-center mt-4"></h2>
+<div class="wrapper justify-content-center">
+    <div>
+        <div class="ec-content-wrapper">
+            <div class="content">
+                <div class="row">
+                    <div class="col-xl-12 col-lg-12 mx-auto">
+                        <div class="ec-cat-list card card-default mb-24px">
+                            <div class="card-body">
+                                <div class="ec-cat-form">
+                                    <h3 th:text="'Câu ' + ${currentIndex + 1} +':'"></h3>
+                                    </br>
+                                    <form th:action="@{/doExam(examId=${examId}, currentIndex=${currentIndex})}"
+                                          method="post" th:object="${currentAnswer}" id="form">
+                                        <div class="wrapper d-flex justify-content-between">
+                                    <div>
+                                        <p th:text="${question.question_text}"></p>
+                                        </br>
+                                        <div class="d-flex justify-content-center">
+                                            <img th:if="${question.image_name != null && !question.image_name.isEmpty()}"
+                                                 th:src="'/image-file/' + ${question.image_name}">
+                                        </div>
+                                        </br>
+                                            <div th:each="option, iter : ${question.options}" class="d-flex align-items-center mb-4">
+                                            <input style="width: 15px; height: 15px; margin-right: 5px" type="radio" name="optionId"
+                                                   th:id="'option' +${iter.count}"
+                                                   th:value="${option.id}"
+                                                   th:checked="${option.id == answers.get(currentIndex).option_id}">
+                                            <p th:text="${option.option_text}"></p>
+                                            </div>
+                                    </div>
+                                        <div class="col-xl-4 col-lg-12">
+                                            <div class="ec-cat-list card card-default mb-24px">
+                                                <div class="card-body">
+                                                    <h4>Bảng câu hỏi</h4>
+                                                        <div class="mt-3 d-flex flex-wrap" >
+                                                            <div th:each="i : ${#numbers.sequence(1,exam.total_question)}">
+                                                                <button class="btn-exam" type="submit" name="action"
+                                                                        th:value="${i}"
+                                                                        th:text="${i}"
+                                                                        th:classappend="${question.question_text != null ? 'btn-success' : ''}"
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    <br/>
+                                                    <div class="row">
+                                                        <div class="col-9">
+                                                            <button type="submit" th:disabled="${currentIndex == 0}" name="action" value="back">Câu trước</button>
+                                                        </div>
+                                                        <div class="col-3" th:switch="${currentIndex == (exam.total_question - 1)}">
+                                                            <button th:case="${false}" type="submit" name="action" value="next">Câu tiếp</button>
+                                                            <button th:case="${true}" type="submit" name="finish" value="true" onclick="stopCountdown(event)">Hoàn thành</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        </div>
+                                        <input type="hidden" name="endTime" id="endTime" th:value="${endTime}">
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <footer th:replace="fragments::footer()"></footer>
+    </div>
+</div>
+
+</body>
+</html>

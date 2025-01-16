@@ -41,8 +41,9 @@ public class SubjectController {
     }
 
     @PostMapping("/create")
-    public String createSubject(Model model, @Valid @ModelAttribute("subject") SubjectDto subject,
-                              BindingResult result, RedirectAttributes redirectAttributes){
+    public String createSubject(@Valid @ModelAttribute("subject") SubjectDto subject,
+                                BindingResult result, Model model,
+                                RedirectAttributes redirectAttributes){
         if (result.hasErrors()){
             List<SubjectEntity> subjectList = subjectService.getAll();
             model.addAttribute("subjectList", subjectList);

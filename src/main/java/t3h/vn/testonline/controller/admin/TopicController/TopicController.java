@@ -62,8 +62,8 @@ public class TopicController {
 
     @PostMapping("/create")
     public String createTopic(@Valid @ModelAttribute("topic")TopicDto topic,
-                              Model model, RedirectAttributes redirectAttributes,
-                              BindingResult result){
+                              BindingResult result,
+                              Model model, RedirectAttributes redirectAttributes){
 
         if(result.hasErrors()){
             model.addAttribute("subjectList", subjectService.getAll());

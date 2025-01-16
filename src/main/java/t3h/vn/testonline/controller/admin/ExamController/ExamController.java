@@ -99,8 +99,9 @@ public class ExamController {
     }
 
     @PostMapping("/create")
-    public String createExam(@Valid @ModelAttribute("exam") ExamDto exam, Model model,
-                             BindingResult result, RedirectAttributes redirectAttributes){
+    public String createExam(@Valid @ModelAttribute("exam") ExamDto exam,
+                             BindingResult result, Model model,
+                             RedirectAttributes redirectAttributes){
         if (result.hasErrors()){
             return "admin/exam/createExam";
         }

@@ -22,4 +22,8 @@ public class OptionService {
         optionRepo.save(optionEntity);
     }
 
+    public OptionEntity getById(Long id){
+        return optionRepo.getById(id);
+    }
+
 }
