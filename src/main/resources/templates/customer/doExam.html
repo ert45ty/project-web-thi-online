@@ -111,7 +111,7 @@
                                                                 <button class="btn-exam" type="submit" name="action"
                                                                         th:value="${i}"
                                                                         th:text="${i}"
-                                                                        th:classappend="${question.question_text != null ? 'btn-success' : ''}"
+                                                                        th:classappend="${answers.get(i - 1).option_id != null ? 'btn-success' : ''}"
                                                                 />
                                                             </div>
                                                         </div>
