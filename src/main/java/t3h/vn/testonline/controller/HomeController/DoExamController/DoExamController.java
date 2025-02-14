@@ -1,4 +1,4 @@
-package t3h.vn.testonline.controller.HomeController;
+package t3h.vn.testonline.controller.HomeController.DoExamController;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -121,6 +121,7 @@ public class DoExamController {
             sessionStatus.setComplete();
             redirectAttributes.addFlashAttribute("message","Nộp bài thành công");
             redirectAttributes.addFlashAttribute("score", score);
+            redirectAttributes.addFlashAttribute("resultId", result.getId());
             return "redirect:/home";
         }
 //        model.addAttribute("examId", examId);

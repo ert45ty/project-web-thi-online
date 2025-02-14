@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments::head('Topics')">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" >
+<head th:replace="fragments::head('Môn thi')">
 </head>
 <body class="ec-header-fixed ec-sidebar-fixed ec-sidebar-dark ec-header-light" id="body">
 <div class="wrapper">
@@ -18,11 +18,11 @@
         </div>
         </br>
         </hr>
-        <div class="breadcrumb-wrapper breadcrumb-wrapper-2 breadcrumb-contacts">
-            <h1>Tuyển chọn các đề thi theo chủ đề</h1>
-          <p class="breadcrumbs "><span><a th:href="@{/home}">Trang chủ</a></span>
-            <span><i class="mdi mdi-chevron-right"></i></span>Môn thi
-          </p>
+        <div class="row ec_breadcrumb_inner mb-3 ml-2">
+          <div class="col-md-6 col-sm-12">
+            <h2 class="ec-breadcrumb-title">Tuyển chọn các đề thi theo chủ đề</h2>
+          </div>
+          <div th:replace="fragments::goToHome('subject')"></div>
           </div>
           <div class="row">
             <div class="col-12">

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments::head('Đăng ký')">
+</head>
+<body class="ec-header-fixed ec-sidebar-fixed ec-sidebar-dark ec-header-light" id="body">
+<div class="wrapper">
+  <div th:replace="fragments::sidebarCustomer('register')"></div>
+  <div class="ec-page-wrapper">
+    <header th:replace="fragments::header('')"></header>
+    <div class="sticky-header-next-sec  ec-breadcrumb section-space-mb">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <div class="row ec_breadcrumb_inner mb-3 ml-2">
+              <div class="col-md-6 col-sm-12">
+                <h2 class="ec-breadcrumb-title">Đăng ký</h2>
+              </div>
+              <div th:replace="fragments::goToHome('register')"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section class="ec-page-content ec-vendor-uploads ec-user-account section-space-p">
+      <div class="container">
+        <div class="row">
+          <section class="ec-page-content section-space-p">
+            <div class="container">
+              <div class="row">
+                <div class="col-md-12 text-center">
+                  <div class="section-title">
+                    <h2 class="ec-bg-title">Đăng ký</h2>
+                    <h2 class="ec-title">Đăng ký</h2>
+                  </div>
+                </div>
+                <div class="ec-login-wrapper">
+                  <div class="ec-login-container">
+                    <div class="ec-login-form">
+                      <form th:action="@{/register}" method="post" th:object="${newUser}">
+                        <span class="ec-login-wrap">
+                                    <label>Tên đầy đủ*</label>
+                                    <input id="name" type="text" th:field="*{fullname}" name="name" placeholder="Mời bạn nhập tên..." required />
+                        </span>
+                        <label th:if="${#fields.hasErrors('fullname')}" th:errors="*{fullname}" for="name" class="form-label text-danger"></label>
+                        <span class="ec-login-wrap">
+                                    <label>Email*</label>
+                                    <input id="email" type="text" th:field="*{email}" name="email" placeholder="Mời bạn nhập email..." required />
+                        </span>
+                        <label th:if="${#fields.hasErrors('email')}" th:errors="*{email}" for="email" class="form-label text-danger"></label>
+                        <span class="ec-login-wrap">
+                                    <label>Tên đăng nhập*</label>
+                                    <input id="username" type="text" th:field="*{username}" name="username" placeholder="Mời bạn nhập tên đăng nhập" required />
+                        </span>
+                        <label th:if="${#fields.hasErrors('username')}" th:errors="*{username}" for="username" class="form-label text-danger"></label>
+                        <span class="ec-login-wrap">
+                                    <label>Mật khẩu*</label>
+                                    <input id="password" type="password" th:field="*{password}" name="password" placeholder="Mời bạn nhập mật khẩu" required />
+                        </span>
+                        <label th:if="${#fields.hasErrors('password')}" th:errors="*{password}" for="password" class="form-label text-danger"></label>
+                        <span class="ec-login-wrap">
+                                    <label>Nhập lại mật khẩu*</label>
+                                    <input id="repassword" type="password" name="repassword" placeholder="Mời bạn nhập lại mật khẩu" required />
+                        </span>
+                        <label th:if="${errorMessage != null}" for="repassword" class="form-label text-danger" th:text="${errorMessage}"></label>
+                        <span class="ec-login-wrap ec-login-btn">
+                                    <button class="btn btn-primary" type="submit">Đăng ký</button>
+                                    <a href="/login" class="btn btn-secondary">Đăng nhập</a>
+                                </span>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </section>
+    <footer th:replace="fragments::footer()"></footer>
+  </div>
+</div>
+</body>
+</html>

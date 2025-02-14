@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments::head('Topics')">
+</head>
+<body class="ec-header-fixed ec-sidebar-fixed ec-sidebar-dark ec-header-light" id="body">
+<div class="wrapper">
+  <div th:replace="fragments::sidebarCustomer('topics')"></div>
+  <div class="ec-page-wrapper">
+    <header th:replace="fragments::header('')"></header>
+    <div class="sticky-header-next-sec  ec-breadcrumb section-space-mb">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <div class="row ec_breadcrumb_inner mb-3 ml-2">
+              <div class="col-md-6 col-sm-12">
+                <h2 class="ec-breadcrumb-title">Danh sách các bài thi đã làm</h2>
+              </div>
+              <div th:replace="fragments::goToHome('history')"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section class="ec-page-content ec-vendor-uploads ec-user-account section-space-p">
+      <div class="container">
+        <div class="row">
+          <div th:replace="fragments::leftside('history')"></div>
+          <div class="ec-shop-rightside col-lg-9 col-md-12">
+            <div class="ec-vendor-dashboard-card">
+              <div class="ec-vendor-card-header">
+                <h5>Danh sách các đề thi đã làm</h5>
+              </div>
+              <div class="ec-vendor-card-body">
+                <div class="ec-vendor-card-table">
+                  <table class="table ec-table">
+                    <thead>
+                    <tr>
+                      <th scope="col">STT</th>
+                      <th scope="col">Tên đề thi</th>
+                      <th scope="col">Thời gian hoàn thành</th>
+                      <th scope="col">Điểm đạt được</th>
+                      <th scope="col">Hành động</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="i, iterStat : ${#numbers.sequence(1, 5)}">
+                      <th scope="row"><span th:text="${}"></span></th>
+                      <td><span></span></td>
+                      <td><span></span></td>
+                      <td><span></span></td>
+                      <td><span class="tbl-btn"><a class="btn btn-lg btn-primary"
+                                                   th:href="@{}">View</a></span></td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <footer th:replace="fragments::footer()"></footer>
+  </div>
+</div>
+</body>
+</html>

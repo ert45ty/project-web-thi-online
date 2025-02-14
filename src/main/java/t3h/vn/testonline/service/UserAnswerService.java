@@ -7,6 +7,8 @@ import t3h.vn.testonline.entities.ResultEntity;
 import t3h.vn.testonline.entities.UserAnswerEntity;
 import t3h.vn.testonline.repository.UserAnswerRepo;
 
+import java.util.List;
+
 @Service
 public class UserAnswerService {
 
@@ -25,5 +27,13 @@ public class UserAnswerService {
         userAnswerEntity.setQuestion(questionService.getQuestionById(userAnswerDto.getQuestion_id()));
         userAnswerEntity.setResult(resultEntity);
         userAnswerRepo.save(userAnswerEntity);
+    }
+
+    public UserAnswerEntity getById(Long id){
+        return userAnswerRepo.getById(id);
+    }
+
+    public List<UserAnswerEntity> getAllByResultId(Long id){
+        return userAnswerRepo.getAllByResult_Id(id);
     }
 }

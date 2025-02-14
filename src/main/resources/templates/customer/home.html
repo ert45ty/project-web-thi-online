@@ -8,12 +8,16 @@
   <div class="ec-page-wrapper">
     <header th:replace="fragments::header('')"></header>
     <div class="ec-content-wrapper">
+      <div th:if="${param.logout}" class="alert alert-success text-center">
+        <span>Đăng xuất khỏi tài khoản thành công.</span>
+        <br>
+      </div>
       <div class="content">
         <div class="col-12 d-none d-md-block" style="margin:0px;padding:0px;">
           <img src="/images/banner/thi-online_1.png" alt="" class="w-100" style="height:300px;">
         </div>
         </br>
-        <div>
+        <div style="background-color: #78ecc7; padding: 2px">
           <h2>Giới thiệu</h2>
           <p style="margin: 10px 40px 20px 40px; font-size: x-large; font-weight: bold; color: #0b0b0b">Thi online là web tổng hợp các đề thi trung
             học phổ thông quốc gia qua các năm tại khắp mọi tỉnh thành.
@@ -23,11 +27,13 @@
             từng thành viên để cho các bạn tiện theo dõi.</p>
 
         </div>
-        <div class="breadcrumb-wrapper breadcrumb-wrapper-2 breadcrumb-contacts">
-            <h1>Danh sách các môn thi và đề thi</h1>
-            <p class="breadcrumbs"><a th:href="@{/home}">Trang chủ</a>
-            </p>
+        <div class="row ec_breadcrumb_inner mt-2 mb-3 ml-2">
+          <div class="col-md-6 col-sm-12">
+            <h2 class="ec-breadcrumb-title">Danh sách các môn thi và đề thi</h2>
           </div>
+          <div th:replace="fragments::goToHome('home')"></div>
+        </div>
+
           <div class="row">
             <div class="col-12">
               <div class="ec-vendor-list card card-default">
@@ -62,7 +68,7 @@
                           <div class="btn-group">
                             <a type="button"
                                class="btn btn-outline-success align-items-center d-flex"
-                               th:href="@{/admin/exam/list(subject=${subjectIndex}, topic=${iterStat.count - 1})}">Thi</a>
+                               th:href="@{/doExam(examId=${exam.id})}">Thi</a>
                           </div>
                         </td>
                       </tr>

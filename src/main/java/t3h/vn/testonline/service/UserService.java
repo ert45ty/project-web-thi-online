@@ -6,6 +6,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import t3h.vn.testonline.dto.UserDto;
@@ -22,6 +23,8 @@ public class UserService {
     UserRepo userRepo;
     @Autowired
     FileUtils fileUtils;
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     public List<UserEntity> getAll(){
         return userRepo.findAll();
@@ -38,6 +41,10 @@ public class UserService {
         return result;
     }
 
+    public UserEntity findByUsername(String username){
+        return userRepo.findFirstByUsername(username);
+    }
+
     public void save(UserDto userDto){
         UserEntity userEntity = new UserEntity();
         BeanUtils.copyProperties(userDto, userEntity);
@@ -46,8 +53,8 @@ public class UserService {
                 String image_name = fileUtils.saveFile(userDto.getFileImage());
                 userEntity.setImage_name(image_name);
             }catch (Exception e){}
-
         }
+        userEntity.setPassword(passwordEncoder.encode(userDto.getPassword()));
         userRepo.save(userEntity);
     }
 

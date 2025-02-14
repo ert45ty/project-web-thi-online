@@ -12,4 +12,6 @@ public interface UserRepo extends JpaRepository<UserEntity, Long> {
     UserEntity getById(Long id);
 
     Page<UserEntity> findAllByUsernameContaining(String query, Pageable pageable);
+
+    UserEntity findFirstByUsername(String name);
 }
