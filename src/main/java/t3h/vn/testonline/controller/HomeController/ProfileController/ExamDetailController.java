@@ -2,10 +2,8 @@ package t3h.vn.testonline.controller.HomeController.ProfileController;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.support.SessionStatus;
 import t3h.vn.testonline.entities.*;
 import t3h.vn.testonline.service.ExamService;
 import t3h.vn.testonline.service.ResultService;
@@ -15,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@SessionAttributes({"totalQuestion","resultId","answers","answerList"})
 @RequestMapping("/profile/history/detail")
 public class ExamDetailController {
 
@@ -26,21 +23,16 @@ public class ExamDetailController {
     @Autowired
     UserAnswerService userAnswerService;
 
-    @Transactional
     @GetMapping
     public String showExamDetail(Model model,
-                             @RequestParam Long resultId,
-                             @RequestParam(defaultValue = "0") Integer currentIndex){
+                             @RequestParam Long resultId){
 
-        List<QuestionEntity> questionList;
+
         ResultEntity resultEntity = resultService.getById(resultId);
         ExamEntity examEntity = examService.getExamById(resultEntity.getExam().getId());
+        List<QuestionEntity> questionList = examEntity.getQuestions();
 
-        if (!model.containsAttribute("totalQuestion")){
-
-
-            questionList = examEntity.getQuestions();
-
+        Float score = resultService.getById(resultId).getScore();
             List<UserAnswerEntity> answerList = userAnswerService.getAllByResultId(resultId);
 
             List<Boolean> answers = new ArrayList<>();
@@ -56,56 +48,15 @@ public class ExamDetailController {
                     answers.add(false);
                 }
             }
-            model.addAttribute("totalQuestion",examEntity.getTotal_question());
+            model.addAttribute("score", score);
+            model.addAttribute("questionList", questionList);
+            model.addAttribute("exam", examEntity);
             model.addAttribute("resultId", resultId);
-
             model.addAttribute("answers", answers);
             model.addAttribute("answerList", answerList);
 
-
-        }
-        List<UserAnswerEntity> answerList = (List<UserAnswerEntity>) model.getAttribute("answerList");
-        questionList = examEntity.getQuestions();
-        QuestionEntity currentQuestion = questionList.get(currentIndex);
-        List<OptionEntity> currentOptionList = currentQuestion.getOptions();
-        UserAnswerEntity currentAnswer = answerList.get(currentIndex);
-
-
-        model.addAttribute("exam", examEntity);
-        model.addAttribute("questionList", questionList);
-        model.addAttribute("currentIndex", currentIndex);
-        model.addAttribute("currentQuestion", currentQuestion);
-        model.addAttribute("currentOptions", currentOptionList);
-        model.addAttribute("currentAnswer", currentAnswer.getOption() != null ? currentAnswer.getOption().getId() : -1);
         return "customer/profile/examDetail";
     }
 
-    @PostMapping
-    public String examDetail(Model model,
-                             @RequestParam Integer currentIndex,
-                             @RequestParam(required = false) String action,
-                             @RequestParam(required = false) String finish,
-                             SessionStatus sessionStatus){
-        Integer totalQuestion = (Integer) model.getAttribute("totalQuestion");
-        Long resultId = (Long) model.getAttribute("resultId");
-        if ("next".equals(action)) {
-            currentIndex = currentIndex < totalQuestion ? currentIndex + 1 : currentIndex;
-        }else if ("back".equals(action)){
-            currentIndex = currentIndex > 0 ? currentIndex - 1 : currentIndex;
-        }else if (action != null) {
-            for (int i = 1; i <= totalQuestion; i++) {
-                String iStr = i + "";
-                if (iStr.equals(action)) {
-                    currentIndex = i - 1;
-                }
-            }
-        }
-        if ("true".equals(finish)){
-            sessionStatus.setComplete();
-            return "redirect:/profile";
-        }
-
-        return showExamDetail(model,resultId,currentIndex);
-    }
 
 }

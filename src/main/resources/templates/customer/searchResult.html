@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments::head('Môn thi')">
+</head>
+<body class="ec-header-fixed ec-sidebar-fixed ec-sidebar-dark ec-header-light" id="body">
+<div class="wrapper">
+    <div th:replace="fragments::sidebarCustomer('topics',${subjectList})"></div>
+    <div class="ec-page-wrapper">
+        <header th:replace="fragments::headerCustomer(${subjectList})"></header>
+        <div class="ec-content-wrapper">
+            <div class="content">
+                <div class="col-12 d-none d-md-block" style="margin:0px;padding:0px;">
+                    <img src="/images/banner/thi-online_1.png" alt="" class="w-100" style="height:300px;">
+                </div>
+                </br>
+                <div>
+                    <h1 style="color: #0b5ed7">Các kết quả tìm được</h1>
+                </div>
+                </br>
+                </hr>
+                <div class="row ec_breadcrumb_inner mb-3 ml-2">
+                    <div class="col-md-6 col-sm-12">
+                        <h2 class="ec-breadcrumb-title" th:text=" 'Từ khóa: ' + ${query}"></h2>
+                    </div>
+                    <div th:replace="fragments::goToHome('search')"></div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="ec-vendor-list card card-default">
+                            <div class="card-body">
+                                <div>
+                                    <table id="responsive-data-table" class="table table-bordered text-center">
+                                        <tbody th:if="${response.hasContent()}">
+                                        <tr th:each="exam, iterStat : ${response.getContent()}">
+                                            <td th:text="'Môn '+ ${exam.topic.subject.name}"></td>
+                                            <td class="text-left" >
+                                                <h4 th:text="${exam.title}" style="margin: 5px"></h4>
+                                                <p class="card-text" style="margin-left: 5px">
+                                                    <span class="badge badge-secondary" th:text="${exam.total_question} + ' câu hỏi'"></span>
+                                                    <span class="badge badge-secondary" th:text="${(exam.duration)/60} + ' phút'"></span>
+                                                    <span class="badge badge-secondary">
+                            <a th:href="@{/rank(examId=${exam.id})}" class="text-white"
+                               th:text="'Điểm cao nhất: ' + ${highestScore.get(iterStat.index) == null ? 'Chưa có' : highestScore.get(iterStat.index)}"/></span>
+                                                </p>
+                                            </td>
+                                            <td>
+                                                <div class="btn-group">
+                                                    <a type="button"
+                                                       class="btn btn-outline-success align-items-center d-flex"
+                                                       th:href="@{/doExam(examId=${exam.id})}">Thi</a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                        <div th:if="${!response.hasContent()}" class="d-flex justify-content-center">Không tìm thấy bài thi nào tương ứng.</div>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+                        <nav class="mt-3 mb-5" th:if="${response.getTotalPages() > 0}">
+                            <ul class="pagination justify-content-center">
+                                <li th:if="${response.getPageable().getPageNumber() > 0}" class="page-item mx-1">
+                                    <a class="btn btn-outline-success"
+                                       th:href="@{/search(subjectId=${subjectId},time=${time},query=${query},
+                                       page=${response.getPageable().getPageNumber()}, perpage=${response.getSize()})}"
+                                    >
+                                        Trang trước
+                                    </a>
+                                </li>
+                                <li class="page-item" th:each="pageNo : ${#numbers.sequence(0, response.getTotalPages() - 1)}">
+                                    <a class="btn btn-outline-secondary" th:classappend="${response.getPageable().getPageNumber() == pageNo ? 'active-page' : ''}"
+                                       th:href="@{/search(subjectId=${subjectId},time=${time},query=${query},
+                                       page=${pageNo + 1}, perpage=${response.getSize()})}"
+                                       th:text="${pageNo + 1}"
+                                    >
+                                    </a>
+                                </li>
+                                <li th:if="${response.getPageable().getPageNumber() < (response.getTotalPages() - 1)}" class="page-item mx-1">
+                                    <a class="btn btn-outline-success"
+                                       th:href="@{/search(subjectId=${subjectId},time=${time},query=${query},
+                                       page=${response.getPageable().getPageNumber() + 2}, perpage=${response.getSize()})}">
+                                        Trang sau
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer th:replace="fragments::footerCustomer()"></footer>
+    </div>
+</div>
+</body>
+</html>

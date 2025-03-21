@@ -16,4 +16,6 @@ public class TopicDto {
     @NotBlank(message = "Mô tả của chủ đề không được để trống")
     @Size(min = 10, message = "Mô tả của chủ đề phải lớn hơn 10 kí tự")
     private String description;
+
+    private int status;
 }

@@ -4,9 +4,9 @@
 </head>
 <body class="ec-header-fixed ec-sidebar-fixed ec-sidebar-dark ec-header-light" id="body">
 <div class="wrapper">
-  <div th:replace="fragments::sidebarCustomer('')"></div>
+  <div th:replace="fragments::sidebarCustomer('',${subjectList})"></div>
   <div class="ec-page-wrapper">
-    <header th:replace="fragments::header('')"></header>
+    <header th:replace="fragments::headerCustomer(${subjectList})"></header>
     <div class="ec-content-wrapper">
       <div th:if="${param.logout}" class="alert alert-success text-center">
         <span>Đăng xuất khỏi tài khoản thành công.</span>
@@ -61,7 +61,9 @@
                           <p class="card-text" style="margin-left: 5px">
                             <span class="badge badge-secondary" th:text="${exam.total_question} + ' câu hỏi'"></span>
                             <span class="badge badge-secondary" th:text="${(exam.duration)/60} + ' phút'"></span>
-<!--                            <span class="badge badge-secondary" th:text="'Điểm cao nhất:'"></span>-->
+                            <span class="badge badge-secondary">
+                            <a th:href="@{/rank(examId=${exam.id})}" class="text-white"
+                               th:text="'Điểm cao nhất: ' + ${highestScore.get(iterStat.index) == null ? 'Chưa có' : highestScore.get(iterStat.index)}"/></span>
                           </p>
                         </td>
                         <td>
@@ -85,7 +87,7 @@
       </div>
     </div>
 
-    <footer th:replace="fragments::footer()"></footer>
+    <footer th:replace="fragments::footerCustomer()"></footer>
   </div>
 </div>
 </body>

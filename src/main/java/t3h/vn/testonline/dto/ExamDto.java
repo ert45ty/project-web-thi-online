@@ -4,6 +4,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class ExamDto {
 
@@ -18,4 +20,8 @@ public class ExamDto {
     private Integer duration;
 
     private Integer total_question;
+
+    private List<QuestionDto> options;
+
+    private int status;
 }

@@ -3,6 +3,8 @@ package t3h.vn.testonline.dto;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class OptionDto {
     private Long id;
@@ -12,4 +14,5 @@ public class OptionDto {
     private String option_text;
 
     private Boolean is_correct;
+
 }

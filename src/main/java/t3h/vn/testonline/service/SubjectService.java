@@ -39,6 +39,7 @@ public class SubjectService {
 
     public void save(SubjectDto subjectDto){
         SubjectEntity subjectEntity = new SubjectEntity();
+        subjectDto.setStatus(1);
         BeanUtils.copyProperties(subjectDto, subjectEntity);
         if(subjectDto.getFileImage() != null && !subjectDto.getFileImage().isEmpty()){
             try{

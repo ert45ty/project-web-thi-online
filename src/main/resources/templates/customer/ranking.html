@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head th:replace="fragments::head('Xếp hạng')">
+</head>
+<body class="ec-header-fixed ec-sidebar-fixed ec-sidebar-dark ec-header-light" id="body">
+<div class="wrapper">
+  <div th:replace="fragments::sidebarCustomer('',${subjectList})"></div>
+  <div class="ec-page-wrapper">
+    <header th:replace="fragments::headerCustomer(${subjectList})"></header>
+    <div class="ec-content-wrapper">
+      <div class="content">
+        <div class="col-12 d-none d-md-block" style="margin:0px;padding:0px;">
+          <img src="/images/banner/thi-online_1.png" alt="" class="w-100" style="height:300px;">
+        </div>
+        </br>
+        <div class="row">
+          <div class="col-12">
+            <div class="ec-vendor-list card card-default">
+              <div class="d-flex justify-content-center ">
+                <p class="font-weight-bolder" style="font-size: xx-large">Xếp hạng</p>
+              </div>
+              <div class="card-body">
+                <h3 th:text="'Bài thi '+${resultList.get(0).exam.title}"></h3>
+                </hr>
+                </br>
+                <div>
+                  <table id="responsive-data-table" class="table table-bordered text-center">
+                    <thead>
+                    <tr>
+                      <th scope="col">Xếp hạng</th>
+                      <th scope="col">Tên người dùng</th>
+                      <th scope="col">Thành tích tốt nhất</th>
+                      <th scope="col">Thời gian thi</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="result, iterStat : ${resultList}">
+                      <td th:text="'#'+ ${iterStat.count}"></td>
+                      <td sec:authorize="isAuthenticated()"
+                          th:text="${result.user.fullname}"
+                          th:classappend="${result.user.username.equals(#authentication.principal.user.username)  ? 'text-success' : ''}"></td>
+                      <td sec:authorize="isAnonymous()"
+                          th:text="${result.user.fullname}"></td>
+                      <td th:text="${result.score}"></td>
+                      <td th:text="${result.exam_duration/60 + ' phút ' + result.exam_duration%60 + ' giây'}"></td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <button class="text-left btn btn-secondary col-1" onclick="goBack()">Quay lại</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer th:replace="fragments::footerCustomer()"></footer>
+  </div>
+</div>
+<script>
+  function goBack() {
+    window.history.back();
+  }
+</script>
+</body>
+</html>

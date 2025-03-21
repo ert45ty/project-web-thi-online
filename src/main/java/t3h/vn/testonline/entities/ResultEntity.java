@@ -32,7 +32,6 @@ public class ResultEntity extends BaseEntity{
     private Float score;
 
     @Column
-    @CreatedDate
     private LocalDateTime created_at;
 
 }

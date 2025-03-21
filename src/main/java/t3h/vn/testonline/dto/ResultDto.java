@@ -15,4 +15,5 @@ public class ResultDto {
     private Float score;
 
     private LocalDateTime created_at;
+
 }

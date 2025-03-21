@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import t3h.vn.testonline.entities.UserEntity;
+import t3h.vn.testonline.exception.AccountNotActivatedException;
 import t3h.vn.testonline.repository.UserRepo;
 
 import java.util.Collection;
@@ -24,7 +25,9 @@ public class UserDetailServiceImpl implements UserDetailsService {
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
 		UserEntity user = userRepo.findFirstByUsername(username);
-		if (user == null) throw new UsernameNotFoundException("Không tồn tại user");
+		if (user == null) throw new UsernameNotFoundException("Không tồn tại tài khoản");
+		if (user.getStatus() == 0) throw new AccountNotActivatedException("Tài khoản chưa được kích hoạt, " +
+				                                                          "vui kích hoạt tài khoản của bạn trước khi đăng nhập");
 		return new UserDetailImpl(user);
 	}
 
@@ -66,9 +69,10 @@ public class UserDetailServiceImpl implements UserDetailsService {
 			return true;
 		}
 
-//		@Override
-//		public boolean isEnabled() {
-//			return user.getStatus() == 1;
-//		}
+		@Override
+		public boolean isEnabled() {
+			return user.getStatus() == 1;
+		}
 	}
+
 }

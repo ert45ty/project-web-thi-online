@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments::head('Đề thi')">
+<head th:replace="fragments::head('Chi tiết đề thi')">
 </head>
 <body class="ec-header-fixed ec-sidebar-fixed ec-sidebar-dark ec-header-light" id="body">
 <div class="wrapper">
@@ -14,7 +14,10 @@
             <div class="ec-cat-list card card-default mb-24px">
               <div class="card-body">
                 <div class="ec-cat-form">
+                  <div class="d-flex justify-content-between">
                   <h4>Chi tiết đề thi</h4>
+                    <button class="text-left btn btn-primary" onclick="goBack()">Quay lại</button>
+                  </div>
                   <table id="responsive-data-table" class="table table-bordered text-center">
                     <thead>
                     <tr>
@@ -43,6 +46,7 @@
                 </div>
               </div>
             </div>
+            <button class="text-left btn btn-primary" onclick="goBack()">Quay lại</button>
           </div>
         </div>
       </div>
@@ -51,5 +55,10 @@
     <footer th:replace="fragments::footer()"></footer>
   </div>
 </div>
+<script>
+  function goBack() {
+    window.history.back();
+  }
+</script>
 </body>
 </html>

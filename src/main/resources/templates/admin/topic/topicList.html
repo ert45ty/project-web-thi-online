@@ -13,7 +13,7 @@
                 <!-- search form -->
                 <div class="search-form d-lg-inline-block">
 
-                    <form th:action="@{/admin/topic/list(subject=${subjectIndex})}" method="post" >
+                    <form th:action="@{/admin/topic(subject=${subjectIndex})}" method="post" >
                         <div class="input-group">
                             <input type="text" name="query" id="search-input" class="form-control"
                                    th:value="${query}"
@@ -59,7 +59,7 @@
                     <p class="breadcrumbs"><span><a href="index.html">Home</a></span>
                         <span><i class="mdi mdi-chevron-right"></i></span>Chủ đề</p></div>
                     <div>
-                        <a type="button" class="btn btn-primary align-items-center d-flex" th:href="@{/admin/topic/list/create}" > Thêm chủ đề
+                        <a type="button" class="btn btn-primary align-items-center d-flex" th:href="@{/admin/topic/create}" > Thêm chủ đề
                         </a>
                     </div>
                 </div>
@@ -73,7 +73,7 @@
                                         <li class="nav-item" th:each="subject, iterStat : ${subjectList}">
                                             <a class="nav-link"
                                                th:classappend="${subjectIndex == iterStat.index} ? 'active' : ''"
-                                               th:href="@{/admin/topic/list(subject=${iterStat.index})}"
+                                               th:href="@{/admin/topic(subject=${iterStat.index})}"
                                                th:text="${subject.name}">
                                             </a>
                                         </li>
@@ -86,6 +86,7 @@
                                             <th scope="col">Tên chủ đề</th>
                                             <th scope="col">Mô tả</th>
                                             <th scope="col">Tổng số đề thi</th>
+                                            <th scope="col">Trạng thái</th>
                                             <th scope="col">Hành động</th>
                                         </tr>
                                         </thead>
@@ -93,13 +94,14 @@
                                         <tbody>
                                         <tr th:each="topic, iterStat : ${response.getContent()}">
                                             <td th:text="${topic.name}"></td>
-                                            <td></td>
-                                            <td></td>
+                                            <td th:text="${topic.description}"></td>
+                                            <td th:text="${topic.exams.size()}"></td>
+                                            <td th:text="${topic.status == 1 ? 'Kích hoạt' : 'Không kích hoạt'}"></td>
                                             <td>
                                                 <div class="btn-group">
                                                     <a type="button"
                                                             class="btn btn-outline-success align-items-center d-flex"
-                                                    th:href="@{/admin/exam/list(subject=${subjectIndex}, topic=${iterStat.count - 1})}">Chi tiết</a>
+                                                    th:href="@{/admin/exam(subject=${subjectIndex}, topic=${iterStat.count - 1})}">Chi tiết</a>
                                                     <button type="button"
                                                             class="btn btn-outline-success dropdown-toggle dropdown-toggle-split"
                                                             data-bs-toggle="dropdown" aria-haspopup="true"
@@ -108,9 +110,9 @@
                                                     </button>
                                                     <div class="dropdown-menu">
                                                         <a class="dropdown-item"
-                                                           th:href="@{/admin/topic/list/update/{id}(id=${topic.id})}">Sửa</a>
+                                                           th:href="@{/admin/topic/update/{id}(id=${topic.id})}">Sửa</a>
                                                         <a class="dropdown-item"
-                                                           th:href="@{/admin/topic/list/delete/{id}(id=${topic.id})}"
+                                                           th:href="@{/admin/topic/delete/{id}(id=${topic.id})}"
                                                            onclick="return confirm('Bạn có muốn xóa?')">Xóa</a>
                                                     </div>
                                                 </div>
@@ -123,23 +125,23 @@
                             </div>
                             <nav class="mt-3 mb-5" th:if="${response.getTotalPages() > 0}">
                                 <ul class="pagination justify-content-center">
-                                    <li th:if="${response.getPageable().getPageNumber() > 0}" class="page-item">
-                                        <a class="page-link"
-                                           th:href="@{/admin/topic/list(subject=${subjectIndex}, page=${response.getPageable().getPageNumber()}, perpage=${response.getSize()})}"
+                                    <li th:if="${response.getPageable().getPageNumber() > 0}" class="page-item mx-1">
+                                        <a class="btn btn-outline-success"
+                                           th:href="@{/admin/topic(subject=${subjectIndex}, page=${response.getPageable().getPageNumber()}, perpage=${response.getSize()})}"
                                         >
                                             Trang trước
                                         </a>
                                     </li>
                                     <li class="page-item" th:each="pageNo : ${#numbers.sequence(0, response.getTotalPages() - 1)}">
-                                        <a class="page-link" th:classappend="${response.getPageable().getPageNumber() == pageNo ? 'active-page' : ''}"
-                                           th:href="@{/admin/topic/list(subject=${subjectIndex}, page=${pageNo + 1}, perpage=${response.getSize()})}"
+                                        <a class="btn btn-outline-secondary" th:classappend="${response.getPageable().getPageNumber() == pageNo ? 'active-page' : ''}"
+                                           th:href="@{/admin/topic(subject=${subjectIndex}, page=${pageNo + 1}, perpage=${response.getSize()})}"
                                            th:text="${pageNo + 1}"
                                         >
                                         </a>
                                     </li>
-                                    <li th:if="${response.getPageable().getPageNumber() < (response.getTotalPages() - 1)}" class="page-item">
-                                        <a class="page-link"
-                                           th:href="@{/admin/topic/list(subject=${subjectIndex}, page=${response.getPageable().getPageNumber() + 2}, perpage=${response.getSize()})}">
+                                    <li th:if="${response.getPageable().getPageNumber() < (response.getTotalPages() - 1)}" class="page-item mx-1">
+                                        <a class="btn btn-outline-success"
+                                           th:href="@{/admin/topic(subject=${subjectIndex}, page=${response.getPageable().getPageNumber() + 2}, perpage=${response.getSize()})}">
                                             Trang sau
                                         </a>
                                     </li>

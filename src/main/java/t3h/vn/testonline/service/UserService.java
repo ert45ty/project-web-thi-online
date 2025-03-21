@@ -73,6 +73,10 @@ public class UserService {
         userRepo.save(userEntity);
     }
 
+    public UserEntity getByCode(String code){
+        return userRepo.getByCode(code);
+    }
+
     public void delete(Long id){
         userRepo.deleteById(id);
     }

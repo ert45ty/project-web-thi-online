@@ -16,4 +16,6 @@ public class SubjectDto {
     private String  image_name;
 
     MultipartFile fileImage;
+
+    private int status;
 }

@@ -40,7 +40,14 @@
 
                 <tbody>
                 <tr th:each="user : ${response.getContent()}">
-                  <td><img  width="50px" height="50px" th:src="'/image-file/' + ${user.image_name}"/></td>
+                  <td>
+                    <th:block th:switch="${user.image_name == null}">
+                      <img th:case="${false}" width="50px" height="50px" th:src="'/image-file/' + ${user.image_name}">
+                      <img th:case="${true}"
+                           src="https://png.pngtree.com/png-clipart/20210608/ourlarge/pngtree-white-silhouette-avatar-png-image_3418408.jpg"
+                           alt="Avatar" width="50px" height="50px">
+                    </th:block>
+                  </td>
                   <td th:text="${user.fullname}"></td>
                   <td th:text="${user.role}"></td>
                   <td th:text="${user.created_at}"></td>
@@ -71,22 +78,22 @@
           </div>
           <nav class="mt-3 mb-5" th:if="${response.getTotalPages() > 0}">
             <ul class="pagination justify-content-center">
-              <li th:if="${response.getPageable().getPageNumber() > 0}" class="page-item">
-                <a class="page-link"
+              <li th:if="${response.getPageable().getPageNumber() > 0}" class="page-item mx-1">
+                <a class="btn btn-outline-success"
                    th:href="@{/admin/user/list(page=${response.getPageable().getPageNumber()}, perpage=${response.getSize()})}"
                 >
                   Trang trước
                 </a>
               </li>
               <li class="page-item" th:each="pageNo : ${#numbers.sequence(0, response.getTotalPages() - 1)}">
-                <a class="page-link" th:classappend="${response.getPageable().getPageNumber() == pageNo ? 'active-page' : ''}"
+                <a class="btn btn-outline-secondary" th:classappend="${response.getPageable().getPageNumber() == pageNo ? 'active-page' : ''}"
                    th:href="@{/admin/user/list(page=${pageNo + 1}, perpage=${response.getSize()})}"
                    th:text="${pageNo + 1}"
                 >
                 </a>
               </li>
-              <li th:if="${response.getPageable().getPageNumber() < (response.getTotalPages() - 1)}" class="page-item">
-                <a class="page-link"
+              <li th:if="${response.getPageable().getPageNumber() < (response.getTotalPages() - 1)}" class="page-item mx-1">
+                <a class="btn btn-outline-success"
                    th:href="@{/admin/user/list(page=${response.getPageable().getPageNumber() + 2}, perpage=${response.getSize()})}">
                   Trang sau
                 </a>

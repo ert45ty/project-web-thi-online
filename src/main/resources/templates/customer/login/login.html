@@ -4,9 +4,9 @@
 </head>
 <body class="ec-header-fixed ec-sidebar-fixed ec-sidebar-dark ec-header-light" id="body">
 <div class="wrapper">
-    <div th:replace="fragments::sidebarCustomer('login')"></div>
+    <div th:replace="fragments::sidebarCustomer('login',${subjectList})"></div>
     <div class="ec-page-wrapper">
-        <header th:replace="fragments::header('')"></header>
+        <header th:replace="fragments::headerCustomer(${subjectList})"></header>
         <div class="sticky-header-next-sec  ec-breadcrumb section-space-mb">
             <div class="container">
                 <div class="row">
@@ -17,7 +17,6 @@
                             </div>
                             <div th:replace="fragments::goToHome('login')"></div>
                         </div>
-                        <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
                     </div>
                 </div>
             </div>
@@ -40,6 +39,11 @@
                                         <span th:text="${errorMessage}"/>
                                     </div>
                                 </div>
+                                <div th:if ="${message} != null">
+                                    <div class="alert alert-success mb-3 small" role="alert">
+                                        <span th:text="${message}"/>
+                                    </div>
+                                </div>
                                 <div class="ec-login-wrapper">
                                     <div class="ec-login-container">
                                         <div class="ec-login-form">
@@ -52,8 +56,8 @@
                                     <label>Mật khẩu*</label>
                                     <input type="password" name="password" placeholder="Mời bạn nhập mật khẩu" required />
                                 </span>
-                                                <span class="ec-login-wrap ec-login-fp">
-                                    <label><a href="#">Quên mật khẩu?</a></label>
+                                <span class="ec-login-wrap ec-login-fp">
+                                    <label><a href="/forgotPassword">Quên mật khẩu?</a></label>
                                 </span>
                                                 <span class="ec-login-wrap ec-login-btn">
                                     <button class="btn btn-primary" type="submit">Đăng nhập</button>
@@ -69,7 +73,7 @@
                 </div>
             </div>
         </section>
-        <footer th:replace="fragments::footer()"></footer>
+        <footer th:replace="fragments::footerCustomer()"></footer>
     </div>
 </div>
 </body>

@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments::head('Topics')">
+<head th:replace="fragments::head('Lịch sử đề thi')">
 </head>
 <body class="ec-header-fixed ec-sidebar-fixed ec-sidebar-dark ec-header-light" id="body">
 <div class="wrapper">
-  <div th:replace="fragments::sidebarCustomer('topics')"></div>
+  <div th:replace="fragments::sidebarCustomer('topics',${subjectList})"></div>
   <div class="ec-page-wrapper">
-    <header th:replace="fragments::header('')"></header>
+    <header th:replace="fragments::headerCustomer(${subjectList})"></header>
     <div class="sticky-header-next-sec  ec-breadcrumb section-space-mb">
       <div class="container">
         <div class="row">
@@ -17,6 +17,13 @@
               </div>
               <div th:replace="fragments::goToHome('history')"></div>
             </div>
+
+          </div>
+
+        </div>
+        <div th:if ="${message} != null">
+          <div class="alert alert-success mb-3 small" role="alert">
+            <span th:text="${message}"/>
           </div>
         </div>
       </div>
@@ -33,35 +40,63 @@
               </div>
               <div class="ec-vendor-card-body">
                 <div class="ec-vendor-card-table">
-                  <table class="table ec-table">
+                  <table th:if="${response.hasContent()}" class="table ec-table">
                     <thead>
                     <tr>
                       <th scope="col">STT</th>
                       <th scope="col">Tên đề thi</th>
                       <th scope="col">Thời gian hoàn thành</th>
                       <th scope="col">Điểm đạt được</th>
+                      <th scope="col">Ngày</th>
                       <th scope="col">Hành động</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="i, iterStat : ${#numbers.sequence(1, 5)}">
-                      <th scope="row"><span th:text="${}"></span></th>
-                      <td><span></span></td>
-                      <td><span></span></td>
-                      <td><span></span></td>
-                      <td><span class="tbl-btn"><a class="btn btn-lg btn-primary"
-                                                   th:href="@{}">View</a></span></td>
+                    <tr th:each="result, iterStat : ${response.getContent()}">
+                      <th scope="row"><span th:text="${iterStat.count}"></span></th>
+                      <td><span th:text="${result.exam.title}"></span></td>
+                      <td><span th:text="${result.exam_duration/60 + ' phút ' + result.exam_duration%60 + ' giây'}"></span></td>
+                      <td><span th:text="${result.score}"></span></td>
+                      <td><span th:text="${result.created_at}"></span></td>
+                      <td><a class="btn btn-primary d-flex align-items-center justify-content-center" type="button"
+                                   th:href="@{/profile/history/detail(resultId=${result.id})}">Xem</a></td>
                     </tr>
                     </tbody>
                   </table>
+                  <div th:if="${!response.hasContent()}"
+                  class="d-flex justify-content-center"> Chưa có bài thi nào.</div>
                 </div>
               </div>
+              <nav class="mt-3 mb-5" th:if="${response.getTotalPages() > 0}">
+                <ul class="pagination justify-content-center">
+                  <li th:if="${response.getPageable().getPageNumber() > 0}" class="page-item mx-1">
+                    <a class="btn btn-outline-success"
+                       th:href="@{/profile/history(page=${response.getPageable().getPageNumber()}, perpage=${response.getSize()})}"
+                    >
+                      Trang trước
+                    </a>
+                  </li>
+                  <li class="page-item" th:each="pageNo : ${#numbers.sequence(0, response.getTotalPages() - 1)}">
+                    <a class="btn btn-outline-secondary" th:classappend="${response.getPageable().getPageNumber() == pageNo ? 'active-page' : ''}"
+                       th:href="@{/profile/history(page=${pageNo + 1}, perpage=${response.getSize()})}"
+                       th:text="${pageNo + 1}"
+                    >
+                    </a>
+                  </li>
+                  <li th:if="${response.getPageable().getPageNumber() < (response.getTotalPages() - 1)}" class="page-item mx-1">
+                    <a class="btn btn-outline-success"
+                       th:href="@{/profile/history(page=${response.getPageable().getPageNumber() + 2}, perpage=${response.getSize()})}">
+                      Trang sau
+                    </a>
+                  </li>
+                </ul>
+              </nav>
             </div>
           </div>
         </div>
       </div>
     </section>
-    <footer th:replace="fragments::footer()"></footer>
+    <footer th:replace="fragments::footerCustomer()"></footer>
   </div>
 </div>
 </body>

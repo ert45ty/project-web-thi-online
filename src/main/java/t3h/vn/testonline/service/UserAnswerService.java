@@ -1,5 +1,6 @@
 package t3h.vn.testonline.service;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import t3h.vn.testonline.dto.UserAnswerDto;
@@ -18,14 +19,17 @@ public class UserAnswerService {
     OptionService optionService;
     @Autowired
     QuestionService questionService;
+    @Autowired
+    ResultService resultService;
 
-    public void save(UserAnswerDto userAnswerDto, ResultEntity resultEntity){
+
+    public void save(UserAnswerDto userAnswerDto, Long resultId, Long questionId, Long optionId){
         UserAnswerEntity userAnswerEntity = new UserAnswerEntity();
-        if (userAnswerDto.getOption_id() != null){
-        userAnswerEntity.setOption(optionService.getById(userAnswerDto.getOption_id()));
-        }
-        userAnswerEntity.setQuestion(questionService.getQuestionById(userAnswerDto.getQuestion_id()));
-        userAnswerEntity.setResult(resultEntity);
+        BeanUtils.copyProperties(userAnswerDto, userAnswerEntity);
+        userAnswerEntity.setResult(resultService.getById(resultId));
+        userAnswerEntity.setQuestion(questionService.getQuestionById(questionId));
+        if (optionId == null) userAnswerEntity.setOption(null);
+        else userAnswerEntity.setOption(optionService.getById(optionId));
         userAnswerRepo.save(userAnswerEntity);
     }
 

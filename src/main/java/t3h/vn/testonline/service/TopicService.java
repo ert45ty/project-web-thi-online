@@ -66,6 +66,7 @@ public class TopicService {
 
     public void save(TopicDto topicDto){
         TopicEntity topicEntity = new TopicEntity();
+        topicDto.setStatus(1);
         SubjectEntity subject = subjectService.getById(topicDto.getSubject_id());
         BeanUtils.copyProperties(topicDto, topicEntity);
         topicEntity.setSubject(subject);

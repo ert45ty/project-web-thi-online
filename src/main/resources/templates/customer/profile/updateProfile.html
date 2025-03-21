@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments::head('Cập nhật thông tin')">
+</head>
+<body class="ec-header-fixed ec-sidebar-fixed ec-sidebar-dark ec-header-light" id="body">
+<div class="wrapper">
+  <div th:replace="fragments::sidebarCustomer('topics',${subjectList})"></div>
+  <div class="ec-page-wrapper">
+    <header th:replace="fragments::headerCustomer(${subjectList})"></header>
+    <div class="sticky-header-next-sec  ec-breadcrumb section-space-mb">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <div class="row ec_breadcrumb_inner mb-3 ml-2">
+              <div class="col-md-6 col-sm-12">
+                <h2 class="ec-breadcrumb-title">Cập nhật thông tin</h2>
+              </div>
+              <div th:replace="fragments::goToHome('profile')"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section class="ec-page-content ec-vendor-uploads ec-user-account section-space-p">
+      <div class="container">
+        <div class="row">
+          <div th:replace="fragments::leftside('change_pass')"></div>
+          <div class="ec-shop-rightside col-lg-9 col-md-12">
+            <div class="ec-vendor-dashboard-card">
+              <div class="ec-vendor-card-header">
+                <h5>Cập nhật thông tin</h5>
+              </div>
+              <div class="ec-vendor-card-body">
+                <div class="container">
+                  <div class="row">
+                    <div class="col-md-12 text-center">
+                      <div class="section-title">
+                        <h2 class="ec-bg-title">Cập nhật thông tin</h2>
+                        <h2 class="ec-title">Cập nhật thông tin</h2>
+                      </div>
+                    </div>
+                    <div class="ec-login-wrapper">
+                      <div class="ec-login-container">
+                        <div class="ec-login-form">
+                          <form action="/profile/update" method="post" th:object="${existUser}" enctype="multipart/form-data">
+                            <span class="ec-login-wrap">
+                                    <label>Ảnh đại diện</label>
+                              <div class="form-group">
+                                <label class="custom-file">
+                                  <input id="fileImage" name="fileImage" type="file" class="custom-file-input" accept="image/*" onchange="previewImage(event)">
+                                  <span class="custom-file-label" id="file-name">Không có tệp nào được chọn</span>
+                                </label>
+                              </div>
+
+<!--                                    <input id="fileImage" name="fileImage" class="form-control here slug-title" type="file" accept="image/*" onchange="previewImage(event)">-->
+                                    <img id="imagePreview" class="mt-2 mb-2" src="#" alt="Ảnh xem trước" style="display: none; width: 200px; height: auto;">
+                            </span>
+                            <span class="ec-login-wrap">
+                                    <label>Bạn có muốn xóa ảnh đại diện không?</label>
+                              <div class="d-flex mb-1">
+                                <input class="d-flex align-items-center" style="width: 15px; height: 15px; margin-right: 5px" name="img" value="yes" type="radio" >
+                                <p>Có</p>
+                              </div>
+                              <div class="d-flex">
+                                <input class="d-flex align-items-center" style="width: 15px; height: 15px; margin-right: 5px" name="img" value="no" type="radio" checked>
+                                <p>Không</p>
+                              </div>
+                            </span>
+                            <span class="ec-login-wrap">
+                                    <label>Tên đầy đủ</label>
+                                    <input id="fullname" type="text" name="fullname" th:value="${existUser.fullname}" th:field="*{fullname}" placeholder="Mời bạn nhập tên đầy đủ" required />
+                            </span>
+                            <label th:if="${#fields.hasErrors('fullname')}" th:errors="*{fullname}" for="fullname" class="form-label text-danger"></label>
+                            <span class="ec-login-wrap">
+                                    <label>Email*</label>
+                                    <input id="email" type="text" name="email" th:value="${existUser.email}" th:field="*{email}" placeholder="Mời bạn nhập email mới" required />
+                            </span>
+                            <label th:if="${#fields.hasErrors('email')}" th:errors="*{email}" for="email" class="form-label text-danger"></label>
+                            <span class="ec-login-wrap ec-login-btn">
+                                    <button class="btn btn-primary" type="submit">Cập nhật</button>
+                                </span>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+    </section>
+    <footer th:replace="fragments::footerCustomer()"></footer>
+  </div>
+</div>
+</body>
+</html>

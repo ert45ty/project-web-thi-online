@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
-<head th:replace="fragments::head('Topics')">
+<head th:replace="fragments::head('Thông tin người dùng')">
 </head>
 <body class="ec-header-fixed ec-sidebar-fixed ec-sidebar-dark ec-header-light" id="body">
 <div class="wrapper">
-  <div th:replace="fragments::sidebarCustomer('topics')"></div>
+  <div th:replace="fragments::sidebarCustomer('topics',${subjectList})"></div>
   <div class="ec-page-wrapper">
-    <header th:replace="fragments::header('')"></header>
+    <header th:replace="fragments::headerCustomer(${subjectList})"></header>
     <div class="sticky-header-next-sec  ec-breadcrumb section-space-mb">
       <div class="container">
         <div class="row">
@@ -17,6 +17,11 @@
               </div>
               <div th:replace="fragments::goToHome('profile')"></div>
             </div>
+          </div>
+        </div>
+        <div th:if ="${message} != null">
+          <div class="alert alert-success mb-3 small" role="alert">
+            <span th:text="${message}"/>
           </div>
         </div>
       </div>
@@ -34,24 +39,30 @@
                     <div class="ec-vendor-block-profile">
                       <div class="ec-vendor-block-img space-bottom-30">
                         <div class="ec-vendor-block-detail">
-                          <img class="v-img" src="/static/images/user/1.jpg" alt="vendor image">
+                          <th:block th:switch="${user.image_name == null}">
+                            <img th:case="${false}" class="v-img" th:src="'/image-file/' + ${user.image_name}" alt="vendor image">
+                            <img th:case="${true}"
+                                 src="https://png.pngtree.com/png-clipart/20210608/ourlarge/pngtree-white-silhouette-avatar-png-image_3418408.jpg"
+                                 alt="Avatar" class="v-img">
+                          </th:block>
+<!--                          <img class="v-img" th:src="'/image-file/' + ${user.image_name}" alt="vendor image">-->
                           <h5 class="name" sec:authentication="principal.user.fullname"></h5>
                         </div>
                       </div>
                       <h5>Thông tin tài khoản</h5>
                       <div class="row d-flex justify-content-center text-center ">
                         <div class="col-md-8 col-sm-12">
-                          <h6>Contact nubmer: </h6>
+                          <h6>Email: </h6>
                           <div class="ec-vendor-detail-block space-bottom-30">
-                            <h6>abc</h6>
+                            <h6 th:text="${'******' + #strings.substring(user.email, user.email.indexOf('@'))}"></h6>
                           </div>
                         </div>
-                        <div class="col-md-8 col-sm-12">
-                          <h6>Contact nubmer: </h6>
-                          <div class="ec-vendor-detail-block space-bottom-30 ">
-                            <h6>abc</h6>
-                          </div>
-                        </div>
+<!--                        <div class="col-md-8 col-sm-12">-->
+<!--                          <h6>Contact nubmer: </h6>-->
+<!--                          <div class="ec-vendor-detail-block space-bottom-30 ">-->
+<!--                            <h6>abc</h6>-->
+<!--                          </div>-->
+<!--                        </div>-->
                         <div class="text-right"><a href="javasript:void(0)" class="btn-primary" style="padding: 2px 4px ; border: 3px solid dimgray;" type="button" title="Edit Detail">Edit <img src="/images/icons/edit.svg" class="svg_img pro_svg" alt="edit"/></a></div>
                       </div>
                     </div>
@@ -65,7 +76,7 @@
     </section>
 
 
-    <footer th:replace="fragments::footer()"></footer>
+    <footer th:replace="fragments::footerCustomer()"></footer>
   </div>
 </div>
 </body>

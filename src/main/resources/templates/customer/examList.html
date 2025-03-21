@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head th:replace="fragments::head('Môn thi')">
+</head>
+<body class="ec-header-fixed ec-sidebar-fixed ec-sidebar-dark ec-header-light" id="body">
+<div class="wrapper">
+  <div th:replace="fragments::sidebarCustomer('topics',${subjectList})"></div>
+  <div class="ec-page-wrapper">
+    <header th:replace="fragments::headerCustomer(${subjectList})"></header>
+    <div class="ec-content-wrapper">
+      <div class="content">
+        <div class="col-12 d-none d-md-block" style="margin:0px;padding:0px;">
+          <img src="/images/banner/thi-online_1.png" alt="" class="w-100" style="height:300px;">
+        </div>
+        </br>
+        <div>
+          <h1 th:text="'Môn ' + ${subject.name}" style="color: #0b5ed7"></h1>
+        </div>
+        </br>
+        </hr>
+        <div class="row ec_breadcrumb_inner mb-3 ml-2">
+          <div class="col-md-6 col-sm-12">
+            <h2 class="ec-breadcrumb-title" th:text="${currentTopic.name}"></h2>
+          </div>
+          <div th:replace="fragments::goToHome('subject')"></div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <div class="ec-vendor-list card card-default">
+              <div class="card-body">
+                <div class="col-md-12 text-center">
+                  <ul class="nav navbar-nav">
+                    <li class="dropdown user-menu">
+                      <button class="dropdown-toggle nav-link ec-drop" data-bs-toggle="dropdown"
+                              aria-expanded="false">
+                        <span class="font-weight-bold" style="font-size: x-large">Chọn chủ đề</span>
+                      </button>
+                    <ul class="dropdown-menu dropdown-menu-right ec-dropdown-menu">
+                      <li class="border-bottom" th:each="topic : ${topicList}">
+                        <a class="ml-2" style="font-size: large" th:text="${topic.name}" th:href="@{/subject/exam(topicId=${topic.id})}" />
+                      </li>
+                    </ul>
+                    </li>
+                  </ul>
+                </div>
+                <div>
+                  <table id="responsive-data-table" class="table table-bordered text-center">
+                    <tbody th:if="${response.hasContent()}">
+                    <tr th:each="exam, iterStat : ${response.getContent()}">
+                      <td class="text-left" >
+                        <h4 th:text="${exam.title}" style="margin: 5px"></h4>
+                        <p class="card-text" style="margin-left: 5px">
+                          <span class="badge badge-secondary" th:text="${exam.total_question} + ' câu hỏi'"></span>
+                          <span class="badge badge-secondary" th:text="${(exam.duration)/60} + ' phút'"></span>
+                          <span class="badge badge-secondary">
+                            <a th:href="@{/rank(examId=${exam.id})}" class="text-white"
+                               th:text="'Điểm cao nhất: ' + ${highestScore.get(iterStat.index) == null ? 'Chưa có' : highestScore.get(iterStat.index)}"/></span>
+                        </p>
+                      </td>
+                      <td>
+                        <div class="btn-group">
+                          <a type="button"
+                             class="btn btn-outline-success align-items-center d-flex"
+                             th:href="@{/doExam(examId=${exam.id})}">Thi</a>
+                        </div>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+            </div>
+            <nav class="mt-3 mb-5" th:if="${response.getTotalPages() > 0}">
+              <ul class="pagination justify-content-center">
+                <li th:if="${response.getPageable().getPageNumber() > 0}" class="page-item mx-1">
+                  <a class="btn btn-outline-success"
+                     th:href="@{/subject/exam(topicId=${currentTopic.id},page=${response.getPageable().getPageNumber()}, perpage=${response.getSize()})}"
+                  >
+                    Trang trước
+                  </a>
+                </li>
+                <li class="page-item" th:each="pageNo : ${#numbers.sequence(0, response.getTotalPages() - 1)}">
+                  <a class="btn btn-outline-secondary" th:classappend="${response.getPageable().getPageNumber() == pageNo ? 'active-page' : ''}"
+                     th:href="@{/subject/exam(topicId=${currentTopic.id},page=${pageNo + 1}, perpage=${response.getSize()})}"
+                     th:text="${pageNo + 1}"
+                  >
+                  </a>
+                </li>
+                <li th:if="${response.getPageable().getPageNumber() < (response.getTotalPages() - 1)}" class="page-item mx-1">
+                  <a class="btn btn-outline-success"
+                     th:href="@{/subject/exam(topicId=${currentTopic.id},page=${response.getPageable().getPageNumber() + 2}, perpage=${response.getSize()})}">
+                    Trang sau
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <h1 style="color: #0b5ed7">Phần bình luận</h1>
+        </div>
+        <br>
+        <div th:if ="${message} != null">
+          <div class="alert alert-danger mb-3 small" role="alert">
+            <span th:text="${message}"/>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <div class="ec-vendor-list card card-default">
+              <div class="card-body">
+                <div class="col-md-12">
+                  <div class="mb-4">
+                    <form th:action="@{/subject/exam(topicId=${currentTopic.id})}"
+                          method="post" th:object="${newComment}">
+                      <div class="form-group">
+                        <h4 for="content">Nhập bình luận của bạn</h4>
+                        <br>
+                        <textarea class="form-control" id="content"
+                                  rows="3" placeholder="Viết bình luận..."
+                                  th:field="*{content}"></textarea>
+                      </div>
+                      <button type="submit" class="btn btn-primary">Gửi</button>
+                    </form>
+                  </div>
+                  <p class="d-flex justify-content-end" th:text="'Hiện có: ' +${comments.size()} +' bình luận.'"></p>
+                  <hr>
+                  <div th:switch="${comments.isEmpty()}">
+                    <th:block th:case="${false}">
+                  <div class="comment row" th:each="comment, iter :${comments}" th:id="'comment' + ${iter.index}">
+                    <div class="col-auto">
+                      <th:block th:switch="${comment.user.image_name == null}">
+                        <img th:case="${false}" th:src="'/image-file/' + ${comment.user.image_name}"
+                             alt="Avatar" class="avatar">
+                        <img th:case="${true}"
+                             src="https://png.pngtree.com/png-clipart/20210608/ourlarge/pngtree-white-silhouette-avatar-png-image_3418408.jpg"
+                             alt="Avatar" class="avatar">
+                      </th:block>
+                    </div>
+                    <div class="col">
+                      <div class="d-flex justify-content-between">
+                        <span class="font-weight-bolder" style="font-size: x-large" th:text="${comment.user.fullname}"></span>
+                        <a sec:authorize="isAuthenticated()" th:if="${#authentication.principal.user.username == comment.user.username}" class="btn btn-danger d-flex align-items-center justify-content-center" type="button"
+                           th:href="@{/subject/exam/delete(topicId=${currentTopic.id}, commentId=${comment.id})}">Xóa</a>
+                      </div>
+                      <p class="ml-3" style="font-size: large; font-weight: bold" th:text="${comment.content}"></p>
+                    </div>
+                  </div>
+                    </th:block>
+                    <div th:case="${true}" class="d-flex justify-content-center">Chưa có bình luận nào.</div>
+                </div>
+                  <div class="d-flex justify-content-center">
+                    <button class="btn btn-primary mr-1" onclick="decre()">Trước</button>
+                    <button class="btn btn-primary" th:onclick="|incre(${comments.size()})|" >Sau</button>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer th:replace="fragments::footerCustomer()"></footer>
+  </div>
+</div>
+<script>
+  let indexFrom = 0;
+  let indexTo = 4;
+  incre = (max)=>{
+    if (indexFrom + 5 >= max){}
+    else {
+      indexFrom += 5;
+      indexTo = indexTo + 5 > max ? max : indexTo + 5;
+      update();
+    };
+
+  }
+  decre = ()=>{
+    if (indexFrom < 5){}
+    else {
+      indexFrom -= 5;
+      indexTo = indexFrom + 4;
+      update();
+    }
+
+  }
+  update =()=>{
+    const displayAllComment = document.querySelectorAll('.comment');
+    displayAllComment.forEach((displayComment) =>{
+      displayComment.style.display = 'none';
+    });
+    let allComment = [];
+    for (let i = indexFrom; i <= indexTo; i++) {
+      let comment = document.querySelector(`#comment${i}`);
+      allComment.push(comment);
+    }
+    allComment.forEach((cmt)=>{
+      cmt.style.display = 'flex';
+    })
+  }
+  window.onload = ()=>{
+    setTimeout(update(), 1000);
+  }
+</script>
+</body>
+</html>

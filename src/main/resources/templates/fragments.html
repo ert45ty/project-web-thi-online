@@ -90,7 +90,7 @@
           <div class="input-group">
         <input type="text" name="query" id="search-input" class="form-control"
                th:value="${query}"
-               placeholder="search.." autofocus autocomplete="off" />
+               placeholder="Tìm kiếm đề thi" autofocus autocomplete="off" />
         <button type="button" name="search" id="search-btn" class="btn btn-flat">
           <i class="mdi mdi-magnify"></i>
         </button>
@@ -106,11 +106,23 @@
         <li sec:authorize="isAuthenticated()" class="dropdown user-menu">
           <button class="dropdown-toggle nav-link ec-drop" data-bs-toggle="dropdown"
                   aria-expanded="false">
-            <img th:src="@{/image-file/{image_name}(image_name=${#authentication.principal.user.image_name})}" class="user-image" alt="User Image" />
+            <th:block th:switch="${#authentication.principal.user.image_name == null}">
+              <img th:case="${false}" th:src="@{/image-file/{image_name}(image_name=${#authentication.principal.user.image_name})}"
+                   class="user-image" alt="User Image" >
+              <img th:case="${true}"
+                   src="https://png.pngtree.com/png-clipart/20210608/ourlarge/pngtree-white-silhouette-avatar-png-image_3418408.jpg"
+                   class="user-image" alt="User Image" >
+            </th:block>
           </button>
           <ul class="dropdown-menu dropdown-menu-right ec-dropdown-menu">
             <li class="dropdown-header">
-              <img th:src="@{/image-file/{image_name}(image_name=${#authentication.principal.user.image_name})}" class="img-circle" alt="User Image" />
+              <th:block th:switch="${#authentication.principal.user.image_name == null}">
+                <img th:case="${false}" th:src="@{/image-file/{image_name}(image_name=${#authentication.principal.user.image_name})}"
+                     class="user-image" alt="User Image" >
+                <img th:case="${true}"
+                     src="https://png.pngtree.com/png-clipart/20210608/ourlarge/pngtree-white-silhouette-avatar-png-image_3418408.jpg"
+                     class="user-image" alt="User Image" >
+              </th:block>
               <div class="d-inline-block" sec:authentication="principal.user.fullname">
                  <small class="pt-1"></small>
               </div>
@@ -122,7 +134,7 @@
               <a href="/profile/history"> <i class="mdi mdi-palette-advanced"></i> Lịch sử bài thi </a>
             </li>
             <li>
-              <a href="index.html"> <i class="mdi mdi-settings-outline"></i> Đổi mật khẩu </a>
+              <a href="/profile/changePassword"> <i class="mdi mdi-settings-outline"></i> Đổi mật khẩu </a>
             </li>
             <li class="dropdown-footer">
               <a href="/logout"> <i class="mdi mdi-logout"></i> Đăng xuất </a>
@@ -148,7 +160,7 @@
 <div th:fragment="sidebar(is_active)" class="ec-left-sidebar ec-bg-sidebar">
   <div id="sidebar" class="sidebar ec-sidebar-footer">
     <div class="ec-brand">
-      <a href="index.html" title="Ekka">
+      <a href="/admin/dashboard" title="Thi online">
         <img class="ec-brand-icon" src="/img/logo/ec-site-logo.png" alt="" />
         <span class="ec-brand-name text-truncate" style="color: whitesmoke">Thi Online</span>
       </a>
@@ -199,10 +211,16 @@
         </li>
 
 
-        <li>
-          <a class="sidenav-item-link" href="review-list.html">
+        <li class="has-sub" th:classappend="${is_active.equals('comments')? 'active' : '' }">
+          <a class="sidenav-item-link" href="/admin/comment">
             <i class="mdi mdi-star-half"></i>
             <span class="nav-text">Bình luận</span>
+          </a>
+        </li>
+        <li class="has-sub">
+          <a class="sidenav-item-link" href="/home">
+            <i class="mdi mdi-image-filter-none"></i>
+            <span class="nav-text">Đi đến trang chủ</span>
           </a>
         </li>
 
@@ -211,10 +229,10 @@
   </div>
 </div>
 
-<div th:fragment="sidebarCustomer(is_active)" class="ec-left-sidebar ec-bg-sidebar">
+<div th:fragment="sidebarCustomer(is_active, subjects)" class="ec-left-sidebar ec-bg-sidebar">
   <div id="sidebar" class="sidebar ec-sidebar-footer">
     <div class="ec-brand">
-      <a href="index.html" title="Thi online">
+      <a href="/home" title="Thi online">
         <img class="ec-brand-icon" src="/img/logo/ec-site-logo.png" alt="" />
         <span class="ec-brand-name text-truncate" style="color: whitesmoke">Thi Online</span>
       </a>
@@ -245,7 +263,14 @@
         <li sec:authorize="isAuthenticated()">
           <div class="ec-brand">
             <a href="/profile">
-              <img th:src="@{/image-file/{image_name}(image_name=${#authentication.principal.user.image_name})}" class="ec-brand-icon" alt="User Image" />
+              <th:block th:switch="${#authentication.principal.user.image_name == null}">
+                <img th:case="${false}" th:src="@{/image-file/{image_name}(image_name=${#authentication.principal.user.image_name})}"
+                     class="ec-brand-icon" alt="User Image">
+                <img th:case="${true}"
+                     src="https://png.pngtree.com/png-clipart/20210608/ourlarge/pngtree-white-silhouette-avatar-png-image_3418408.jpg"
+                     class="ec-brand-icon" alt="User Image">
+              </th:block>
+<!--              <img th:src="@{/image-file/{image_name}(image_name=${#authentication.principal.user.image_name})}" class="ec-brand-icon" alt="User Image" />-->
               <span class="ec-brand-name text-truncate" style="color: red; font-size: large" sec:authentication="principal.user.fullname"></span>
             </a>
           </div>
@@ -257,9 +282,9 @@
           </a>
           <div class="collapse show">
             <ul class="sub-menu" id="categorys" data-parent="#sidebar-menu">
-              <li >
-                <a class="sidenav-item-link" href="main-category.html">
-                  <span class="nav-text">Main Category</span>
+              <li th:each="subject,iterStat : ${subjectList}">
+                <a class="sidenav-item-link" th:href="@{/subject(subject=${iterStat.index})}">
+                  <span class="nav-text" th:text="${subject.name}"></span>
                 </a>
               </li>
             </ul>
@@ -277,9 +302,9 @@
       <div class="ec-vendor-block">
         <div class="ec-vendor-block-items">
           <ul>
-            <li><a th:classappend="${is_active == 'profile' ? 'active-leftside' : ''}" href="user-profile.html">Thông tin người dùng</a></li>
-            <li><a th:classappend="${is_active == 'history' ? 'active-leftside' : ''}" href="user-history.html">Lịch sử bài thi</a></li>
-            <li><a th:classappend="${is_active == 'change_pass' ? 'active-leftside' : ''}" href="wishlist.html">Đổi mật khẩu</a></li>
+            <li><a th:classappend="${is_active == 'profile' ? 'active-leftside' : ''}" href="/profile">Thông tin người dùng</a></li>
+            <li><a th:classappend="${is_active == 'history' ? 'active-leftside' : ''}" href="/profile/history">Lịch sử bài thi</a></li>
+            <li><a th:classappend="${is_active == 'change_pass' ? 'active-leftside' : ''}" href="/profile/changePassword">Đổi mật khẩu</a></li>
           </ul>
         </div>
       </div>
@@ -295,7 +320,7 @@
                                                      current == 'subject' ? 'Môn thi' :
                                                      current == 'profile' ? 'Thông tin người dùng' :
                                                      current == 'history' ? 'Lịch sử bài thi' :
-                                                     current == 'home' ? '' : ''}"></li>
+                                                     current == 'search' ? 'Tìm kiếm' : ''}"></li>
   </ul>
 </div>
 
@@ -306,5 +331,116 @@
     </p>
   </div>
 </footer>
+
+<footer th:fragment="footerCustomer()" class="footer mt-auto">
+  <div class="copyright bg-white">
+    <p>
+      Copyright &copy; <span id="ec-year"></span><a class="text-primary" href="https://themeforest.net/user/ashishmaraviya" target="_blank"> Test Online </a>. All Rights Reserved.
+    </p>
+  </div>
+</footer>
+
+<div th:fragment="headerCustomer(subjectList)" class="ec-main-header" id="header1">
+  <nav class="navbar navbar-static-top navbar-expand-lg">
+    <!-- Sidebar toggle button -->
+    <button id="sidebar-toggler" class="sidebar-toggle"></button>
+    <!-- search form -->
+    <div class="search-form d-lg-inline-block">
+
+      <form th:action="@{/search}" method="get" >
+        <ul class="nav navbar-nav">
+          <li class="dropdown">
+            <select name="subjectName" id="subjectName" class="form-select">
+              <option value="" disabled selected>Môn học</option>
+              <th:block th:each="subject : ${subjectList}">
+                <option th:value="${subject.id}" th:text="${subject.name}"></option>
+              </th:block>
+          </select>
+          </li>
+          <li class="dropdown">
+            <select name="time" id="time" class="form-select">
+              <option value="" disabled selected>Thời gian</option>
+              <option value="900">15 phút</option>
+              <option value="1800">30 phút</option>
+              <option value="2700">45 phút</option>
+              <option value="3600">60 phút</option>
+            </select>
+          </li>
+          <li class="dropdown">
+            <div class="d-flex">
+            <input type="text" name="query" id="search-input1" class="form-control"
+                   th:value="${query}"
+                   placeholder="Tìm kiếm đề thi" autofocus autocomplete="off" />
+            <button type="button" name="search" id="search-btn1" class="btn btn-flat">
+              <i class="mdi mdi-magnify"></i>
+            </button></div>
+          </li>
+        </ul>
+      </form>
+      <div id="search-results-container1">
+        <ul id="search-result1"></ul>
+      </div>
+    </div>
+    <!-- navbar right -->
+    <div class="navbar-right">
+      <ul class="nav navbar-nav">
+        <!-- User Account -->
+        <li sec:authorize="isAuthenticated()" class="dropdown user-menu">
+          <button class="dropdown-toggle nav-link ec-drop" data-bs-toggle="dropdown"
+                  aria-expanded="false">
+            <th:block th:switch="${#authentication.principal.user.image_name == null}">
+              <img th:case="${false}" th:src="@{/image-file/{image_name}(image_name=${#authentication.principal.user.image_name})}"
+                   class="user-image" alt="User Image" >
+              <img th:case="${true}"
+                   src="https://png.pngtree.com/png-clipart/20210608/ourlarge/pngtree-white-silhouette-avatar-png-image_3418408.jpg"
+                   class="user-image" alt="User Image" >
+            </th:block>
+            <!--            <img th:src="@{/image-file/{image_name}(image_name=${#authentication.principal.user.image_name})}" class="user-image" alt="User Image" />-->
+          </button>
+          <ul class="dropdown-menu dropdown-menu-right ec-dropdown-menu">
+            <li class="dropdown-header">
+              <th:block th:switch="${#authentication.principal.user.image_name == null}">
+                <img th:case="${false}" th:src="@{/image-file/{image_name}(image_name=${#authentication.principal.user.image_name})}"
+                     class="user-image" alt="User Image" >
+                <img th:case="${true}"
+                     src="https://png.pngtree.com/png-clipart/20210608/ourlarge/pngtree-white-silhouette-avatar-png-image_3418408.jpg"
+                     class="user-image" alt="User Image" >
+              </th:block>
+              <!--              <img th:src="@{/image-file/{image_name}(image_name=${#authentication.principal.user.image_name})}" class="img-circle" alt="User Image" />-->
+              <div class="d-inline-block" sec:authentication="principal.user.fullname">
+                <small class="pt-1"></small>
+              </div>
+            </li>
+            <li>
+              <a href="/profile"> <i class="mdi mdi-account"></i> Thông tin chi tiết </a>
+            </li>
+            <li th:each="authority :${#authentication.authorities}" th:if="${authority.authority.contains('ROLE_ADMIN')}">
+              <a href="/admin/dashboard"> <i class="mdi mdi-login"></i> Đến trang quản trị </a>
+            </li>
+            <li>
+              <a href="/profile/history"> <i class="mdi mdi-palette-advanced"></i> Lịch sử bài thi </a>
+            </li>
+            <li>
+              <a href="/profile/changePassword"> <i class="mdi mdi-settings-outline"></i> Đổi mật khẩu </a>
+            </li>
+            <li class="dropdown-footer">
+              <a href="/logout"> <i class="mdi mdi-logout"></i> Đăng xuất </a>
+            </li>
+          </ul>
+        </li>
+        <li sec:authorize="isAnonymous()" class="dropdown">
+          <ul class="nav navbar-nav">
+            <li class="dropdown">
+              <a href="/login" class="btn btn-primary mr-1">Đăng nhập</a>
+            </li>
+            <li class="dropdown">
+              <a href="/register" class="btn btn-secondary">Đăng ký</a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</div>
 
 </html>

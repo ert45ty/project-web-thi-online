@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments::head('Bài kiểm tra')">
+
+</head>
+<body class="ec-header-fixed ec-sidebar-fixed ec-sidebar-dark ec-header-light" id="body">
+<header class="header text-center" style=" background-color: black; padding: 15px; position: sticky; top: 0; z-index: 1000;">
+  <input type="hidden" id="endTime" th:value="${endTime}" name="endTime">
+  <h2 style="color: white;">Thời gian còn lại: <span id="countdown">Đang tải...</span></h2>
+</header>
+<div class="wrapper justify-content-center">
+  <div>
+    <div class="ec-content-wrapper">
+      <div class="content">
+        <div class="row">
+          <div class="col-xl-12 col-lg-12 mx-auto">
+            <div class="ec-cat-list card card-default mb-24px">
+              <div class="card-body">
+                <button th:onclick="|increment(${max})|">Increase</button>
+                <button onclick="decrement()">Decrease</button>
+                <h3 th:id="'question-' + ${i}" th:each="i : ${#numbers.sequence(1,max)}" th:styleappend="${i != 1 ? 'display: none;' : 'display: block'}" >
+                  <span  th:text="'câu' + ${i}"></span>
+                </h3>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <footer th:replace="fragments::footerCustomer()"></footer>
+  </div>
+</div>
+<script>
+  let timer;
+  let remainingTime;
+
+  // Hàm để tính toán và hiển thị bộ đếm ngược
+  function startCountdown() {
+    // Lấy thời gian kết thúc từ server
+    const endTimeValue = document.getElementById("endTime").value;
+
+    // Kiểm tra nếu endTime là hợp lệ
+    const endTime = new Date(endTimeValue).getTime(); // Chuyển đổi giá trị endTime thành đối tượng Date
+
+    if (isNaN(endTime)) {
+      console.error("End time không hợp lệ:", endTimeValue);
+      return;
+    }
+
+    // Nếu có thời gian còn lại trong sessionStorage, sử dụng nó
+    if (sessionStorage.getItem("remainingTime")) {
+      remainingTime = parseInt(sessionStorage.getItem("remainingTime"));
+    } else {
+      remainingTime = endTime - new Date().getTime();
+    }
+
+    // Cập nhật bộ đếm ngược mỗi giây
+    const countdownElement = document.getElementById("countdown");
+
+    function updateCountdown() {
+      if (remainingTime <= 0) {
+        countdownElement.innerHTML = "Thời gian đã hết!";
+        document.getElementById("form").submit();  // Nộp form
+        clearInterval(timer);  // Dừng bộ đếm ngược
+      } else {
+        const secondsLeft = Math.floor(remainingTime / 1000);
+        const minutes = Math.floor(secondsLeft / 60);
+        const seconds = secondsLeft % 60;
+
+        countdownElement.innerHTML = minutes + " phút " + seconds + " giây";
+        remainingTime -= 1000;  // Giảm thời gian còn lại mỗi giây
+        sessionStorage.setItem("remainingTime", remainingTime);  // Lưu thời gian còn lại vào sessionStorage
+      }
+    }
+
+    // Cập nhật mỗi giây
+    timer = setInterval(updateCountdown, 1000);
+  }
+
+  // Hàm để ngừng bộ đếm ngược khi người dùng nộp bài
+  function stopCountdown(event) {
+    const confirmSubmit = confirm("Bạn có chắc chắn muốn nộp bài không?");
+
+    if (confirmSubmit) {
+      // Nếu người dùng xác nhận, gửi form nộp bài
+      document.getElementById("form").submit();
+      clearInterval(timer);  // Ngừng bộ đếm ngược
+      sessionStorage.removeItem("remainingTime");  // Xóa dữ liệu khỏi sessionStorage khi nộp bài
+    } else {
+      // Nếu người dùng hủy bỏ, không làm gì cả
+      event.preventDefault();
+    }
+
+  }
+  window.onload = startCountdown;
+
+  let index = 1;
+  increment = (max)=>{
+    if (index < max){
+    index++;
+    console.log(index);
+    updateVisibility();}
+  }
+  decrement = ()=>{
+    if (index > 1){
+    index--;
+    console.log(index);
+    updateVisibility();}
+  }
+
+  updateIndex = (value)=>{
+    index = value;
+    updateVisibility();
+  }
+
+  updateVisibility = () =>{
+    let allQuestion = document.querySelectorAll("h3")
+    allQuestion.forEach((question) =>{
+      question.style.display = 'none';
+    });
+    let currentQuestion = document.getElementById('question-' + index);
+    if (currentQuestion) {
+      currentQuestion.style.display = 'block';
+    }
+
+  }
+</script>
+</body>
+</html>

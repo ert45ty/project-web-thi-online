@@ -35,6 +35,12 @@ public class UserEntity extends BaseEntity{
     private String role;
 
     @Column
+    private Integer status;
+
+    @Column
+    private String code;
+
+    @Column
     @CreatedDate
     private LocalDateTime created_at;
 

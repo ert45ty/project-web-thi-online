@@ -29,4 +29,7 @@ public class ExamEntity extends BaseEntity{
 
     @Column
     private Integer total_question;
+
+    @Column
+    private int status;
 }

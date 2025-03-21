@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments::head('Kích hoạt tài khoản')">
+</head>
+<body class="ec-header-fixed ec-sidebar-fixed ec-sidebar-dark ec-header-light" id="body">
+<div class="wrapper">
+    <div th:replace="fragments::sidebarCustomer('register',${subjectList})"></div>
+    <div class="ec-page-wrapper">
+        <header th:replace="fragments::headerCustomer(${subjectList})"></header>
+        <div class="sticky-header-next-sec  ec-breadcrumb section-space-mb">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="row ec_breadcrumb_inner mb-3 ml-2">
+                            <div class="col-md-6 col-sm-12">
+                                <h2 class="ec-breadcrumb-title">Kích hoạt tài khoản</h2>
+                            </div>
+                            <div th:replace="fragments::goToHome('register')"></div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <section class="ec-page-content ec-vendor-uploads ec-user-account section-space-p">
+            <div class="container">
+                <div class="row">
+                    <section class="ec-page-content section-space-p">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-12 text-center">
+                                    <div class="section-title">
+                                        <h2 class="ec-bg-title">Kích hoạt tài khoản</h2>
+                                        <h2 class="ec-title">Kích hoạt tài khoản</h2>
+                                    </div>
+                                </div>
+                                <div th:if="${message}" class="alert alert-danger" th:text="${message}"></div>
+                                <div class="ec-login-wrapper">
+                                    <div class="ec-login-container">
+                                        <div class="ec-login-form">
+                                            <form th:action="@{/reactivate}" method="post" th:object="${user}">
+                                                <span class="ec-login-wrap">
+                                    <label>Email*</label>
+                                    <input id="email" type="text" th:field="*{email}" name="email" placeholder="Mời bạn nhập email..." required />
+                                                </span>
+                                                <label th:if="${#fields.hasErrors('email')}" th:errors="*{email}" for="email" class="form-label text-danger"></label>
+                                                <span class="ec-login-wrap">
+                                    <button class="btn btn-primary" type="submit">Kích hoạt</button>
+                                </span>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </section>
+        <footer th:replace="fragments::footerCustomer()"></footer>
+    </div>
+</div>
+</body>
+</html>

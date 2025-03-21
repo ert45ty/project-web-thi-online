@@ -10,16 +10,23 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import t3h.vn.testonline.dto.SubjectDto;
 import t3h.vn.testonline.entities.SubjectEntity;
+import t3h.vn.testonline.entities.TopicEntity;
+import t3h.vn.testonline.service.ExamService;
 import t3h.vn.testonline.service.SubjectService;
+import t3h.vn.testonline.service.TopicService;
 
 import java.util.List;
 
-@RequestMapping("/admin/subject/list")
+@RequestMapping("/admin/subject")
 @Controller
 public class SubjectController {
 
     @Autowired
     SubjectService subjectService;
+    @Autowired
+    TopicService topicService;
+    @Autowired
+    ExamService examService;
 
     @GetMapping
     public String subjectList(Model model,
@@ -52,14 +59,25 @@ public class SubjectController {
                 subjectService.save(subject);
         }
         redirectAttributes.addFlashAttribute("message", "Thêm môn thi thành công");
-        return "redirect:/admin/subject/list";
+        return "redirect:/admin/subject";
     }
 
     @GetMapping("/delete/{id}")
     public String deleteSubject(Model model, @PathVariable Long id, RedirectAttributes redirectAttributes){
-        subjectService.delete(id);
-        redirectAttributes.addFlashAttribute("message", "Xóa môn thi thành công");
-        return "redirect:/admin/subject/list";
+        SubjectEntity subjectEntity =  subjectService.getById(id);
+        subjectEntity.setStatus(0);
+        List<TopicEntity> topicEntities = subjectEntity.getTopics();
+        for (int i=0; i < topicEntities.size(); i++){
+            topicEntities.get(i).setStatus(0);
+            for (int j = 0; j <topicEntities.get(i).getExams().size(); j ++){
+                topicEntities.get(i).getExams().get(j).setStatus(0);
+                examService.update(topicEntities.get(i).getExams().get(j));
+            }
+            topicService.update(topicEntities.get(i));
+        }
+        subjectService.update(subjectEntity, null);
+        redirectAttributes.addFlashAttribute("message", "Hủy môn thi thành công");
+        return "redirect:/admin/subject";
     }
 
     @GetMapping("/update/{id}")
@@ -86,6 +104,6 @@ public class SubjectController {
         subjectService.update(subjectEntity, fileImage);
 
         redirectAttributes.addFlashAttribute("message", "Sửa môn thi thành công");
-        return "redirect:/admin/subject/list";
+        return "redirect:/admin/subject";
     }
 }

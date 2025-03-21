@@ -4,9 +4,9 @@
 </head>
 <body class="ec-header-fixed ec-sidebar-fixed ec-sidebar-dark ec-header-light" id="body">
 <div class="wrapper">
-  <div th:replace="fragments::sidebarCustomer('topics')"></div>
+  <div th:replace="fragments::sidebarCustomer('topics',${subjectList})"></div>
   <div class="ec-page-wrapper">
-    <header th:replace="fragments::header('')"></header>
+    <header th:replace="fragments::headerCustomer(${subjectList})"></header>
     <div class="ec-content-wrapper">
       <div class="content">
         <div class="col-12 d-none d-md-block" style="margin:0px;padding:0px;">
@@ -14,7 +14,7 @@
         </div>
         </br>
         <div>
-          <h2 th:text="'Môn ' + ${currentSubject.name}"></h2>
+          <h1 th:text="'Môn ' + ${currentSubject.name}"  style="color: #0b5ed7"></h1>
         </div>
         </br>
         </hr>
@@ -50,7 +50,7 @@
                       <tbody>
                       <tr th:each="topic, iterStat : ${response.getContent()}">
                         <td class="text-left" >
-                          <a th:text="${topic.name}" th:href="@{/home}"/>
+                          <a th:text="${topic.name}" th:href="@{/subject/exam(topicId=${topic.id})}"/>
                         </td>
                         <td th:text="${(topic.exams == null && topic.exams.isEmpty()) ? '0' : topic.exams.size()}">
                         </td>
@@ -87,13 +87,11 @@
               </nav>
             </div>
           </div>
-        <div class="row">
-          <h1>Phần bình luận</h1>
-        </div>
+
       </div>
     </div>
 
-    <footer th:replace="fragments::footer()"></footer>
+    <footer th:replace="fragments::footerCustomer()"></footer>
   </div>
 </div>
 </body>

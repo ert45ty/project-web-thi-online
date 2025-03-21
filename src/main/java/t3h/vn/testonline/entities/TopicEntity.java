@@ -26,4 +26,7 @@ public class TopicEntity extends BaseEntity{
 
     @Column
     private String description;
+
+    @Column
+    private int status;
 }

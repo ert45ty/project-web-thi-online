@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title th:text="${subject == 'forgotPassword' ? 'Đặt lại mật khẩu' : 'Kích hoạt tài khoản'}">Email Template</title>
+  <style>
+    body {
+      font-family: Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f2f2f2;
+    }
+    .container {
+      font-size: 16px;
+      width: 70%;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+      border-bottom: 1px solid #eee;
+      padding-bottom: 20px;
+      margin-bottom: 20px;
+    }
+    .brand {
+      font-size: 1.5em;
+      color: green !important;
+      text-decoration: none;
+      font-weight: 800;
+    }
+    p {
+      margin-bottom: 15px;
+    }
+    .footer {
+      color: #aaa;
+      font-size: 0.8em;
+      font-weight: 300;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <a href="http://localhost:8080/home" class="brand">Test Online</a>
+  </div>
+  <h3>Xin chào, <span th:text="${name}"></span>!</h3>
+  <th:block th:switch="${subject == 'forgotPassword'}">
+    <div th:case="${false}">
+  <p>Bạn vừa đăng kí tài khoản thành công với tên tài khoản là : <p th:text="${username}"></p>
+  tại <a href="http://localhost:8080/home">Test Online</a>.
+    Xin vui lòng bấm vào nút dưới đây để kích hoạt tài khoản của bạn.
+  </p>
+  <a th:href="@{'http://localhost:8080/' + ${message}}">Bấm vào đây</a>
+    </div>
+    <div th:case="${true}">
+      <p>Bạn vừa đặt lại mật khẩu của tài khoản <p th:text="${username}"></p>
+      tại <a href="http://localhost:8080/home">Test Online</a>.
+      Dưới đây là mật khẩu của bạn sau khi đặt lại
+      </p>
+      <div class="d-flex justify-content-center" style="font-size: xx-large; font-weight: bold" th:text="${message}"></div>
+    </div>
+  </th:block>
+  <br><br>
+  <div class="footer">
+    <p>Cảm ơn.</p>
+  </div>
+</div>
+</body>
+</html>

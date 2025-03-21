@@ -23,7 +23,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Controller
-@RequestMapping("/admin/exam/list")
+@RequestMapping("/admin/exam")
 public class ExamController {
 
     @Autowired
@@ -32,8 +32,7 @@ public class ExamController {
     TopicService topicService;
     @Autowired
     SubjectService subjectService;
-    @Autowired
-    QuestionService questionService;
+
 
     @GetMapping
     public String examList(Model model, HttpSession session,
@@ -45,8 +44,7 @@ public class ExamController {
 
         List<SubjectEntity> subjectList = subjectService.getAll();
         if (subject >= subjectList.size()) {
-            model.addAttribute("error", "Subject không hợp lệ");
-            return "admin/exam/examList";
+            subject = subjectList.size() - 1;
         }
         List<TopicEntity> topicList;
         Integer totalTopic = 0;
@@ -56,8 +54,7 @@ public class ExamController {
             totalTopic = topicList.size();
         }
         if (topic >= totalTopic) {
-            model.addAttribute("error", "Topic không hợp lệ");
-            return "admin/exam/examList";
+            topic = topicList.size() - 1;
         }
         TopicEntity currentTopic;
         Long topicId = 0L;
@@ -91,7 +88,7 @@ public class ExamController {
         return examList(model, session, subject, topic, query, 1, 10);
     }
 
-    @GetMapping("create")
+    @GetMapping("/create")
     public String formCreateExam(Model model, HttpSession session){
         model.addAttribute("exam", new ExamDto());
         model.addAttribute("topicList", session.getAttribute("topicList"));
@@ -114,12 +111,53 @@ public class ExamController {
         return "redirect:/admin/exam/createQandA";
     }
 
+    @GetMapping("/update")
+    public String formUpdateExam(Model model, HttpSession session, @RequestParam Long examId){
+        ExamEntity examEntity = examService.getExamById(examId);
+        ExamDto existExam = new ExamDto();
+        existExam.setId(examEntity.getId());
+        existExam.setStatus(examEntity.getStatus());
+        existExam.setTitle(examEntity.getTitle());
+        existExam.setTopic_id(examEntity.getTopic().getId());
+        model.addAttribute("existExam", existExam);
+        model.addAttribute("is_update", "update");
+        model.addAttribute("topicList", session.getAttribute("topicList"));
+        return "admin/exam/createExam";
+    }
+
+    @PostMapping("/update")
+    public String updateExam(@Valid @ModelAttribute("existExam") ExamDto existExam,
+                             BindingResult result, RedirectAttributes redirectAttributes,
+                             Model model){
+        if (result.hasErrors()){
+            return "admin/exam/createExam";
+        }
+        ExamEntity examEntity = new ExamEntity();
+        examEntity.setTopic(topicService.getById(existExam.getTopic_id()));
+        if (examEntity.getTopic().getStatus() == 0 && existExam.getStatus() == 1){
+            model.addAttribute("error", "Không thể kích hoạt bài thi khi chủ đề bạn chọn đang không được kích hoạt");
+            return "admin/exam/createExam";
+        }
+        examEntity.setStatus(existExam.getStatus());
+        examEntity.setTitle(existExam.getTitle());
+        examEntity.setTotal_question(existExam.getTotal_question());
+        examEntity.setDuration(duration(existExam.getTotal_question()));
+        examService.update(examEntity);
+        redirectAttributes.addFlashAttribute("message", "Cập nhật bài thi thành công");
+        return "redirect:/admin/exam";
+    }
+
     @GetMapping("/delete")
     public String delete(@RequestParam Long examId, RedirectAttributes redirectAttributes){
-        questionService.deleteByExamId(examId);
-        examService.delete(examId);
-        redirectAttributes.addFlashAttribute("message", "Xóa đề thi thành công");
-        return "redirect:/admin/exam/list";
+        ExamEntity examEntity = examService.getExamById(examId);
+        if (examEntity.getStatus() == 0){
+            redirectAttributes.addFlashAttribute("message", "Đề thi đã được hủy rồi");
+            return "redirect:/admin/exam";
+        }
+        examEntity.setStatus(0);
+        examService.update(examEntity);
+        redirectAttributes.addFlashAttribute("message", "Hủy đề thi thành công");
+        return "redirect:/admin/exam";
     }
 
     @GetMapping("/detail")

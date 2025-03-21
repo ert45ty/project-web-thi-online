@@ -21,4 +21,7 @@ public class SubjectEntity extends BaseEntity{
 
     @OneToMany(mappedBy = "subject")
     private List<TopicEntity> topics = new ArrayList<>();
+
+    @Column
+    private int status;
 }

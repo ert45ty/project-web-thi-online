@@ -49,6 +49,7 @@ public class ExamService {
 
     public ExamEntity save(ExamDto examDto){
         ExamEntity examEntity = new ExamEntity();
+        examDto.setStatus(1);
         TopicEntity topic = topicService.getById(examDto.getTopic_id());
         BeanUtils.copyProperties(examDto, examEntity);
         examEntity.setTopic(topic);
@@ -58,5 +59,15 @@ public class ExamService {
 
     public void delete(Long id){
         examRepo.deleteById(id);
+    }
+
+    public Page<ExamEntity> searchInCustomerView(Long subjectId, Integer duration,
+                                                 String title, int page, int perpage){
+        Pageable pageable = PageRequest.of(page - 1, perpage);
+        return examRepo.findExamEntitiesByDurationAndTitleContainingAndSubject_Id(subjectId, duration, title, pageable);
+    }
+
+    public void update(ExamEntity examEntity){
+        examRepo.save(examEntity);
     }
 }
