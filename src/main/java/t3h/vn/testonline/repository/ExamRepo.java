@@ -12,19 +12,24 @@ import java.util.List;
 
 @Repository
 public interface ExamRepo extends JpaRepository<ExamEntity, Long> {
-    List<ExamEntity> getExamEntityByTopic_Id(Long id);
+    Page<ExamEntity> getExamEntityByTopic_IdAndStatus(Long id, int status, Pageable pageable);
+
+    Page<ExamEntity> getExamEntityByTopic_Id(Long id, Pageable pageable);
+
+    ExamEntity findByIdAndStatus(Long id, int status);
 
     ExamEntity getById(Long id);
 
-    Page<ExamEntity> findAllByTopic_IdAndTitle(Long id, String query, Pageable pageable);
+    Page<ExamEntity> findAllByTopic_IdAndTitleContaining(Long id, String query, Pageable pageable);
 
-    Page<ExamEntity> findAllByDurationAndTitleContaining(Integer duration, String query, Pageable pageable);
+//    Page<ExamEntity> findAllByDurationAndTitleContaining(Integer duration, String query, Pageable pageable);
 
     @Query("SELECT e FROM ExamEntity e " +
             "JOIN e.topic t " +
             "WHERE (:subjectId IS NULL OR t.subject.id = :subjectId) " +
             "AND (:duration IS NULL OR e.duration = :duration) " +
-            "AND (:title IS NULL OR e.title LIKE %:title%)")
+            "AND (:title IS NULL OR e.title LIKE %:title%) " +
+            "AND e.status = 1")
     Page<ExamEntity> findExamEntitiesByDurationAndTitleContainingAndSubject_Id(@Param("subjectId") Long subjectId,
                                                                                @Param("duration") Integer duration,
                                                                                @Param("title") String title,

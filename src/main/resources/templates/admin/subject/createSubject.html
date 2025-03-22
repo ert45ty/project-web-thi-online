@@ -19,9 +19,9 @@
                                 <div class="form-group row">
                                     <label for="thumb" class="col-12 col-form-label">Ảnh</label>
                                     <div class="col-12" >
-                                        <input id="thumb" name="fileImage" class="form-control" type="file"  accept="image/*" onchange="previewImage(event)">
+                                        <input id="thumb" name="fileImage" class="form-control" type="file"  accept="image/*" onchange="previewImage(event,1)">
                                         <br><br>
-                                        <img id="imagePreview" src="#" alt="Ảnh xem trước" style="display: none; width: 200px; height: auto;">
+                                        <img id="imagePreview1" src="#" alt="Ảnh xem trước" style="display: none; width: 200px; height: auto;">
                                         <br><br>
                                     </div>
                                 </div>
@@ -40,8 +40,9 @@
                                     </select>
                                 </div>
                                 <div class="row">
-                                    <div class="col-12">
+                                    <div class="col-12 d-flex justify-content-between">
                                         <button name="submit" type="submit" class="btn btn-primary">Sửa</button>
+                                        <a class="btn btn-secondary" type="button" href="/admin/subject">Quay lại</a>
                                     </div>
                                 </div>
                             </form>
@@ -56,5 +57,10 @@
         <footer th:replace="fragments::footer()"></footer>
     </div>
 </div>
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
 </body>
 </html>

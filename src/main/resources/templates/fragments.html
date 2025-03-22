@@ -179,7 +179,7 @@
         </li>
         <!-- Users -->
         <li class="has-sub" th:classappend="${is_active.equals('users')? 'active' : '' }">
-          <a class="sidenav-item-link" th:href="@{/admin/user/list}">
+          <a class="sidenav-item-link" th:href="@{/admin/user}">
             <i class="mdi mdi-account-group"></i>
             <span class="nav-text">Tài khoản</span>
           </a>
@@ -188,7 +188,7 @@
 
 
         <li class="has-sub" th:classappend="${is_active.equals('subjects')? 'active' : '' }">
-          <a class="sidenav-item-link" th:href="@{/admin/subject/list}">
+          <a class="sidenav-item-link" th:href="@{/admin/subject}">
             <i class="mdi mdi-dns-outline"></i>
             <span class="nav-text">Môn thi</span>
           </a>
@@ -196,7 +196,7 @@
 
 
         <li class="has-sub" th:classappend="${is_active.equals('topics')? 'active' : '' }">
-          <a class="sidenav-item-link" th:href="@{/admin/topic/list?subject=0}">
+          <a class="sidenav-item-link" th:href="@{/admin/topic?subject=0}">
             <i class="mdi mdi-palette-advanced"></i>
             <span class="nav-text">Chủ đề</span>
           </a>
@@ -204,7 +204,7 @@
 
 
         <li class="has-sub" th:classappend="${is_active.equals('exams')? 'active' : '' }">
-          <a class="sidenav-item-link" th:href="@{/admin/exam/list?subject=0&topic=0}">
+          <a class="sidenav-item-link" th:href="@{/admin/exam?subject=0&topic=0}">
             <i class="mdi mdi-tag-faces"></i>
             <span class="nav-text">Bài thi</span>
           </a>

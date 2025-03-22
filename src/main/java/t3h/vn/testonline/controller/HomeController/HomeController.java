@@ -31,9 +31,9 @@ public class HomeController {
     public String home(Model model,
                        @RequestParam(defaultValue = "0") Integer subject){
 
-        List<SubjectEntity> subjectList = subjectService.getAll();
+        List<SubjectEntity> subjectList = subjectService.getAllAndStatusIsLike();
         Long id = subjectList.get(subject).getId();
-        List<TopicEntity> topicList = topicService.getAllBySubjectId(id);
+        List<TopicEntity> topicList = topicService.getAllBySubjectIdAndStatusIsLike(id);
         List<ExamEntity> examList = new ArrayList<>();
         int count = 0;
         List<Float> highestScore = new ArrayList<>();

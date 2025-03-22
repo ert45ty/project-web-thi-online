@@ -16,7 +16,7 @@
               <div th:switch="${is_update}" class="card-body">
                 <div th:case="update" class="ec-cat-form">
                   <h4>Thay đổi thông tin tài khoản</h4>
-                  <form th:action="@{/admin/user/list/update/{id}(id=${ID})}" method="post" th:object="${user}" enctype="multipart/form-data">
+                  <form th:action="@{/admin/user/update/{id}(id=${ID})}" method="post" th:object="${user}" enctype="multipart/form-data">
                     <div class="form-group row">
                       <label for="fullname" class="col-12 col-form-label">Tên đầy đủ</label>
                       <div class="col-12">
@@ -48,8 +48,8 @@
                     <div class="form-group row">
                       <label class="col-12 col-form-label">Hình ảnh</label>
                       <div class="col-12">
-                        <input id="fileImage" name="fileImage" class="form-control here slug-title" type="file" accept="image/*" onchange="previewImage(event)">
-                        <img id="imagePreview" class="mt-2 mb-2" src="#" alt="Ảnh xem trước" style="display: none; width: 200px; height: auto;">
+                        <input id="fileImage" name="fileImage" class="form-control here slug-title" type="file" accept="image/*" onchange="previewImage(event,1)">
+                        <img id="imagePreview1" class="mt-2 mb-2" src="#" alt="Ảnh xem trước" style="display: none; width: 200px; height: auto;">
                       </div>
                     </div>
                     <div class="form-group row">
@@ -60,8 +60,9 @@
                       </select>
                     </div>
                     <div class="row">
-                      <div class="col-12">
+                      <div class="col-12 d-flex justify-content-between">
                         <button name="submit" type="submit" class="btn btn-primary">Sửa</button>
+                        <a class="btn btn-secondary" type="button" href="/admin/user">Quay lại</a>
                       </div>
                     </div>
                   </form>
@@ -111,14 +112,14 @@
                     </div>
                     <div class="row">
                       <div class="col-12">
-                        <a class="btn btn-primary" th:href="@{/user/list}" type="button">Quay lại</a>
+                        <a class="btn btn-primary" type="button" href="/admin/user">Quay lại</a>
                       </div>
                     </div>
                   </form>
                 </div>
                 <div th:case="*" class="ec-cat-form">
                   <h4>Thêm tài khoản</h4>
-                  <form action="/admin/user/list/create" method="post" th:object="${user}" enctype="multipart/form-data">
+                  <form action="/admin/user/create" method="post" th:object="${user}" enctype="multipart/form-data">
                     <div class="form-group row">
                       <label for="fullname" class="col-12 col-form-label">Tên đầy đủ</label>
                       <div class="col-12">
@@ -156,9 +157,9 @@
                     <div class="form-group row">
                       <label class="col-12 col-form-label">Hình ảnh</label>
                       <div class="col-12">
-                        <input id="fileImage" name="fileImage" class="form-control here slug-title" type="file" accept="image/*" onchange="previewImage(event)">
+                        <input id="fileImage" name="fileImage" class="form-control here slug-title" type="file" accept="image/*" onchange="previewImage(event,1)">
                         <br><br>
-                        <img id="imagePreview" src="#" alt="Ảnh xem trước" style="display: none; width: 200px; height: auto;">
+                        <img id="imagePreview1" src="#" alt="Ảnh xem trước" style="display: none; width: 200px; height: auto;">
                         <br><br>
                       </div>
                     </div>
@@ -170,8 +171,9 @@
                       </select>
                     </div>
                     <div class="row">
-                      <div class="col-12">
+                      <div class="col-12 d-flex justify-content-between">
                         <button name="submit" type="submit" class="btn btn-primary">Thêm</button>
+                        <a class="btn btn-secondary" type="button" href="/admin/user">Quay lại</a>
                       </div>
                     </div>
                   </form>

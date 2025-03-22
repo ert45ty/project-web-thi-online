@@ -22,4 +22,6 @@ public class QuestionDto {
     private String image_name;
 
     MultipartFile fileImage;
+
+    private  int correct;
 }

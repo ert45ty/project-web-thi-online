@@ -34,7 +34,7 @@ public class ExamHistoryController {
         String message =(String) model.asMap().get("message");
         Long id = userService.findByUsername(username).getId();
         model.addAttribute("message", message);
-        model.addAttribute("subjectList", subjectService.getAll());
+        model.addAttribute("subjectList", subjectService.getAllAndStatusIsLike());
         model.addAttribute("response", resultService.findResultByUserId(id, page, perpage));
         return "customer/profile/examHistory";
     }

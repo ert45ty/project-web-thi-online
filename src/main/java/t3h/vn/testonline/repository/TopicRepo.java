@@ -11,9 +11,15 @@ import java.util.List;
 
 @Repository
 public interface TopicRepo extends JpaRepository<TopicEntity, Long> {
+    List<TopicEntity> findAllBySubject_IdAndStatus(Long id, int status);
+
     List<TopicEntity> findAllBySubject_Id(Long id);
 
-    TopicEntity getById(Long id);
+    Page<TopicEntity> findAllBySubjectIdAndStatus(Long id,int status, Pageable pageable);
+
+    Page<TopicEntity> findAllBySubjectId(Long id, Pageable pageable);
+
+    TopicEntity findByIdAndStatus(Long id, int status);
 
     Page<TopicEntity> findAllBySubject_IdAndNameContaining(Long id, String query, Pageable pageable);
 }

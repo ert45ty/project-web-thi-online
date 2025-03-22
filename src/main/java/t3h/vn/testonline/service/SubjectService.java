@@ -22,19 +22,17 @@ public class SubjectService {
     @Autowired
     FileUtils fileUtils;
 
+    public List<SubjectEntity> getAllAndStatusIsLike(){
+        return subjectRepo.findAllByStatus(1);
+    }
+
     public List<SubjectEntity> getAll(){
         return subjectRepo.findAll();
     }
 
     public Page<SubjectEntity> search(String query, Integer page, Integer perpage){
         Pageable pageable = PageRequest.of(page - 1, perpage);
-        Page<SubjectEntity> pageResult;
-        if (query != null && !query.isEmpty()){
-            pageResult = subjectRepo.findAllByNameContaining(query, pageable);
-            return pageResult;
-        }
-        pageResult = subjectRepo.findAll(pageable);
-        return pageResult;
+        return subjectRepo.findAllByNameContaining(query, pageable);
     }
 
     public void save(SubjectDto subjectDto){
@@ -58,8 +56,8 @@ public class SubjectService {
                 subjectEntity.setImage_name(image_name);
             }catch (Exception e){
             }
-            subjectRepo.save(subjectEntity);
-        }
+
+        }subjectRepo.save(subjectEntity);
     }
 
     public SubjectEntity getById(Long id){

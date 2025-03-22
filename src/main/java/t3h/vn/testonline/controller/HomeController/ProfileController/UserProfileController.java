@@ -27,7 +27,7 @@ public class UserProfileController {
         String message = (String) model.asMap().get("message");
         model.addAttribute("message", message);
         model.addAttribute("user", userEntity);
-        model.addAttribute("subjectList", subjectService.getAll());
+        model.addAttribute("subjectList", subjectService.getAllAndStatusIsLike());
         return "customer/profile/userProfile";
     }
 }

@@ -23,19 +23,23 @@ public class TopicService {
         return topicRepo.findAll();
     }
     public Page<TopicEntity> search(Long id, String query, Integer page, Integer perpage){
-        SubjectEntity subject = new SubjectEntity();
-        subject.setId(id);
-        TopicEntity exampleTopic = new TopicEntity();
-        exampleTopic.setSubject(subject);
-        Example<TopicEntity> topic = Example.of(exampleTopic);
         Pageable pageable = PageRequest.of(page - 1, perpage);
-        Page<TopicEntity> pageResult;
-        if (query != null && !query.isEmpty()){
-            pageResult = topicRepo.findAllBySubject_IdAndNameContaining(id, query, pageable);
-            return pageResult;
-        }
-        pageResult = topicRepo.findAll(topic, pageable);
-        return pageResult;
+        return topicRepo.findAllBySubject_IdAndNameContaining(id, query, pageable);
+    }
+
+    public Page<TopicEntity> getAllBySubjectIdAndStatus(Long subjectId, int status, int page, int perpage){
+        Pageable pageable = PageRequest.of(page - 1, perpage);
+        return topicRepo.findAllBySubjectIdAndStatus(subjectId, status, pageable);
+    }
+
+    public List<TopicEntity> getAllBySubjectIdAndStatusIsLike(Long id){
+
+        return topicRepo.findAllBySubject_IdAndStatus(id, 1);
+    }
+
+    public Page<TopicEntity> getAllBySubjectId(Long id, int page, int perpage){
+        Pageable pageable = PageRequest.of(page-1, perpage);
+        return topicRepo.findAllBySubjectId(id, pageable);
     }
 
     public List<TopicEntity> getAllBySubjectId(Long id){
@@ -56,7 +60,7 @@ public class TopicService {
     }
 
     public TopicEntity getById(Long id){
-        return topicRepo.getById(id);
+        return topicRepo.findByIdAndStatus(id, 1);
     }
 
     public void update(TopicEntity topicEntity){

@@ -39,9 +39,12 @@ public class TopicController {
         List<SubjectEntity> subjectList = subjectService.getAll();
         Long id = subjectList.get(subject).getId();
         String message = (String) model.asMap().get("message");
-
+        if (query.isEmpty()){
+            model.addAttribute("response", topicService.getAllBySubjectId(id, page, perpage));
+        }else {
+            model.addAttribute("response", topicService.search(id,query, page, perpage));
+        }
         model.addAttribute("message", message);
-        model.addAttribute("response", topicService.search(id, query, page, perpage));
         model.addAttribute("subjectList", subjectList);
         model.addAttribute("subjectIndex", subject);
 
@@ -93,9 +96,9 @@ public class TopicController {
         return "redirect:/admin/topic";
     }
 
-    @GetMapping("/update/{id}")
-    public String updateTopic(Model model, @PathVariable Long id){
-        TopicEntity existTopic = topicService.getById(id);
+    @GetMapping("/update")
+    public String updateTopic(Model model, @RequestParam(value = "topicId") Long topicId){
+        TopicEntity existTopic = topicService.getById(topicId);
         TopicDto topicDto = new TopicDto();;
         topicDto.setId(existTopic.getId());
         topicDto.setName(existTopic.getName());
@@ -105,15 +108,14 @@ public class TopicController {
         model.addAttribute("subjectList", subjectList);
         model.addAttribute("topic", topicDto);
         model.addAttribute("is_update", "update");
-        model.addAttribute("ID", id);
         return "admin/topic/createTopic";
     }
 
-    @PostMapping("/update/{id}")
+    @PostMapping("/update")
     @Transactional
     public String update(@Valid @ModelAttribute("topic") TopicDto topic,
                          Model model, RedirectAttributes redirectAttributes,
-                         BindingResult result, @PathVariable Long id){
+                         BindingResult result){
         if(result.hasErrors()){
             model.addAttribute("is_update", "update");
             return "admin/topic/createTopic";

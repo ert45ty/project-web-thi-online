@@ -31,7 +31,7 @@ public class ChangePasswordController {
     public String formChangePassword(Model model){
 
         model.addAttribute("password", new CustomerDto());
-        model.addAttribute("subjectList", subjectService.getAll());
+        model.addAttribute("subjectList", subjectService.getAllAndStatusIsLike());
         return "customer/profile/changePassword";
     }
 

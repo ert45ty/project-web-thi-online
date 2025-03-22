@@ -39,7 +39,7 @@ public class UpdateProfileController {
         userDto.setImage_name(userEntity.getImage_name());
 
         model.addAttribute("existUser", userDto);
-        model.addAttribute("subjectList", subjectService.getAll());
+        model.addAttribute("subjectList", subjectService.getAllAndStatusIsLike());
         return "customer/profile/updateProfile";
     }
 

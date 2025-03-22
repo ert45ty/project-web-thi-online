@@ -23,24 +23,23 @@ public class ExamService {
     @Autowired
     TopicService topicService;
 
-    public List<ExamEntity> getAllByTopicId(Long id){
-        return examRepo.getExamEntityByTopic_Id(id);
+    public Page<ExamEntity> getAllByTopicIdAndStatus(Long id,int page, int perpage){
+        Pageable pageable = PageRequest.of(page-1, perpage);
+        return examRepo.getExamEntityByTopic_IdAndStatus(id, 1,pageable);
+    }
+
+    public Page<ExamEntity> getAllByTopicId(Long id,int page, int perpage){
+        Pageable pageable = PageRequest.of(page-1, perpage);
+        return examRepo.getExamEntityByTopic_Id(id,pageable);
     }
 
     public Page<ExamEntity> search(Long id,String query, Integer page, Integer perpage){
-        TopicEntity exampleTopic = new TopicEntity();
-        exampleTopic.setId(id);
-        ExamEntity exampleExam = new ExamEntity();
-        exampleExam.setTopic(exampleTopic);
-        Example<ExamEntity> exam = Example.of(exampleExam);
         Pageable pageable = PageRequest.of(page - 1, perpage);
-        Page<ExamEntity> result;
-        if (query != null && !query.isEmpty()){
-            result = examRepo.findAllByTopic_IdAndTitle(id, query, pageable);
-            return result;
-        }
-        result = examRepo.findAll(exam, pageable);
-        return result;
+        return examRepo.findAllByTopic_IdAndTitleContaining(id, query, pageable);
+    }
+
+    public ExamEntity getExamByIdAndStatusIsLike(Long id){
+        return examRepo.findByIdAndStatus(id, 1);
     }
 
     public ExamEntity getExamById(Long id){
@@ -49,7 +48,7 @@ public class ExamService {
 
     public ExamEntity save(ExamDto examDto){
         ExamEntity examEntity = new ExamEntity();
-        examDto.setStatus(1);
+        examDto.setStatus(0);
         TopicEntity topic = topicService.getById(examDto.getTopic_id());
         BeanUtils.copyProperties(examDto, examEntity);
         examEntity.setTopic(topic);

@@ -29,7 +29,7 @@ public class ResultService {
     public ResultEntity save(ResultDto resultDto, Long examId, Long userId){
         ResultEntity resultEntity = new ResultEntity();
         BeanUtils.copyProperties(resultDto, resultEntity);
-        ExamEntity examEntity = examService.getExamById(examId);
+        ExamEntity examEntity = examService.getExamByIdAndStatusIsLike(examId);
         UserEntity userEntity = userService.getById(userId);
         resultEntity.setExam(examEntity);
         resultEntity.setUser(userEntity);

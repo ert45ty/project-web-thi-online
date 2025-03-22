@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head th:replace="fragments::head('Chủ đề')">
 </head>
 <body class="ec-header-fixed ec-sidebar-fixed ec-sidebar-dark ec-header-light" id="body">
@@ -30,20 +30,41 @@
                 <div class="navbar-right">
                     <ul class="nav navbar-nav">
                         <!-- User Account -->
-                        <li class="dropdown user-menu">
+                        <li sec:authorize="isAuthenticated()" class="dropdown user-menu">
                             <button class="dropdown-toggle nav-link ec-drop" data-bs-toggle="dropdown"
                                     aria-expanded="false">
-                                <img src="/img/user/user.png" class="user-image" alt="User Image" />
+                                <th:block th:switch="${#authentication.principal.user.image_name == null}">
+                                    <img th:case="${false}" th:src="@{/image-file/{image_name}(image_name=${#authentication.principal.user.image_name})}"
+                                         class="user-image" alt="User Image" >
+                                    <img th:case="${true}"
+                                         src="https://png.pngtree.com/png-clipart/20210608/ourlarge/pngtree-white-silhouette-avatar-png-image_3418408.jpg"
+                                         class="user-image" alt="User Image" >
+                                </th:block>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-right ec-dropdown-menu">
                                 <li class="dropdown-header">
-                                    <img src="/img/user/user.png" class="img-circle" alt="User Image" />
-                                    <div class="d-inline-block">
-                                        John Deo <small class="pt-1"></small>
+                                    <th:block th:switch="${#authentication.principal.user.image_name == null}">
+                                        <img th:case="${false}" th:src="@{/image-file/{image_name}(image_name=${#authentication.principal.user.image_name})}"
+                                             class="user-image" alt="User Image" >
+                                        <img th:case="${true}"
+                                             src="https://png.pngtree.com/png-clipart/20210608/ourlarge/pngtree-white-silhouette-avatar-png-image_3418408.jpg"
+                                             class="user-image" alt="User Image" >
+                                    </th:block>
+                                    <div class="d-inline-block" sec:authentication="principal.user.fullname">
+                                        <small class="pt-1"></small>
                                     </div>
                                 </li>
+                                <li>
+                                    <a href="/profile"> <i class="mdi mdi-account"></i> Thông tin chi tiết </a>
+                                </li>
+                                <li>
+                                    <a href="/profile/history"> <i class="mdi mdi-palette-advanced"></i> Lịch sử bài thi </a>
+                                </li>
+                                <li>
+                                    <a href="/profile/changePassword"> <i class="mdi mdi-settings-outline"></i> Đổi mật khẩu </a>
+                                </li>
                                 <li class="dropdown-footer">
-                                    <a href="index.html"> <i class="mdi mdi-logout"></i> Log Out </a>
+                                    <a href="/logout"> <i class="mdi mdi-logout"></i> Đăng xuất </a>
                                 </li>
                             </ul>
                         </li>
@@ -110,7 +131,7 @@
                                                     </button>
                                                     <div class="dropdown-menu">
                                                         <a class="dropdown-item"
-                                                           th:href="@{/admin/topic/update/{id}(id=${topic.id})}">Sửa</a>
+                                                           th:href="@{/admin/topic/update(topicId=${topic.id})}">Sửa</a>
                                                         <a class="dropdown-item"
                                                            th:href="@{/admin/topic/delete/{id}(id=${topic.id})}"
                                                            onclick="return confirm('Bạn có muốn xóa?')">Xóa</a>

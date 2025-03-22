@@ -12,16 +12,20 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import t3h.vn.testonline.dto.CustomerDto;
 import t3h.vn.testonline.dto.groupValidation.EmailActiveAccount;
 import t3h.vn.testonline.service.CustomerService;
+import t3h.vn.testonline.service.SubjectService;
 
 @Controller
 public class ForgotPasswordController {
 
     @Autowired
     CustomerService customerService;
+    @Autowired
+    SubjectService subjectService;
 
     @GetMapping("/forgotPassword")
     public String formForgotPassword(Model model){
         model.addAttribute("user", new CustomerDto());
+        model.addAttribute("subjectList", subjectService.getAllAndStatusIsLike());
         return "forgotPassword";
     }
 

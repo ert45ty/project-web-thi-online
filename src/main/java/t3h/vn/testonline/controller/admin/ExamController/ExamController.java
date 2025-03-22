@@ -67,10 +67,16 @@ public class ExamController {
 
         String message = (String) model.asMap().get("message");
 
+        if (query.isEmpty()){
+            model.addAttribute("response", examService.getAllByTopicId(topicId, page, perpage));
+        }else {
+            model.addAttribute("response", examService.search(topicId,query, page, perpage));
+        }
+
         model.addAttribute("message", message);
         model.addAttribute("currentTopic", currentTopic);
         model.addAttribute("subjectList", subjectList);
-        model.addAttribute("response", examService.search(topicId, query, page, perpage));
+        model.addAttribute("response", examService.getAllByTopicId(topicId, page, perpage));
         model.addAttribute("subjectIndex", subject);
         model.addAttribute("topicIndex", topic);
         session.setAttribute("topicList", topicList);
@@ -106,7 +112,7 @@ public class ExamController {
         exam.setDuration(duration(total));
         ExamEntity examEntity = examService.save(exam);
         Long examId = examEntity.getId();
-        redirectAttributes.addFlashAttribute("exam", examEntity);
+        redirectAttributes.addAttribute("totalQuestion", examEntity.getTotal_question());
         redirectAttributes.addAttribute("examId", examId);
         return "redirect:/admin/exam/createQandA";
     }

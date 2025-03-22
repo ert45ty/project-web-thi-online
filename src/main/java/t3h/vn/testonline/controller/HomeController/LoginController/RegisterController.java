@@ -29,7 +29,7 @@ public class RegisterController {
     @GetMapping("/register")
     public String registerForm(Model model){
         model.addAttribute("newUser", new CustomerDto());
-        model.addAttribute("subjectList", subjectService.getAll());
+        model.addAttribute("subjectList", subjectService.getAllAndStatusIsLike());
         return "customer/login/register";
     }
 

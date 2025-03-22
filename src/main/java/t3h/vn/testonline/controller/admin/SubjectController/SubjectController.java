@@ -65,7 +65,7 @@ public class SubjectController {
     @GetMapping("/delete/{id}")
     public String deleteSubject(Model model, @PathVariable Long id, RedirectAttributes redirectAttributes){
         SubjectEntity subjectEntity =  subjectService.getById(id);
-        subjectEntity.setStatus(0);
+
         List<TopicEntity> topicEntities = subjectEntity.getTopics();
         for (int i=0; i < topicEntities.size(); i++){
             topicEntities.get(i).setStatus(0);
@@ -75,6 +75,7 @@ public class SubjectController {
             }
             topicService.update(topicEntities.get(i));
         }
+        subjectEntity.setStatus(0);
         subjectService.update(subjectEntity, null);
         redirectAttributes.addFlashAttribute("message", "Hủy môn thi thành công");
         return "redirect:/admin/subject";
@@ -88,7 +89,6 @@ public class SubjectController {
         subjectDto.setName(existSubject.getName());
         model.addAttribute("subject", subjectDto);
         model.addAttribute("ID", id);
-//        model.addAttribute("is_update", "update");
         return "admin/subject/createSubject";
     }
 

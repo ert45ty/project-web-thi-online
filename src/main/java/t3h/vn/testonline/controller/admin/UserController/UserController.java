@@ -15,7 +15,7 @@ import t3h.vn.testonline.service.UserService;
 import java.util.List;
 
 @Controller
-@RequestMapping("/admin/user/list")
+@RequestMapping("/admin/user")
 public class UserController {
 
     @Autowired
@@ -59,7 +59,7 @@ public class UserController {
         }
         userService.save(user);
         redirectAttributes.addFlashAttribute("message", "Thêm mới người dùng thành công");
-        return "redirect:/admin/user/list";
+        return "redirect:/admin/user";
     }
 
     @GetMapping("/delete/{id}")
@@ -67,7 +67,7 @@ public class UserController {
                          RedirectAttributes redirectAttributes){
         userService.delete(id);
         redirectAttributes.addFlashAttribute("message", "Xóa tài khoản thành công");
-        return "redirect:/admin/user/list";
+        return "redirect:/admin/user";
     }
 
     @GetMapping("update/{id}")
@@ -100,7 +100,7 @@ public class UserController {
         userEntity.setRole(user.getRole());
         userService.update(userEntity, fileImage);
         redirectAttributes.addFlashAttribute("message", "Cập nhật người dùng thành công");
-        return "redirect:/admin/user/list";
+        return "redirect:/admin/user";
     }
 
     @GetMapping("detail/{id}")

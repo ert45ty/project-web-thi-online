@@ -58,9 +58,9 @@ public class ExamListController {
         model.addAttribute("comments", commentList);
         model.addAttribute("currentTopic", topicEntity);
         model.addAttribute("topicList", topicList);
-        model.addAttribute("response", examService.search(topicId, null, page, perpage));
+        model.addAttribute("response", examService.getAllByTopicIdAndStatus(topicId, page, perpage));
         model.addAttribute("subject", topicEntity.getSubject());
-        model.addAttribute("subjectList", subjectService.getAll());
+        model.addAttribute("subjectList", subjectService.getAllAndStatusIsLike());
         model.addAttribute("highestScore", highestScore);
 
         return "customer/examList";

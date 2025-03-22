@@ -39,7 +39,7 @@ public class SearchController {
             }
         }
 
-        model.addAttribute("subjectList", subjectService.getAll());
+        model.addAttribute("subjectList", subjectService.getAllAndStatusIsLike());
         model.addAttribute("subjectId", subjectId);
         model.addAttribute("time", time);
         model.addAttribute("query", query);

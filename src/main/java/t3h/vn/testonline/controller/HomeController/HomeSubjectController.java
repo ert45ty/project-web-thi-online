@@ -24,28 +24,19 @@ public class HomeSubjectController {
     @GetMapping
     public String topicList(Model model,
                             @RequestParam(defaultValue = "0") Integer subject,
-                            @RequestParam(defaultValue = "") String query,
                             @RequestParam(defaultValue = "1") Integer page,
                             @RequestParam(defaultValue = "10") Integer perpage){
 
-        List<SubjectEntity> subjectList = subjectService.getAll();
+        List<SubjectEntity> subjectList = subjectService.getAllAndStatusIsLike();
         Long id = subjectList.get(subject).getId();
         SubjectEntity currentSubject = subjectList.get(subject);
 
-        model.addAttribute("response", topicService.search(id, query, page, perpage));
+        model.addAttribute("response", topicService.getAllBySubjectIdAndStatus(id, 1, page, perpage));
         model.addAttribute("subjectList", subjectList);
         model.addAttribute("currentSubject", currentSubject);
         model.addAttribute("subjectIndex", subject);
 
         return "customer/subjectHomeList";
-    }
-
-    @PostMapping
-    public String querySearch(Model model,
-                              @RequestParam(defaultValue = "0") Integer subject,
-                              @RequestParam String query){
-        model.addAttribute("subjectIndex", subject);
-        return topicList(model, subject, query, 1, 10);
     }
 
 }

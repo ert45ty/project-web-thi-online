@@ -24,7 +24,7 @@ public class LoginController {
             // Xóa lỗi sau khi đã hiển thị
             request.getSession().removeAttribute("error");
         }
-        model.addAttribute("subjectList", subjectService.getAll());
+        model.addAttribute("subjectList", subjectService.getAllAndStatusIsLike());
         return "customer/login/login";
     }
 

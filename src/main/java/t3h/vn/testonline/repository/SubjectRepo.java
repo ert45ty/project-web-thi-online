@@ -12,5 +12,8 @@ import java.util.List;
 public interface SubjectRepo extends JpaRepository<SubjectEntity, Long> {
     SubjectEntity getById(Long id);
 
+    List<SubjectEntity> findAllByStatus(int status);
+
+
     Page<SubjectEntity> findAllByNameContaining(String query, Pageable pageable);
 }

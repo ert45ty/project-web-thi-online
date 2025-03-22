@@ -22,7 +22,7 @@ public class RankController {
     public String templateRanking(Model model, @RequestParam Long examId){
 
         model.addAttribute("resultList", resultService.getTop10ExamsHighestScore(examId, 1, 10));
-        model.addAttribute("subjectList", subjectService.getAll());
+        model.addAttribute("subjectList", subjectService.getAllAndStatusIsLike());
         return "customer/ranking";
     }
 }

@@ -31,7 +31,12 @@ public class QuestionService {
     public QuestionEntity save(QuestionDto questionDto, Long id){
         QuestionEntity questionEntity = new QuestionEntity();
         BeanUtils.copyProperties(questionDto, questionEntity);
-
+        if (questionDto.getFileImage() != null && !questionDto.getFileImage().isEmpty()){
+            try {
+                String image_name = fileUtils.saveFile(questionDto.getFileImage());
+                questionEntity.setImage_name(image_name);
+            }catch (Exception e){ }
+        }
         questionEntity.setExam(examService.getExamById(id));
         QuestionEntity question = questionRepo.save(questionEntity);
         return question;

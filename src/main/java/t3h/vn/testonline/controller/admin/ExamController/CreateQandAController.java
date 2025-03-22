@@ -8,10 +8,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import t3h.vn.testonline.dto.ListQuestionDto;
 import t3h.vn.testonline.dto.OptionDto;
 import t3h.vn.testonline.dto.QuestionDto;
 import t3h.vn.testonline.entities.ExamEntity;
 import t3h.vn.testonline.entities.QuestionEntity;
+import t3h.vn.testonline.service.ExamService;
 import t3h.vn.testonline.service.OptionService;
 import t3h.vn.testonline.service.QuestionService;
 import t3h.vn.testonline.utils.FileUtils;
@@ -22,7 +24,6 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/admin/exam")
-@SessionAttributes({"exam", "questions", "examId"})
 public class CreateQandAController {
 
     @Autowired
@@ -30,101 +31,56 @@ public class CreateQandAController {
     @Autowired
     OptionService optionService;
     @Autowired
+    ExamService examService;
+    @Autowired
     FileUtils fileUtils;
 
     @GetMapping("/createQandA")
     public String formQandA(Model model,
                             @RequestParam(value = "examId", required = false) Long examId,
-                            @RequestParam(value = "currentIndex", required = false, defaultValue = "0") Integer currentIndex){
-        if (currentIndex == null || currentIndex < 0) {
-            currentIndex = 0;
+                            @RequestParam(value = "totalQuestion") int totalQuestion){
+
+        ListQuestionDto questions = new ListQuestionDto();
+        for (int i = 0; i < totalQuestion; i++) {
+            QuestionDto questionDto = new QuestionDto();
+            questionDto.setOptions(new ArrayList<>(4));
+            for (int j = 0; j < 4; j++) {
+                OptionDto optionDto = new OptionDto();
+                optionDto.setIs_correct(false);
+                questionDto.getOptions().add(optionDto);
+            }
+            questions.getQuestionDtoList().add(questionDto);
         }
-        if (!model.containsAttribute("questions")){
-            model.addAttribute("questions", new ArrayList<QuestionDto>());
-            ExamEntity examEntity = (ExamEntity) model.asMap().get("exam");
-            model.addAttribute("exam", examEntity);
-        }
-        List<QuestionDto> questions = (List<QuestionDto>) model.getAttribute("questions");
-        if (questions == null) {
-            questions = new ArrayList<>();
-            model.addAttribute("questions", questions);
-        }
-        if (questions.size() < currentIndex) {
-            currentIndex = questions.size() - 1;
-        }
-        QuestionDto question;
-        if (questions.size() > currentIndex){
-            question = questions.get(currentIndex);
-        }else {
-            question = new QuestionDto();
-            question.setOptions(new ArrayList<>(Arrays.asList(new OptionDto(), new OptionDto(),
-                    new OptionDto(),new OptionDto())));
-        }
+        model.addAttribute("questions", questions);
+        model.addAttribute("totalQuestion", totalQuestion);
         model.addAttribute("examId", examId);
-        model.addAttribute("currentQuestion", question);
-        model.addAttribute("currentIndex", currentIndex);
         return "admin/exam/createQandA";
     }
 
     @PostMapping("createQandA")
-    public String createQandA(@Valid @ModelAttribute QuestionDto currentQuestion,
-                              @RequestParam(required = false) Long examId,
-                              @RequestParam(required = false) String finish,
-                              @RequestParam(required = false) String action,
-                              @RequestParam(required = false) Integer currentIndex,
-                              @RequestParam(required = false) Integer correct,
-                              BindingResult result, Model model, SessionStatus sessionStatus,
+    public String createQandA(@Valid @ModelAttribute ListQuestionDto questions,
+                              BindingResult result, Model model,
+                              @RequestParam Long examId,
                               RedirectAttributes redirectAttributes){
         if(result.hasErrors()){
             return "admin/exam/createQandA";
         }
-        List<QuestionDto> questions = (List<QuestionDto>) model.getAttribute("questions");
-        for (int i = 0; i < 4; i++){
-            if (correct == i) currentQuestion.getOptions().get(i).setIs_correct(true);
-            else currentQuestion.getOptions().get(i).setIs_correct(false);
-        }
-        if (currentQuestion.getFileImage() != null && !currentQuestion.getFileImage().isEmpty()){
-            try {
-                String image_name = fileUtils.saveFile(currentQuestion.getFileImage());
-                currentQuestion.setImage_name(image_name);
-            }catch (Exception e){}
-        }
-
-        if (currentIndex != null && currentIndex >= 0 && currentIndex < questions.size()) {
-            questions.set(currentIndex, currentQuestion);
-        } else {
-            questions.add(currentQuestion);
-        }
-
-        if ("next".equals(action)) {
-            currentIndex = currentIndex < questions.size() ? currentIndex + 1 : currentIndex;
-        }else if ("back".equals(action)){
-            currentIndex = currentIndex > 0 ? currentIndex - 1 : currentIndex;
-        }
-
-        if ("true".equals(finish)){
-            for (QuestionDto question : questions){
-                QuestionEntity questionEntity = questionService.save(question, examId);
-                for (OptionDto option : question.getOptions()) {
-                    Long questionId = questionEntity.getId();
-                    optionService.save(option, questionId);
-                }
+        List<QuestionDto> questionDtoList = questions.getQuestionDtoList();
+        for (int i = 0; i < questionDtoList.size(); i++) {
+            QuestionEntity questionEntity = questionService.save(questionDtoList.get(i), examId);
+            for (int j = 0; j < 4; j++) {
+                OptionDto option = questionDtoList.get(i).getOptions().get(j);
+                if (questionDtoList.get(i).getCorrect() == j){
+                    option.setIs_correct(true);
+                }else option.setIs_correct(false);
+                Long questionId = questionEntity.getId();
+                optionService.save(option, questionId);
             }
-            sessionStatus.setComplete();
-            redirectAttributes.addFlashAttribute("message", "Tạo bài thi thành công");
-            return "redirect:/admin/exam/list";
         }
-        QuestionDto question;
-        if (questions.size() > currentIndex){
-            question = questions.get(currentIndex);
-        }else {
-            question = new QuestionDto();
-            question.setOptions(new ArrayList<>(Arrays.asList(new OptionDto(), new OptionDto(),
-                    new OptionDto(),new OptionDto())));
-        }
-        model.addAttribute("questions", questions);
-        model.addAttribute("currentIndex", currentIndex);
-        model.addAttribute("currentQuestion", question);
-        return "admin/exam/createQandA";
+        ExamEntity examEntity = examService.getExamById(examId);
+        examEntity.setStatus(1);
+        examService.update(examEntity);
+        redirectAttributes.addFlashAttribute("message", "Tạo bài thi thành công");
+        return "redirect:/admin/exam";
     }
 }

@@ -17,7 +17,7 @@
         </p>
       </div>
       <div>
-        <a type="button" class="btn btn-primary align-items-center d-flex" th:href="@{/admin/user/list/create}"> Thêm tài khoản
+        <a type="button" class="btn btn-primary align-items-center d-flex" th:href="@{/admin/user/create}"> Thêm tài khoản
         </a>
       </div>
     </div>
@@ -55,7 +55,7 @@
                     <div class="btn-group mb-1">
                       <a type="button"
                          class="btn btn-outline-success align-items-center d-flex"
-                         th:href="@{/admin/user/list/detail/{id}(id=${user.id})}">Chi tiết</a>
+                         th:href="@{/admin/user/detail/{id}(id=${user.id})}">Chi tiết</a>
                       <button type="button"
                               class="btn btn-outline-success dropdown-toggle dropdown-toggle-split"
                               data-bs-toggle="dropdown" aria-haspopup="true"
@@ -64,9 +64,9 @@
                       </button>
                       <div class="dropdown-menu">
                         <a class="dropdown-item"
-                           th:href="@{/admin/user/list/update/{id}(id=${user.id})}">Sửa</a>
+                           th:href="@{/admin/user/update/{id}(id=${user.id})}">Sửa</a>
                         <a class="dropdown-item"
-                           th:href="@{/admin/user/list/delete/{id}(id=${user.id})}">Xóa</a>
+                           th:href="@{/admin/user/delete/{id}(id=${user.id})}">Xóa</a>
                       </div>
                     </div>
                   </td>
@@ -80,21 +80,21 @@
             <ul class="pagination justify-content-center">
               <li th:if="${response.getPageable().getPageNumber() > 0}" class="page-item mx-1">
                 <a class="btn btn-outline-success"
-                   th:href="@{/admin/user/list(page=${response.getPageable().getPageNumber()}, perpage=${response.getSize()})}"
+                   th:href="@{/admin/user(page=${response.getPageable().getPageNumber()}, perpage=${response.getSize()})}"
                 >
                   Trang trước
                 </a>
               </li>
               <li class="page-item" th:each="pageNo : ${#numbers.sequence(0, response.getTotalPages() - 1)}">
                 <a class="btn btn-outline-secondary" th:classappend="${response.getPageable().getPageNumber() == pageNo ? 'active-page' : ''}"
-                   th:href="@{/admin/user/list(page=${pageNo + 1}, perpage=${response.getSize()})}"
+                   th:href="@{/admin/user(page=${pageNo + 1}, perpage=${response.getSize()})}"
                    th:text="${pageNo + 1}"
                 >
                 </a>
               </li>
               <li th:if="${response.getPageable().getPageNumber() < (response.getTotalPages() - 1)}" class="page-item mx-1">
                 <a class="btn btn-outline-success"
-                   th:href="@{/admin/user/list(page=${response.getPageable().getPageNumber() + 2}, perpage=${response.getSize()})}">
+                   th:href="@{/admin/user(page=${response.getPageable().getPageNumber() + 2}, perpage=${response.getSize()})}">
                   Trang sau
                 </a>
               </li>

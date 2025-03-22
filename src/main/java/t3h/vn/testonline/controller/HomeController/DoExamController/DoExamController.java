@@ -45,7 +45,7 @@ public class DoExamController {
     public String formDoExam(@RequestParam Long examId,
                              Model model){
 
-        ExamEntity examEntity = examService.getExamById(examId);
+        ExamEntity examEntity = examService.getExamByIdAndStatusIsLike(examId);
 
         List<QuestionEntity> questionList = examEntity.getQuestions();
 
@@ -76,7 +76,7 @@ public class DoExamController {
                          HttpSession session,
                          RedirectAttributes redirectAttributes){
             ResultDto resultDto = new ResultDto();
-            ExamEntity examEntity = examService.getExamById(examId);
+            ExamEntity examEntity = examService.getExamByIdAndStatusIsLike(examId);
             int duration = examEntity.getDuration() - (int)(Long.parseLong(submitTime)/1000);
             resultDto.setExam_duration(duration);
             Float score = 0f;
