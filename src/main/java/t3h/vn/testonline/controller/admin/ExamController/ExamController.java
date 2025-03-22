@@ -53,12 +53,12 @@ public class ExamController {
             topicList = topicService.getAllBySubjectId(subjectList.get(subject).getId());
             totalTopic = topicList.size();
         }
-        if (topic >= totalTopic) {
+        if (topic > totalTopic) {
             topic = topicList.size() - 1;
         }
         TopicEntity currentTopic;
         Long topicId = 0L;
-        if(topicList == null){
+        if(topicList == null || topicList.isEmpty()){
             currentTopic = null;
         }else {
             currentTopic = topicList.get(topic);
@@ -76,7 +76,6 @@ public class ExamController {
         model.addAttribute("message", message);
         model.addAttribute("currentTopic", currentTopic);
         model.addAttribute("subjectList", subjectList);
-        model.addAttribute("response", examService.getAllByTopicId(topicId, page, perpage));
         model.addAttribute("subjectIndex", subject);
         model.addAttribute("topicIndex", topic);
         session.setAttribute("topicList", topicList);
@@ -126,6 +125,7 @@ public class ExamController {
         existExam.setTitle(examEntity.getTitle());
         existExam.setTopic_id(examEntity.getTopic().getId());
         model.addAttribute("existExam", existExam);
+        model.addAttribute("examId", examId);
         model.addAttribute("is_update", "update");
         model.addAttribute("topicList", session.getAttribute("topicList"));
         return "admin/exam/createExam";
@@ -134,20 +134,20 @@ public class ExamController {
     @PostMapping("/update")
     public String updateExam(@Valid @ModelAttribute("existExam") ExamDto existExam,
                              BindingResult result, RedirectAttributes redirectAttributes,
-                             Model model){
+                             Model model,@RequestParam Long examId){
         if (result.hasErrors()){
+            model.addAttribute("is_update", "update");
             return "admin/exam/createExam";
         }
-        ExamEntity examEntity = new ExamEntity();
-        examEntity.setTopic(topicService.getById(existExam.getTopic_id()));
+        ExamEntity examEntity = examService.getExamById(examId);
+        examEntity.setTopic(topicService.getsById(existExam.getTopic_id()));
         if (examEntity.getTopic().getStatus() == 0 && existExam.getStatus() == 1){
+            model.addAttribute("is_update", "update");
             model.addAttribute("error", "Không thể kích hoạt bài thi khi chủ đề bạn chọn đang không được kích hoạt");
             return "admin/exam/createExam";
         }
         examEntity.setStatus(existExam.getStatus());
         examEntity.setTitle(existExam.getTitle());
-        examEntity.setTotal_question(existExam.getTotal_question());
-        examEntity.setDuration(duration(existExam.getTotal_question()));
         examService.update(examEntity);
         redirectAttributes.addFlashAttribute("message", "Cập nhật bài thi thành công");
         return "redirect:/admin/exam";

@@ -15,7 +15,7 @@
                     <div th:switch="${is_update}" class="card-body">
                         <div th:case="update" class="ec-cat-form">
                             <h4>Sửa thông tin bài thi</h4>
-                            <form action="/admin/exam/update" method="post" th:object="${existExam}">
+                            <form th:action="@{/admin/exam/update(examId=${examId})}" method="post" th:object="${existExam}">
                                 <div class="form-group row">
                                     <label for="title" class="col-12 col-form-label">Tiêu đề</label>
                                     <div class="col-12">
@@ -37,6 +37,7 @@
                                         <option th:value="${0}">Không kích hoạt</option>
                                         <option th:value="${1}">Kích hoạt</option>
                                     </select>
+                                    <label th:if="${error}" th:text="${error}" for="title" class="form-label text-danger"></label>
                                 </div>
                                 <div class="row">
                                     <div class="col-12 d-flex justify-content-between">

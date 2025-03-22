@@ -14,6 +14,8 @@ public interface SubjectRepo extends JpaRepository<SubjectEntity, Long> {
 
     List<SubjectEntity> findAllByStatus(int status);
 
+    Page<SubjectEntity> findAll(Pageable pageable);
+
 
     Page<SubjectEntity> findAllByNameContaining(String query, Pageable pageable);
 }

@@ -14,7 +14,7 @@ public class ExamDto {
     private Long topic_id;
 
     @NotBlank(message = "Tiêu đề không được để rỗng")
-    @Size(min = 5)
+    @Size(min = 5, message = "Tiêu đề phải có ít nhất 5 kí tự")
     private String title;
 
     private Integer duration;

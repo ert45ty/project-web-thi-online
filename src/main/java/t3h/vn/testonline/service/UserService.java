@@ -15,6 +15,7 @@ import t3h.vn.testonline.repository.UserRepo;
 import t3h.vn.testonline.utils.FileUtils;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -55,6 +56,9 @@ public class UserService {
             }catch (Exception e){}
         }
         userEntity.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        String randomCode = UUID.randomUUID().toString();
+        userEntity.setCode(randomCode);
+        userEntity.setStatus(1);
         userRepo.save(userEntity);
     }
 

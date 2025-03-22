@@ -29,7 +29,7 @@ public class ReactivateAccountController {
     @GetMapping("/reactivate")
     public String reActivate(Model model){
 
-        model.addAttribute("subjectList", subjectService.getAll());
+        model.addAttribute("subjectList", subjectService.getAllAndStatusIsLike());
         model.addAttribute("user", new CustomerDto());
         return "activateAccount";
     }

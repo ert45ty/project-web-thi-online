@@ -15,6 +15,8 @@ public interface TopicRepo extends JpaRepository<TopicEntity, Long> {
 
     List<TopicEntity> findAllBySubject_Id(Long id);
 
+    TopicEntity findTopicEntityById(Long id);
+
     Page<TopicEntity> findAllBySubjectIdAndStatus(Long id,int status, Pageable pageable);
 
     Page<TopicEntity> findAllBySubjectId(Long id, Pageable pageable);

@@ -98,7 +98,7 @@ public class TopicController {
 
     @GetMapping("/update")
     public String updateTopic(Model model, @RequestParam(value = "topicId") Long topicId){
-        TopicEntity existTopic = topicService.getById(topicId);
+        TopicEntity existTopic = topicService.getsById(topicId);
         TopicDto topicDto = new TopicDto();;
         topicDto.setId(existTopic.getId());
         topicDto.setName(existTopic.getName());
@@ -107,6 +107,7 @@ public class TopicController {
         List<SubjectEntity> subjectList = subjectService.getAll();
         model.addAttribute("subjectList", subjectList);
         model.addAttribute("topic", topicDto);
+        model.addAttribute("topicId", topicId);
         model.addAttribute("is_update", "update");
         return "admin/topic/createTopic";
     }
@@ -115,7 +116,7 @@ public class TopicController {
     @Transactional
     public String update(@Valid @ModelAttribute("topic") TopicDto topic,
                          Model model, RedirectAttributes redirectAttributes,
-                         BindingResult result){
+                         BindingResult result,@RequestParam(value = "topicId") Long topicId){
         if(result.hasErrors()){
             model.addAttribute("is_update", "update");
             return "admin/topic/createTopic";
@@ -126,7 +127,7 @@ public class TopicController {
             model.addAttribute("error", "Không thể cập nhật trạng thái khi môn học bạn chọn đang ở trạng thái không kích hoạt");
             return "admin/topic/createTopic";
         }
-        TopicEntity topicEntity = topicService.getById(topic.getId());
+        TopicEntity topicEntity = topicService.getsById(topicId);
         topicEntity.setName(topic.getName());
         topicEntity.setDescription(topic.getDescription());
         topicEntity.setSubject(subjectEntity);

@@ -35,9 +35,11 @@ public class SubjectController {
                               @RequestParam(defaultValue = "10") Integer perpage){
 
         String message = (String) model.asMap().get("message");
+        if (query == null || query.isEmpty()){
+            model.addAttribute("response", subjectService.getPageAll(page, perpage));
+        }else model.addAttribute("response", subjectService.search(query, page, perpage));
 
         model.addAttribute("message", message);
-        model.addAttribute("response", subjectService.search(query, page, perpage));
         model.addAttribute("subject", new SubjectDto());
         return "admin/subject/subjectList";
     }
@@ -52,8 +54,7 @@ public class SubjectController {
                                 BindingResult result, Model model,
                                 RedirectAttributes redirectAttributes){
         if (result.hasErrors()){
-            List<SubjectEntity> subjectList = subjectService.getAll();
-            model.addAttribute("subjectList", subjectList);
+            model.addAttribute("response", subjectService.getPageAll(1, 10));
             return "admin/subject/subjectList";
         }else {
                 subjectService.save(subject);

@@ -63,6 +63,10 @@ public class TopicService {
         return topicRepo.findByIdAndStatus(id, 1);
     }
 
+    public TopicEntity getsById(Long id){
+        return topicRepo.findTopicEntityById(id);
+    }
+
     public void update(TopicEntity topicEntity){
         topicRepo.save(topicEntity);
     }

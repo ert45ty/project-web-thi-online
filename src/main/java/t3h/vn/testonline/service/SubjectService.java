@@ -29,6 +29,10 @@ public class SubjectService {
     public List<SubjectEntity> getAll(){
         return subjectRepo.findAll();
     }
+    public Page<SubjectEntity> getPageAll(int page, int perpage){
+        Pageable pageable = PageRequest.of(page -1, perpage);
+        return subjectRepo.findAll(pageable);
+    }
 
     public Page<SubjectEntity> search(String query, Integer page, Integer perpage){
         Pageable pageable = PageRequest.of(page - 1, perpage);
