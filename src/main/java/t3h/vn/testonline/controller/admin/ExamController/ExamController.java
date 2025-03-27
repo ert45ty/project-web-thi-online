@@ -26,12 +26,15 @@ import java.util.List;
 @RequestMapping("/admin/exam")
 public class ExamController {
 
-    @Autowired
-    ExamService examService;
-    @Autowired
-    TopicService topicService;
-    @Autowired
-    SubjectService subjectService;
+    private final ExamService examService;
+    private final TopicService topicService;
+    private final SubjectService subjectService;
+
+    public ExamController(ExamService examService, TopicService topicService, SubjectService subjectService){
+        this.examService = examService;
+        this.topicService = topicService;
+        this.subjectService = subjectService;
+    }
 
 
     @GetMapping

@@ -26,14 +26,15 @@ import java.util.List;
 @RequestMapping("/admin/exam")
 public class CreateQandAController {
 
-    @Autowired
-    QuestionService questionService;
-    @Autowired
-    OptionService optionService;
-    @Autowired
-    ExamService examService;
-    @Autowired
-    FileUtils fileUtils;
+    private final QuestionService questionService;
+    private final OptionService optionService;
+    private final ExamService examService;
+
+    public CreateQandAController(QuestionService questionService, OptionService optionService, ExamService examService){
+        this.examService = examService;
+        this.optionService = optionService;
+        this.questionService = questionService;
+    }
 
     @GetMapping("/createQandA")
     public String formQandA(Model model,
@@ -41,16 +42,16 @@ public class CreateQandAController {
                             @RequestParam(value = "totalQuestion") int totalQuestion){
 
         ListQuestionDto questions = new ListQuestionDto();
-        for (int i = 0; i < totalQuestion; i++) {
-            QuestionDto questionDto = new QuestionDto();
-            questionDto.setOptions(new ArrayList<>(4));
-            for (int j = 0; j < 4; j++) {
-                OptionDto optionDto = new OptionDto();
-                optionDto.setIs_correct(false);
-                questionDto.getOptions().add(optionDto);
-            }
-            questions.getQuestionDtoList().add(questionDto);
-        }
+//        for (int i = 0; i < totalQuestion; i++) {
+//            QuestionDto questionDto = new QuestionDto();
+//            questionDto.setOptions(new ArrayList<>(4));
+//            for (int j = 0; j < 4; j++) {
+//                OptionDto optionDto = new OptionDto();
+//                optionDto.setIs_correct(false);
+//                questionDto.getOptions().add(optionDto);
+//            }
+//            questions.getQuestionDtoList().add(questionDto);
+//        }
         model.addAttribute("questions", questions);
         model.addAttribute("totalQuestion", totalQuestion);
         model.addAttribute("examId", examId);
@@ -58,11 +59,13 @@ public class CreateQandAController {
     }
 
     @PostMapping("createQandA")
-    public String createQandA(@Valid @ModelAttribute ListQuestionDto questions,
+    public String createQandA(@Valid @ModelAttribute("questions") ListQuestionDto questions,
                               BindingResult result, Model model,
-                              @RequestParam Long examId,
+                              @RequestParam Long examId,@RequestParam int totalQuestion,
                               RedirectAttributes redirectAttributes){
         if(result.hasErrors()){
+
+            model.addAttribute("totalQuestion", totalQuestion);
             return "admin/exam/createQandA";
         }
         List<QuestionDto> questionDtoList = questions.getQuestionDtoList();

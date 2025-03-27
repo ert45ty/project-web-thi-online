@@ -1,7 +1,6 @@
 package t3h.vn.testonline.controller.admin.SubjectController;
 
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,14 +19,17 @@ import java.util.List;
 @RequestMapping("/admin/subject")
 @Controller
 public class SubjectController {
+    private final SubjectService subjectService;
+    private final ExamService examService;
+    private final TopicService topicService;
 
-    @Autowired
-    SubjectService subjectService;
-    @Autowired
-    TopicService topicService;
-    @Autowired
-    ExamService examService;
+    public SubjectController(SubjectService subjectService, TopicService topicService, ExamService examService){
+        this.examService = examService;
+        this.subjectService = subjectService;
+        this.topicService = topicService;
+    }
 
+    //GET
     @GetMapping
     public String subjectList(Model model,
                               @RequestParam(defaultValue = "") String query,
@@ -49,6 +51,7 @@ public class SubjectController {
         return subjectList(model, query, 1, 10);
     }
 
+    //CREATE
     @PostMapping("/create")
     public String createSubject(@Valid @ModelAttribute("subject") SubjectDto subject,
                                 BindingResult result, Model model,
@@ -63,25 +66,7 @@ public class SubjectController {
         return "redirect:/admin/subject";
     }
 
-    @GetMapping("/delete/{id}")
-    public String deleteSubject(Model model, @PathVariable Long id, RedirectAttributes redirectAttributes){
-        SubjectEntity subjectEntity =  subjectService.getById(id);
-
-        List<TopicEntity> topicEntities = subjectEntity.getTopics();
-        for (int i=0; i < topicEntities.size(); i++){
-            topicEntities.get(i).setStatus(0);
-            for (int j = 0; j <topicEntities.get(i).getExams().size(); j ++){
-                topicEntities.get(i).getExams().get(j).setStatus(0);
-                examService.update(topicEntities.get(i).getExams().get(j));
-            }
-            topicService.update(topicEntities.get(i));
-        }
-        subjectEntity.setStatus(0);
-        subjectService.update(subjectEntity, null);
-        redirectAttributes.addFlashAttribute("message", "Hủy môn thi thành công");
-        return "redirect:/admin/subject";
-    }
-
+    //UPDATE
     @GetMapping("/update/{id}")
     public String updateSubject(Model model, @PathVariable Long id){
         SubjectEntity existSubject = subjectService.getById(id);
@@ -107,4 +92,26 @@ public class SubjectController {
         redirectAttributes.addFlashAttribute("message", "Sửa môn thi thành công");
         return "redirect:/admin/subject";
     }
+
+
+    //DELETE
+    @GetMapping("/delete/{id}")
+    public String deleteSubject(Model model, @PathVariable Long id, RedirectAttributes redirectAttributes){
+        SubjectEntity subjectEntity =  subjectService.getById(id);
+
+        List<TopicEntity> topicEntities = subjectEntity.getTopics();
+        for (int i=0; i < topicEntities.size(); i++){
+            topicEntities.get(i).setStatus(0);
+            for (int j = 0; j <topicEntities.get(i).getExams().size(); j ++){
+                topicEntities.get(i).getExams().get(j).setStatus(0);
+                examService.update(topicEntities.get(i).getExams().get(j));
+            }
+            topicService.update(topicEntities.get(i));
+        }
+        subjectEntity.setStatus(0);
+        subjectService.update(subjectEntity, null);
+        redirectAttributes.addFlashAttribute("message", "Hủy môn thi thành công");
+        return "redirect:/admin/subject";
+    }
+
 }

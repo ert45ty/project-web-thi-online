@@ -17,6 +17,7 @@ public class QuestionDto {
     @Size(min = 10, message = "Câu hỏi quá ngắn")
     private String question_text;
 
+    @Valid
     private List<OptionDto> options;
 
     private String image_name;

@@ -15,7 +15,7 @@
               <div class="card-body">
                 <div class="ec-cat-form">
 
-                  <form id="form" th:action="@{/admin/exam/createQandA(examId=${examId})}"
+                  <form id="form" th:action="@{/admin/exam/createQandA(examId=${examId},totalQuestion=${totalQuestion})}"
                         method="post" th:object="${questions}" enctype="multipart/form-data">
                     <div th:each="i : ${#numbers.sequence(0, totalQuestion - 1)}" class="allQuestion"
                          th:id="'question-'+ ${i+1}">
@@ -25,7 +25,7 @@
                       <div class="col-12">
                         <textarea th:id="'questionDtoList['+${i}+ '].question_text'" th:name="'questionDtoList['+${i}+ '].question_text'" cols="40" rows="2" class="form-control" th:field="*{questionDtoList[__${i}__].question_text}" required></textarea>
                       </div>
-                      <label th:if="${#fields.hasErrors('questionDtoList['+i+'].question_text')}" th:errors="*{questionDtoList[${i}].question_text}" th:for="'questionDtoList['+${i}+ '].question_text'" class="form-label text-danger"></label>
+                      <label th:if="${#fields.hasErrors('questionDtoList['+i+'].question_text')}" th:errors="*{questionDtoList[__${i}__].question_text}" th:for="'questionDtoList['+${i}+ '].question_text'" class="form-label text-danger"></label>
                     </div>
                     <div class="form-group row">
                       <label class="col-12 col-form-label">Hình ảnh</label>
@@ -42,7 +42,7 @@
                         <label th:for="'questionDtoList['+${i}+'].options['+${j}+']'">Lựa chọn:</label>
                         <input type="text" th:id="'questionDtoList['+${i}+'].options['+${j}+']'" th:name="'questionDtoList['+${i}+'].options'" th:field="*{questionDtoList[__${i}__].options[__${j}__].option_text}" placeholder="Nhập câu trả lời" required class="mr-1"/>
                       </div>
-                      <label th:if="${#fields.hasErrors('questionDtoList['+i+'].options['+j+'].option_text')}" th:errors="*{questionDtoList[${i}].options[${j}].option_text}" th:for="'questionDtoList['+${i}+'].options['+${j}+']'" class="form-label text-danger"></label>
+                      <label th:if="${#fields.hasErrors('questionDtoList['+i+'].options['+j+'].option_text')}" th:errors="*{questionDtoList[__${i}__].options[__${j}__].option_text}" th:for="'questionDtoList['+${i}+'].options['+${j}+']'" class="form-label text-danger"></label>
                     </div>
                 </div>
                     <div class="form-group row">

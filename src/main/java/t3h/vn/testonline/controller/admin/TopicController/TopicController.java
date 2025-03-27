@@ -22,12 +22,15 @@ import java.util.List;
 @RequestMapping("/admin/topic")
 public class TopicController {
 
-    @Autowired
-    TopicService topicService;
-    @Autowired
-    SubjectService subjectService;
-    @Autowired
-    ExamService examService;
+    private final TopicService topicService;
+    private final SubjectService subjectService;
+    private final ExamService examService;
+
+    public TopicController(TopicService topicService, SubjectService subjectService, ExamService examService){
+        this.topicService = topicService;
+        this.examService = examService;
+        this.subjectService = subjectService;
+    }
 
     @GetMapping
     public String topicList(Model model,
@@ -59,6 +62,7 @@ public class TopicController {
         return topicList(model, subject, query, 1, 10);
     }
 
+    //CREATE
     @GetMapping("/create")
     public String create(Model model){
         List<SubjectEntity> subjectList = subjectService.getAll();
@@ -81,21 +85,7 @@ public class TopicController {
         return "redirect:/admin/topic";
     }
 
-    @GetMapping("/delete/{id}")
-    public String delete(Model model, @PathVariable Long id, RedirectAttributes redirectAttributes){
-        TopicEntity topicEntity = topicService.getById(id);
-        for (int i = 0; i< topicEntity.getExams().size(); i++){
-            ExamEntity examEntity = topicEntity.getExams().get(i);
-            if (examEntity.getStatus() == 0) continue;
-            examEntity.setStatus(0);
-            examService.update(examEntity);
-        }
-        topicEntity.setStatus(0);
-        topicService.update(topicEntity);
-        redirectAttributes.addFlashAttribute("message", "Hủy chủ đề thành công");
-        return "redirect:/admin/topic";
-    }
-
+    //UPDATE
     @GetMapping("/update")
     public String updateTopic(Model model, @RequestParam(value = "topicId") Long topicId){
         TopicEntity existTopic = topicService.getsById(topicId);
@@ -116,7 +106,7 @@ public class TopicController {
     @Transactional
     public String update(@Valid @ModelAttribute("topic") TopicDto topic,
                          Model model, RedirectAttributes redirectAttributes,
-                         BindingResult result,@RequestParam(value = "topicId") Long topicId){
+                         BindingResult result, @RequestParam(value = "topicId") Long topicId){
         if(result.hasErrors()){
             model.addAttribute("is_update", "update");
             return "admin/topic/createTopic";
@@ -136,4 +126,21 @@ public class TopicController {
         redirectAttributes.addFlashAttribute("message", "Cập nhật chủ đề thành công");
         return "redirect:/admin/topic";
     }
+
+    //DELETE
+    @GetMapping("/delete/{id}")
+    public String delete(Model model, @PathVariable Long id, RedirectAttributes redirectAttributes){
+        TopicEntity topicEntity = topicService.getById(id);
+        for (int i = 0; i< topicEntity.getExams().size(); i++){
+            ExamEntity examEntity = topicEntity.getExams().get(i);
+            if (examEntity.getStatus() == 0) continue;
+            examEntity.setStatus(0);
+            examService.update(examEntity);
+        }
+        topicEntity.setStatus(0);
+        topicService.update(topicEntity);
+        redirectAttributes.addFlashAttribute("message", "Hủy chủ đề thành công");
+        return "redirect:/admin/topic";
+    }
+
 }
