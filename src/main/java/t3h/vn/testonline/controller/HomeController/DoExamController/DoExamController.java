@@ -1,6 +1,7 @@
 package t3h.vn.testonline.controller.HomeController.DoExamController;
 
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,37 +10,29 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import t3h.vn.testonline.dto.ListUserAnswerDto;
-import t3h.vn.testonline.dto.QuestionDto;
-import t3h.vn.testonline.dto.ResultDto;
-import t3h.vn.testonline.dto.UserAnswerDto;
+import t3h.vn.testonline.dto.request.ListUserAnswerDto;
+import t3h.vn.testonline.dto.request.ResultDto;
+import t3h.vn.testonline.dto.request.UserAnswerDto;
 import t3h.vn.testonline.entities.ExamEntity;
 import t3h.vn.testonline.entities.QuestionEntity;
 import t3h.vn.testonline.entities.ResultEntity;
-import t3h.vn.testonline.entities.UserAnswerEntity;
 import t3h.vn.testonline.service.*;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 @RequestMapping("/doExam")
 @SessionAttributes({"examId", "answers"})
+@RequiredArgsConstructor
 public class DoExamController {
 
-    @Autowired
-    ExamService examService;
-    @Autowired
-    ResultService resultService;
-    @Autowired
-    OptionService optionService;
-    @Autowired
-    UserAnswerService userAnswerService;
-    @Autowired
-    UserService userService;
+    private final ExamService examService;
+    private final ResultService resultService;
+    private final OptionService optionService;
+    private final UserAnswerService userAnswerService;
+    private final UserService userService;
 
     @GetMapping()
     public String formDoExam(@RequestParam Long examId,

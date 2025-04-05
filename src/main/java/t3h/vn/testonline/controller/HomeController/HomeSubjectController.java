@@ -1,5 +1,6 @@
 package t3h.vn.testonline.controller.HomeController;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,11 +16,10 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/subject")
+@RequiredArgsConstructor
 public class HomeSubjectController {
-    @Autowired
-    TopicService topicService;
-    @Autowired
-    SubjectService subjectService;
+    private final TopicService topicService;
+    private final SubjectService subjectService;
 
     @GetMapping
     public String topicList(Model model,

@@ -1,0 +1,29 @@
+package t3h.vn.testonline.dto.request;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.List;
+
+@Getter
+@Setter
+public class ExamDto {
+
+    private Long id;
+
+    private Long topic_id;
+
+    @NotBlank(message = "Tiêu đề không được để rỗng")
+    @Size(min = 5, message = "Tiêu đề phải có ít nhất 5 kí tự")
+    private String title;
+
+    private Integer duration;
+
+    private Integer total_question;
+
+    private List<QuestionDto> options;
+
+    private int status;
+}

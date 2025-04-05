@@ -1,5 +1,6 @@
 package t3h.vn.testonline.controller.HomeController.ProfileController;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,14 +15,12 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/profile/history/detail")
+@RequiredArgsConstructor
 public class ExamDetailController {
 
-    @Autowired
-    ResultService resultService;
-    @Autowired
-    ExamService examService;
-    @Autowired
-    UserAnswerService userAnswerService;
+    private final ResultService resultService;
+    private final ExamService examService;
+    private final UserAnswerService userAnswerService;
 
     @GetMapping
     public String showExamDetail(Model model,

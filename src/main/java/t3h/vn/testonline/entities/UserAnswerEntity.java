@@ -2,10 +2,14 @@ package t3h.vn.testonline.entities;
 
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 @Entity
-@Data
+@Setter
+@Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "user_answer")
 public class UserAnswerEntity extends BaseEntity{
 

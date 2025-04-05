@@ -1,83 +1,35 @@
 package t3h.vn.testonline.service;
 
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
-import org.springframework.stereotype.Service;
-import t3h.vn.testonline.dto.TopicDto;
-import t3h.vn.testonline.entities.SubjectEntity;
+import org.springframework.data.domain.Page;
+import t3h.vn.testonline.dto.request.TopicDto;
 import t3h.vn.testonline.entities.TopicEntity;
-import t3h.vn.testonline.repository.TopicRepo;
 
 import java.util.List;
 
-@Service
-public class TopicService {
 
-    @Autowired
-    TopicRepo topicRepo;
-    @Autowired
-    SubjectService subjectService;
+public interface TopicService {
 
-    public List<TopicEntity> getAll(){
-        return topicRepo.findAll();
-    }
-    public Page<TopicEntity> search(Long id, String query, Integer page, Integer perpage){
-        Pageable pageable = PageRequest.of(page - 1, perpage);
-        return topicRepo.findAllBySubject_IdAndNameContaining(id, query, pageable);
-    }
+     List<TopicEntity> getAll();
+     Page<TopicEntity> search(Long id, String query, Integer page, Integer perpage);
 
-    public Page<TopicEntity> getAllBySubjectIdAndStatus(Long subjectId, int status, int page, int perpage){
-        Pageable pageable = PageRequest.of(page - 1, perpage);
-        return topicRepo.findAllBySubjectIdAndStatus(subjectId, status, pageable);
-    }
+     Page<TopicEntity> getAllBySubjectIdAndStatus(Long subjectId, int status, int page, int perpage);
 
-    public List<TopicEntity> getAllBySubjectIdAndStatusIsLike(Long id){
+     List<TopicEntity> getAllBySubjectIdAndStatusIsLike(Long id);
 
-        return topicRepo.findAllBySubject_IdAndStatus(id, 1);
-    }
+     Page<TopicEntity> getAllBySubjectId(Long id, int page, int perpage);
 
-    public Page<TopicEntity> getAllBySubjectId(Long id, int page, int perpage){
-        Pageable pageable = PageRequest.of(page-1, perpage);
-        return topicRepo.findAllBySubjectId(id, pageable);
-    }
+     List<TopicEntity> getAllBySubjectId(Long id);
 
-    public List<TopicEntity> getAllBySubjectId(Long id){
-        return topicRepo.findAllBySubject_Id(id);
-    }
+     int getTotalExams();
 
-    public int getTotalExams(){
-        int total = 0;
-        List<TopicEntity> topics = getAll();
-        for (TopicEntity topic : topics) {
-            total += topic.getExams().size();
-        }
-        return total;
-    }
+     void delete(Long id);
 
-    public void delete(Long id){
-        topicRepo.deleteById(id);
-    }
+     TopicEntity getById(Long id);
 
-    public TopicEntity getById(Long id){
-        return topicRepo.findByIdAndStatus(id, 1);
-    }
+     TopicEntity getsById(Long id);
 
-    public TopicEntity getsById(Long id){
-        return topicRepo.findTopicEntityById(id);
-    }
-
-    public void update(TopicEntity topicEntity){
-        topicRepo.save(topicEntity);
-    }
+     void update(TopicEntity topicEntity);
 
 
-    public void save(TopicDto topicDto){
-        TopicEntity topicEntity = new TopicEntity();
-        topicDto.setStatus(1);
-        SubjectEntity subject = subjectService.getById(topicDto.getSubject_id());
-        BeanUtils.copyProperties(topicDto, topicEntity);
-        topicEntity.setSubject(subject);
-        topicRepo.save(topicEntity);
-    }
+     void save(TopicDto topicDto);
 }

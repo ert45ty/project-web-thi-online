@@ -2,12 +2,16 @@ package t3h.vn.testonline.entities;
 
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Setter
+@Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "`option`")
 public class OptionEntity extends BaseEntity{

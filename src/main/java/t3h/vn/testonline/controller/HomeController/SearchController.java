@@ -1,5 +1,6 @@
 package t3h.vn.testonline.controller.HomeController;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -16,14 +17,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
+@RequiredArgsConstructor
 public class SearchController {
 
-    @Autowired
-    ExamService examService;
-    @Autowired
-    SubjectService subjectService;
-    @Autowired
-    ResultService resultService;
+    private final ExamService examService;
+    private final SubjectService subjectService;
+    private final ResultService resultService;
 
     @GetMapping("/search")
     public String search(Model model, @RequestParam(value = "query", required = false) String query,

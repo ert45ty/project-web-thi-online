@@ -1,5 +1,6 @@
 package t3h.vn.testonline.controller.HomeController;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,12 +12,11 @@ import t3h.vn.testonline.service.SubjectService;
 
 @Controller
 @RequestMapping("/rank")
+@RequiredArgsConstructor
 public class RankController {
 
-    @Autowired
-    SubjectService subjectService;
-    @Autowired
-    ResultService resultService;
+    private final SubjectService subjectService;
+    private final ResultService resultService;
 
     @GetMapping
     public String templateRanking(Model model, @RequestParam Long examId){

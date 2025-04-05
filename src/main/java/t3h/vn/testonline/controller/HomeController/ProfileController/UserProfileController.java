@@ -1,5 +1,6 @@
 package t3h.vn.testonline.controller.HomeController.ProfileController;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,12 +14,11 @@ import t3h.vn.testonline.service.UserService;
 
 @Controller
 @RequestMapping("profile")
+@RequiredArgsConstructor
 public class UserProfileController {
 
-    @Autowired
-    SubjectService subjectService;
-    @Autowired
-    UserService userService;
+   private final SubjectService subjectService;
+   private final UserService userService;
 
     @GetMapping
     public String userProfile(Model model, @AuthenticationPrincipal UserDetails user){

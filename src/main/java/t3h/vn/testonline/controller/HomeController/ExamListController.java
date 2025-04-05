@@ -1,6 +1,7 @@
 package t3h.vn.testonline.controller.HomeController;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,7 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import t3h.vn.testonline.dto.CommentDto;
+import t3h.vn.testonline.dto.request.CommentDto;
 import t3h.vn.testonline.entities.CommentEntity;
 import t3h.vn.testonline.entities.ExamEntity;
 import t3h.vn.testonline.entities.TopicEntity;
@@ -21,18 +22,14 @@ import java.util.List;
 @Controller
 @RequestMapping("/subject/exam")
 @SessionAttributes({"subjectList", "subject"})
+@RequiredArgsConstructor
 public class ExamListController {
 
-    @Autowired
-    ExamService examService;
-    @Autowired
-    TopicService topicService;
-    @Autowired
-    SubjectService subjectService;
-    @Autowired
-    CommentService commentService;
-    @Autowired
-    ResultService resultService;
+    private final ExamService examService;
+    private final TopicService topicService;
+    private final SubjectService subjectService;
+    private final CommentService commentService;
+    private final ResultService resultService;
 
 
     @GetMapping

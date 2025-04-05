@@ -1,6 +1,7 @@
 package t3h.vn.testonline.controller.HomeController.ProfileController;
 
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,8 +12,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import t3h.vn.testonline.dto.CustomerDto;
-import t3h.vn.testonline.dto.UserDto;
+import t3h.vn.testonline.dto.request.UserDto;
 import t3h.vn.testonline.dto.groupValidation.UpdateAccountInformation;
 import t3h.vn.testonline.entities.UserEntity;
 import t3h.vn.testonline.service.SubjectService;
@@ -21,12 +21,11 @@ import t3h.vn.testonline.service.UserService;
 @Controller
 @SessionAttributes("subjectList")
 @RequestMapping("/profile/update")
+@RequiredArgsConstructor
 public class UpdateProfileController {
 
-    @Autowired
-    SubjectService subjectService;
-    @Autowired
-    UserService userService;
+    private final SubjectService subjectService;
+    private final UserService userService;
 
     @GetMapping
     public String formUpdate(Model model, @AuthenticationPrincipal UserDetails user){

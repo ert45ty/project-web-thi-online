@@ -1,6 +1,7 @@
 package t3h.vn.testonline.controller.HomeController.LoginController;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,23 +9,18 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import t3h.vn.testonline.dto.CustomerDto;
-import t3h.vn.testonline.dto.UserDto;
+import t3h.vn.testonline.dto.request.CustomerDto;
 import t3h.vn.testonline.service.CustomerService;
 import t3h.vn.testonline.service.SubjectService;
-import t3h.vn.testonline.service.UserService;
 import t3h.vn.testonline.service.email.EmailService;
 
 @Controller
 @SessionAttributes("subjectList")
+@RequiredArgsConstructor
 public class RegisterController {
 
-    @Autowired
-    CustomerService customerService;
-    @Autowired
-    SubjectService subjectService;
-    @Autowired
-    EmailService emailService;
+    private final CustomerService customerService;
+    private final SubjectService subjectService;
 
     @GetMapping("/register")
     public String registerForm(Model model){

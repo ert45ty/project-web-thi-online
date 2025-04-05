@@ -1,72 +1,27 @@
 package t3h.vn.testonline.service;
 
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import t3h.vn.testonline.dto.ExamDto;
+import t3h.vn.testonline.dto.request.ExamDto;
 import t3h.vn.testonline.entities.ExamEntity;
-import t3h.vn.testonline.entities.QuestionEntity;
-import t3h.vn.testonline.entities.TopicEntity;
-import t3h.vn.testonline.repository.ExamRepo;
 
-import java.util.List;
+public interface ExamService {
 
-@Service
-public class ExamService {
+     Page<ExamEntity> getAllByTopicIdAndStatus(Long id,int page, int perpage);
 
-    @Autowired
-    ExamRepo examRepo;
-    @Autowired
-    TopicService topicService;
+     Page<ExamEntity> getAllByTopicId(Long id,int page, int perpage);
 
-    public Page<ExamEntity> getAllByTopicIdAndStatus(Long id,int page, int perpage){
-        Pageable pageable = PageRequest.of(page-1, perpage);
-        return examRepo.getExamEntityByTopic_IdAndStatus(id, 1,pageable);
-    }
+     Page<ExamEntity> search(Long id,String query, Integer page, Integer perpage);
 
-    public Page<ExamEntity> getAllByTopicId(Long id,int page, int perpage){
-        Pageable pageable = PageRequest.of(page-1, perpage);
-        return examRepo.getExamEntityByTopic_Id(id,pageable);
-    }
+     ExamEntity getExamByIdAndStatusIsLike(Long id);
 
-    public Page<ExamEntity> search(Long id,String query, Integer page, Integer perpage){
-        Pageable pageable = PageRequest.of(page - 1, perpage);
-        return examRepo.findAllByTopic_IdAndTitleContaining(id, query, pageable);
-    }
+     ExamEntity getExamById(Long id);
 
-    public ExamEntity getExamByIdAndStatusIsLike(Long id){
-        return examRepo.findByIdAndStatus(id, 1);
-    }
+     ExamEntity save(ExamDto examDto);
 
-    public ExamEntity getExamById(Long id){
-        return examRepo.getById(id);
-    }
+     void delete(Long id);
 
-    public ExamEntity save(ExamDto examDto){
-        ExamEntity examEntity = new ExamEntity();
-        examDto.setStatus(0);
-        TopicEntity topic = topicService.getById(examDto.getTopic_id());
-        BeanUtils.copyProperties(examDto, examEntity);
-        examEntity.setTopic(topic);
-        examRepo.save(examEntity);
-        return examEntity;
-    }
+     Page<ExamEntity> searchInCustomerView(Long subjectId, Integer duration,
+                                                 String title, int page, int perpage);
 
-    public void delete(Long id){
-        examRepo.deleteById(id);
-    }
-
-    public Page<ExamEntity> searchInCustomerView(Long subjectId, Integer duration,
-                                                 String title, int page, int perpage){
-        Pageable pageable = PageRequest.of(page - 1, perpage);
-        return examRepo.findExamEntitiesByDurationAndTitleContainingAndSubject_Id(subjectId, duration, title, pageable);
-    }
-
-    public void update(ExamEntity examEntity){
-        examRepo.save(examEntity);
-    }
+     void update(ExamEntity examEntity);
 }

@@ -1,5 +1,6 @@
 package t3h.vn.testonline.controller.HomeController.ProfileController;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,7 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import t3h.vn.testonline.dto.CustomerDto;
+import t3h.vn.testonline.dto.request.CustomerDto;
 import t3h.vn.testonline.dto.groupValidation.ChangePassword;
 import t3h.vn.testonline.entities.UserEntity;
 import t3h.vn.testonline.service.SubjectService;
@@ -18,14 +19,12 @@ import t3h.vn.testonline.service.UserService;
 
 @Controller
 @SessionAttributes("subjectList")
+@RequiredArgsConstructor
 public class ChangePasswordController {
 
-    @Autowired
-    UserService userService;
-    @Autowired
-    PasswordEncoder passwordEncoder;
-    @Autowired
-    SubjectService subjectService;
+    private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
+    private final SubjectService subjectService;
 
     @GetMapping("/profile/changePassword")
     public String formChangePassword(Model model){
